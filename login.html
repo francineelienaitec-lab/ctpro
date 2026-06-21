@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CT Pro — Entrar</title>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+:root{
+  --v:#1a6b4a;--vc:#22c55e;--vm:#d1fae5;
+  --c:#0f1a14;--b:#e0e8e2;--t:#1c2b22;--m:#6b7f72;
+  --bg:#f5f7f5;--d:#ef4444;--w:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;display:flex;}
+
+/* ESQUERDA */
+.left{width:440px;min-width:440px;background:linear-gradient(150deg,var(--c) 0%,#162a1e 55%,#1a3d28 100%);display:flex;flex-direction:column;justify-content:space-between;padding:40px;position:relative;overflow:hidden;}
+.left::before{content:'';position:absolute;top:-150px;right:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(34,197,94,.1) 0%,transparent 65%);pointer-events:none;}
+.left::after{content:'';position:absolute;bottom:-100px;left:-100px;width:360px;height:360px;background:radial-gradient(circle,rgba(26,107,74,.18) 0%,transparent 65%);pointer-events:none;}
+.logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--vc);display:flex;align-items:center;gap:8px;z-index:1;text-decoration:none;}
+.logo b{background:rgba(34,197,94,.2);border:1px solid rgba(34,197,94,.3);color:var(--vc);font-size:.6rem;padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.left-mid{z-index:1;}
+.left-h{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:#fff;line-height:1.18;margin-bottom:14px;}
+.left-h em{color:var(--vc);font-style:normal;}
+.left-d{font-size:.88rem;color:rgba(255,255,255,.48);line-height:1.7;margin-bottom:32px;}
+.pills{display:flex;flex-direction:column;gap:9px;}
+.pill{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:11px 13px;}
+.pill-i{width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,.12);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.pill-t strong{display:block;font-size:.8rem;color:#fff;margin-bottom:1px;}
+.pill-t span{font-size:.72rem;color:rgba(255,255,255,.42);}
+.left-foot{font-size:.7rem;color:rgba(255,255,255,.22);z-index:1;display:flex;gap:18px;}
+.left-foot a{color:rgba(255,255,255,.22);text-decoration:none;}
+.left-foot a:hover{color:rgba(255,255,255,.5);}
+
+/* DIREITA */
+.right{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+.box{width:100%;max-width:408px;}
+
+/* TABS */
+.ftabs{display:flex;background:#edf2ee;border-radius:9px;padding:3px;margin-bottom:26px;}
+.ftab{flex:1;padding:8px;text-align:center;border-radius:7px;font-size:.83rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--m);border:none;background:none;font-family:'Inter',sans-serif;}
+.ftab.on{background:#fff;color:var(--v);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+
+.ftitle{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;color:var(--t);margin-bottom:3px;}
+.fsub{font-size:.8rem;color:var(--m);margin-bottom:22px;}
+
+/* INPUTS */
+.ig{margin-bottom:12px;}
+.lbl{display:block;font-size:.7rem;font-weight:600;color:var(--m);margin-bottom:4px;}
+.inp,.sel{width:100%;padding:9px 11px;border:1.5px solid var(--b);border-radius:8px;font-size:.85rem;color:var(--t);font-family:'Inter',sans-serif;outline:none;background:#fff;transition:all .15s;}
+.inp:focus,.sel:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(26,107,74,.08);}
+.inp.err{border-color:var(--d);}
+.irow{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.pw-wrap{position:relative;}
+.pw-wrap input{padding-right:40px;}
+.pw-eye{position:absolute;right:11px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--m);background:none;border:none;font-size:.82rem;}
+
+/* BOTÕES */
+.btn-sub{width:100%;padding:11px;border-radius:8px;border:none;background:var(--v);color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:2px;}
+.btn-sub:hover{background:#155a3d;transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,107,74,.22);}
+.btn-sub:disabled{background:#9ca3af;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-google{width:100%;padding:10px;border-radius:8px;border:1.5px solid var(--b);background:#fff;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .15s;color:var(--t);}
+.btn-google:hover{background:var(--bg);border-color:#c0ccc4;}
+.btn-back{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--m);cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;margin-bottom:18px;}
+.btn-back:hover{color:var(--v);}
+.forgot{font-size:.76rem;color:var(--v);text-decoration:none;float:right;margin-top:-9px;display:block;}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--m);font-size:.72rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--b);}
+.link-alt{text-align:center;font-size:.78rem;color:var(--m);margin-top:18px;}
+.link-alt a{color:var(--v);font-weight:600;text-decoration:none;cursor:pointer;}
+.link-alt a:hover{text-decoration:underline;}
+
+/* ALERTAS */
+.alert{padding:10px 13px;border-radius:7px;font-size:.79rem;margin-bottom:13px;display:none;align-items:center;gap:7px;}
+.alert.show{display:flex;}
+.a-err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+.a-ok{background:var(--vm);color:var(--v);border:1px solid rgba(26,107,74,.2);}
+.a-warn{background:#fef3c7;color:#92400e;border:1px solid #fde68a;}
+
+/* STEPS */
+.steps{display:flex;align-items:center;gap:5px;margin-bottom:22px;}
+.stn{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;}
+.st-todo .stn{background:var(--b);color:var(--m);}
+.st-on .stn{background:var(--v);color:#fff;}
+.st-done .stn{background:var(--vm);color:var(--v);}
+.st-txt{font-size:.72rem;color:var(--m);}
+.st-on .st-txt{color:var(--v);font-weight:600;}
+.st-line{flex:1;height:1px;background:var(--b);}
+
+/* PLANO */
+.plan-g{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}
+.plan-c{border:2px solid var(--b);border-radius:8px;padding:11px 7px;text-align:center;cursor:pointer;transition:all .15s;}
+.plan-c:hover,.plan-c.on{border-color:var(--v);background:var(--vm);}
+.plan-n{font-size:.78rem;font-weight:700;}
+.plan-p{font-size:.67rem;color:var(--m);margin-top:2px;}
+
+/* SPINNER */
+.sp{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* PROGRESS BAR */
+.progress{height:3px;background:var(--b);border-radius:50px;margin-bottom:22px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--v);border-radius:50px;transition:width .4s;}
+
+@media(max-width:820px){.left{display:none;}.right{padding:24px 16px;}}
+</style>
+</head>
+<body>
+
+<div class="left">
+  <a class="logo" href="ctpro-landing.html">CT Pro <b>IA</b></a>
+  <div class="left-mid">
+    <h2 class="left-h">Gestão com <em>inteligência</em><br>para sua CT</h2>
+    <p class="left-d">O único sistema para Comunidades Terapêuticas com IA real integrada em todos os módulos. RDC 29 · LGPD · SENAPRED.</p>
+    <div class="pills">
+      <div class="pill"><div class="pill-i">✦</div><div class="pill-t"><strong>PAS gerado com IA</strong><span>Plano completo em minutos, não horas</span></div></div>
+      <div class="pill"><div class="pill-i">🎙️</div><div class="pill-t"><strong>Evolução por voz</strong><span>Fale, a IA transcreve e estrutura</span></div></div>
+      <div class="pill"><div class="pill-i">📊</div><div class="pill-t"><strong>Relatório SENAPRED</strong><span>Geração automática com 1 clique</span></div></div>
+      <div class="pill"><div class="pill-i">🔒</div><div class="pill-t"><strong>LGPD + RDC 29</strong><span>100% em conformidade</span></div></div>
+    </div>
+  </div>
+  <div class="left-foot">
+    <a href="#">Privacidade</a><a href="#">Termos</a><a href="#">Suporte</a><span>© 2026 CT Pro</span>
+  </div>
+</div>
+
+<div class="right">
+  <div class="box">
+
+    <!-- TABS PRINCIPAIS -->
+    <div class="ftabs" id="main-tabs">
+      <button class="ftab on" onclick="sf('login')">Entrar</button>
+      <button class="ftab" onclick="sf('cadastro')">Criar conta</button>
+    </div>
+
+    <!-- ====== LOGIN ====== -->
+    <div id="f-login">
+      <div class="ftitle">Bem-vindo de volta</div>
+      <div class="fsub">Acesse o sistema da sua CT</div>
+      <div class="alert a-err" id="al-login">❌ E-mail ou senha incorretos.</div>
+      <div class="alert a-ok" id="al-login-ok">✅ Acesso confirmado! Entrando...</div>
+      <div class="ig"><label class="lbl">E-mail</label><input class="inp" type="email" id="l-email" placeholder="seu@email.com" autocomplete="email"></div>
+      <div class="ig">
+        <label class="lbl">Senha</label>
+        <div class="pw-wrap"><input class="inp" type="password" id="l-pw" placeholder="••••••••" autocomplete="current-password"><button class="pw-eye" onclick="tpw('l-pw',this)">👁</button></div>
+        <a class="forgot" onclick="sf('rec')">Esqueci a senha</a>
+      </div>
+      <button class="btn-sub" id="btn-login" onclick="doLogin()"><span id="lbl-login">Entrar no CT Pro</span></button>
+      <div class="divider">ou</div>
+      <button class="btn-google" onclick="doGoogle()">
+        <svg width="17" height="17" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.1 33.4 29.6 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 2.9l6.3-6.3C34.3 5.7 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8.1 19.7-20 0-1.3-.1-2.7-.2-4z"/></svg>
+        Entrar com Google
+      </button>
+      <div class="link-alt">Não tem conta? <a onclick="sf('cadastro')">Criar gratuitamente</a></div>
+    </div>
+
+    <!-- ====== RECUPERAR SENHA ====== -->
+    <div id="f-rec" style="display:none">
+      <button class="btn-back" onclick="sf('login')">← Voltar ao login</button>
+      <div class="ftitle">Recuperar senha</div>
+      <div class="fsub">Enviaremos um link por e-mail</div>
+      <div class="alert a-ok" id="al-rec">✅ Link enviado! Verifique seu e-mail.</div>
+      <div class="ig"><label class="lbl">E-mail cadastrado</label><input class="inp" type="email" id="rec-email" placeholder="seu@email.com"></div>
+      <button class="btn-sub" onclick="doRec()">Enviar link de recuperação</button>
+    </div>
+
+    <!-- ====== CADASTRO ====== -->
+    <div id="f-cadastro" style="display:none">
+
+      <!-- Barra de progresso -->
+      <div class="progress"><div class="progress-fill" id="prog-bar" style="width:33%"></div></div>
+
+      <!-- Steps indicator -->
+      <div class="steps" id="steps-ind">
+        <div class="st-on" id="s1"><div class="stn">1</div><div class="st-txt">Conta</div></div>
+        <div class="st-line"></div>
+        <div class="st-todo" id="s2"><div class="stn">2</div><div class="st-txt">Sua CT</div></div>
+        <div class="st-line"></div>
+        <div class="st-todo" id="s3"><div class="stn">3</div><div class="st-txt">Plano</div></div>
+      </div>
+
+      <!-- STEP 1: CONTA -->
+      <div id="cad-1">
+        <div class="ftitle">Criar sua conta</div>
+        <div class="fsub">Grátis, sem cartão de crédito</div>
+        <div class="alert a-err" id="al-c1"></div>
+        <div class="irow">
+          <div class="ig"><label class="lbl">Nome *</label><input class="inp" id="c-nome" placeholder="Nome"></div>
+          <div class="ig"><label class="lbl">Sobrenome *</label><input class="inp" id="c-sobrenome" placeholder="Sobrenome"></div>
+        </div>
+        <div class="ig"><label class="lbl">E-mail *</label><input class="inp" type="email" id="c-email" placeholder="seu@email.com"></div>
+        <div class="ig"><label class="lbl">Função na CT *</label>
+          <select class="sel" id="c-funcao">
+            <option value="">Selecione sua função...</option>
+            <option>Coordenador(a)</option><option>Diretor(a)</option>
+            <option>Psicólogo(a)</option><option>Médico(a) / Psiquiatra</option>
+            <option>Assistente Social</option><option>Terapeuta</option>
+            <option>Enfermeiro(a)</option><option>Técnico administrativo</option>
+          </select>
+        </div>
+        <div class="ig">
+          <label class="lbl">Senha * <span style="font-weight:400;color:var(--m)">(mín. 8 caracteres)</span></label>
+          <div class="pw-wrap"><input class="inp" type="password" id="c-pw" placeholder="Crie uma senha forte"><button class="pw-eye" onclick="tpw('c-pw',this)">👁</button></div>
+        </div>
+        <div class="ig">
+          <label class="lbl">Confirmar senha *</label>
+          <div class="pw-wrap"><input class="inp" type="password" id="c-pw2" placeholder="Repita a senha"><button class="pw-eye" onclick="tpw('c-pw2',this)">👁</button></div>
+        </div>
+        <button class="btn-sub" onclick="toStep2()">Continuar →</button>
+        <div class="link-alt">Já tem conta? <a onclick="sf('login')">Entrar</a></div>
+      </div>
+
+      <!-- STEP 2: DADOS DA CT -->
+      <div id="cad-2" style="display:none">
+        <div class="ftitle">Sua Comunidade Terapêutica</div>
+        <div class="fsub">Essas informações ficam no seu perfil</div>
+        <div class="ig"><label class="lbl">Nome da CT *</label><input class="inp" id="ct-nome" placeholder="Ex: CT Esperança"></div>
+        <div class="irow">
+          <div class="ig"><label class="lbl">CNPJ</label><input class="inp" id="ct-cnpj" placeholder="00.000.000/0001-00" oninput="fmtCnpj(this)"></div>
+          <div class="ig"><label class="lbl">CNES</label><input class="inp" id="ct-cnes" placeholder="Número CNES"></div>
+        </div>
+        <div class="irow">
+          <div class="ig"><label class="lbl">Total de vagas *</label><input class="inp" type="number" id="ct-vagas" placeholder="Ex: 30" min="1" max="500"></div>
+          <div class="ig"><label class="lbl">Vagas gratuitas</label><input class="inp" type="number" id="ct-grat" placeholder="Ex: 6" min="0"></div>
+        </div>
+        <div class="irow">
+          <div class="ig"><label class="lbl">Cidade *</label><input class="inp" id="ct-cidade" placeholder="Cidade"></div>
+          <div class="ig"><label class="lbl">Estado *</label>
+            <select class="sel" id="ct-uf">
+              <option value="">UF</option>
+              <option>AC</option><option>AL</option><option>AM</option><option>AP</option><option>BA</option>
+              <option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option>
+              <option>MG</option><option>MS</option><option>MT</option><option>PA</option><option>PB</option>
+              <option>PE</option><option>PI</option><option>PR</option><option>RJ</option><option>RN</option>
+              <option>RO</option><option>RR</option><option>RS</option><option>SC</option><option selected>SP</option>
+              <option>SE</option><option>TO</option>
+            </select>
+          </div>
+        </div>
+        <div class="ig"><label class="lbl">Telefone da CT</label><input class="inp" id="ct-tel" placeholder="(00) 00000-0000" oninput="fmtTel(this)"></div>
+        <div style="display:flex;gap:9px;margin-top:4px">
+          <button class="btn-sub" style="background:var(--bg);color:var(--t);border:1.5px solid var(--b);flex:0 0 80px" onclick="toStep1()">← Voltar</button>
+          <button class="btn-sub" style="flex:1" onclick="toStep3()">Continuar →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: PLANO -->
+      <div id="cad-3" style="display:none">
+        <div class="ftitle">Escolha seu plano</div>
+        <div class="fsub">Comece grátis, faça upgrade quando precisar</div>
+        <div class="plan-g">
+          <div class="plan-c on" onclick="selPlano(this,'freemium')">
+            <div style="font-size:1.5rem">🌱</div>
+            <div class="plan-n">Gratuito</div>
+            <div class="plan-p">R$0/mês<br>até 15 acolhidos</div>
+          </div>
+          <div class="plan-c" onclick="selPlano(this,'pro')">
+            <div style="font-size:1.5rem">⚡</div>
+            <div class="plan-n">Pro</div>
+            <div class="plan-p">R$197/mês<br>ilimitado + IA</div>
+          </div>
+          <div class="plan-c" onclick="selPlano(this,'rede')">
+            <div style="font-size:1.5rem">🌐</div>
+            <div class="plan-n">Rede</div>
+            <div class="plan-p">R$397/mês<br>até 5 unidades</div>
+          </div>
+        </div>
+        <div id="plano-info" style="font-size:.73rem;color:var(--m);text-align:center;margin-bottom:12px">✅ Gratuito selecionado — sem cartão necessário</div>
+        <div class="alert a-warn show" style="margin-bottom:12px">💡 <strong>Pro inclui IA:</strong> PAS automático, evolução por voz, relatórios SENAPRED e alertas preditivos. 14 dias grátis ao fazer upgrade.</div>
+        <div class="alert a-err" id="al-c3"></div>
+        <div class="alert a-ok" id="al-c3-ok" style="flex-direction:column;align-items:flex-start;gap:4px">
+          <div>🎉 <strong>Conta criada com sucesso!</strong></div>
+          <div style="font-size:.75rem">Entrando no sistema...</div>
+        </div>
+        <div style="display:flex;gap:9px">
+          <button class="btn-sub" style="background:var(--bg);color:var(--t);border:1.5px solid var(--b);flex:0 0 80px" onclick="toStep2()">← Voltar</button>
+          <button class="btn-sub" style="flex:1" id="btn-fin" onclick="doSignup()"><span id="lbl-fin">Criar minha conta</span></button>
+        </div>
+      </div>
+
+    </div><!-- /cadastro -->
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIGURAÇÃO SUPABASE
+// Substitua pelos valores do seu projeto
+// ══════════════════════════════════════════
+const SUPA_URL  = 'https://gkiwarkkyhitwitvqclb.supabase.co'
+const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdraXdhcmtreWhpdHdpdHZxY2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODIxNjksImV4cCI6MjA5NzU1ODE2OX0.CwiiJyoaq00nB7_0G4XmuX-xEawop45TJl9hFtzkC1U'
+
+// Inicializa Supabase
+const { createClient } = supabase
+const db = createClient(SUPA_URL, SUPA_KEY)
+
+// ── helpers ──
+const $ = id => document.getElementById(id)
+const delay = ms => new Promise(r => setTimeout(r, ms))
+let plano = 'freemium'
+
+// ══════════════════════════════════════════
+// NAVEGAÇÃO
+// ══════════════════════════════════════════
+function sf(form) {
+  $('f-login').style.display = 'none'
+  $('f-rec').style.display   = 'none'
+  $('f-cadastro').style.display = 'none'
+  $('main-tabs').style.display = 'flex'
+
+  if (form === 'login') {
+    $('f-login').style.display = 'block'
+    setTab(0)
+  } else if (form === 'cadastro') {
+    $('f-cadastro').style.display = 'block'
+    toStep1()
+    setTab(1)
+  } else if (form === 'rec') {
+    $('f-rec').style.display = 'block'
+    $('main-tabs').style.display = 'none'
+  }
+}
+
+function setTab(i) {
+  document.querySelectorAll('.ftab').forEach((t,idx) => t.classList.toggle('on', idx === i))
+}
+
+// ══════════════════════════════════════════
+// STEPS DO CADASTRO
+// ══════════════════════════════════════════
+function toStep1() {
+  $('cad-1').style.display = 'block'
+  $('cad-2').style.display = 'none'
+  $('cad-3').style.display = 'none'
+  setStep(1)
+}
+function toStep2() {
+  if ($('cad-1').style.display !== 'none') {
+    // validar step 1
+    const nome = $('c-nome').value.trim()
+    const email = $('c-email').value.trim()
+    const funcao = $('c-funcao').value
+    const pw = $('c-pw').value
+    const pw2 = $('c-pw2').value
+    if (!nome || !email || !funcao || !pw) { showAlert('al-c1','⚠️ Preencha todos os campos obrigatórios.'); return }
+    if (pw.length < 8) { showAlert('al-c1','⚠️ Senha deve ter pelo menos 8 caracteres.'); return }
+    if (pw !== pw2) { showAlert('al-c1','⚠️ As senhas não coincidem.'); return }
+    hideAlert('al-c1')
+  }
+  $('cad-1').style.display = 'none'
+  $('cad-2').style.display = 'block'
+  $('cad-3').style.display = 'none'
+  setStep(2)
+}
+function toStep3() {
+  const nome = $('ct-nome').value.trim()
+  const vagas = $('ct-vagas').value
+  const cidade = $('ct-cidade').value.trim()
+  const uf = $('ct-uf').value
+  if (!nome || !vagas || !cidade || !uf) { alert('Preencha os campos obrigatórios da CT.'); return }
+  $('cad-1').style.display = 'none'
+  $('cad-2').style.display = 'none'
+  $('cad-3').style.display = 'block'
+  setStep(3)
+}
+
+function setStep(n) {
+  for (let i = 1; i <= 3; i++) {
+    const el = $('s'+i)
+    el.className = i < n ? 'st-done' : i === n ? 'st-on' : 'st-todo'
+    el.querySelector('.stn').textContent = i < n ? '✓' : i
+  }
+  $('prog-bar').style.width = (n * 33.33) + '%'
+}
+
+// ══════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════
+async function doLogin() {
+  const email = $('l-email').value.trim()
+  const pw    = $('l-pw').value
+  hideAlert('al-login'); hideAlert('al-login-ok')
+  if (!email || !pw) { showAlert('al-login', '⚠️ Preencha e-mail e senha.'); return }
+
+  setLoading('btn-login', 'lbl-login', true)
+
+  const { data, error } = await db.auth.signInWithPassword({ email, password: pw })
+
+  if (error) {
+    setLoading('btn-login', 'lbl-login', false, 'Entrar no CT Pro')
+    showAlert('al-login', '❌ ' + traduzirErro(error.message))
+  } else {
+    showAlertOk('al-login-ok')
+    // Salva último acesso
+    await db.from('perfis').update({ ultimo_acesso: new Date().toISOString() }).eq('id', data.user.id)
+    await delay(1200)
+    window.location.href = 'ctpro-completo.html'
+  }
+}
+
+async function doGoogle() {
+  const { error } = await db.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin + '/ctpro-completo.html' }
+  })
+  if (error) showAlert('al-login', '❌ Erro ao conectar com Google.')
+}
+
+// ══════════════════════════════════════════
+// RECUPERAR SENHA
+// ══════════════════════════════════════════
+async function doRec() {
+  const email = $('rec-email').value.trim()
+  if (!email) return
+  const { error } = await db.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/ctpro-login.html#reset'
+  })
+  if (!error) showAlertOk('al-rec')
+}
+
+// ══════════════════════════════════════════
+// CADASTRO
+// ══════════════════════════════════════════
+async function doSignup() {
+  hideAlert('al-c3'); hideAlert('al-c3-ok')
+  setLoading('btn-fin', 'lbl-fin', true)
+
+  const email  = $('c-email').value.trim()
+  const pw     = $('c-pw').value
+  const nome   = $('c-nome').value.trim() + ' ' + $('c-sobrenome').value.trim()
+  const funcao = $('c-funcao').value
+  const ctNome = $('ct-nome').value.trim()
+  const cnpj   = $('ct-cnpj').value
+  const cnes   = $('ct-cnes').value
+  const vagas  = parseInt($('ct-vagas').value) || 30
+  const grat   = parseInt($('ct-grat').value) || 0
+  const cidade = $('ct-cidade').value.trim()
+  const uf     = $('ct-uf').value
+  const tel    = $('ct-tel').value
+
+  // 1. Criar usuário no Auth
+  const { data: authData, error: authErr } = await db.auth.signUp({
+    email, password: pw,
+    options: {
+      data: { nome, funcao, ct_nome: ctNome }
+    }
+  })
+
+  if (authErr) {
+    setLoading('btn-fin', 'lbl-fin', false, 'Criar minha conta')
+    showAlert('al-c3', '❌ ' + traduzirErro(authErr.message))
+    return
+  }
+
+  const userId = authData.user?.id
+
+  // 2. Criar comunidade
+  const { data: ct, error: ctErr } = await db.from('comunidades').insert({
+    nome: ctNome, cnpj, cnes,
+    total_vagas: vagas, vagas_gratuitas: grat,
+    cidade, estado: uf, telefone: tel,
+    plano: plano
+  }).select().single()
+
+  if (ctErr) {
+    console.error('Erro ao criar CT:', ctErr)
+  }
+
+  // 3. Criar perfil
+  if (userId && ct?.id) {
+    await db.from('perfis').insert({
+      id: userId,
+      comunidade_id: ct.id,
+      nome, email, funcao,
+      role: 'admin'
+    })
+  }
+
+  setLoading('btn-fin', 'lbl-fin', false, 'Criar minha conta')
+  showAlertOk('al-c3-ok')
+
+  await delay(2000)
+  window.location.href = 'ctpro-completo.html'
+}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function tpw(id, btn) {
+  const inp = $(id)
+  inp.type = inp.type === 'password' ? 'text' : 'password'
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈'
+}
+
+function showAlert(id, msg) {
+  const el = $(id)
+  if (msg) el.textContent = msg
+  el.className = el.className.replace('show','').trim() + ' show'
+}
+function showAlertOk(id) {
+  const el = $(id)
+  el.className = el.className.replace('show','').trim() + ' show'
+}
+function hideAlert(id) {
+  const el = $(id)
+  if (el) el.className = el.className.replace('show','').trim()
+}
+
+function setLoading(btnId, lblId, loading, txt='') {
+  const btn = $(btnId)
+  const lbl = $(lblId)
+  btn.disabled = loading
+  lbl.innerHTML = loading ? '<div class="sp"></div>' : txt
+}
+
+function selPlano(card, p) {
+  document.querySelectorAll('.plan-c').forEach(c => c.classList.remove('on'))
+  card.classList.add('on')
+  plano = p
+  const info = { freemium:'✅ Gratuito — sem cartão necessário', pro:'✅ Pro (R$197/mês) — 14 dias grátis', rede:'✅ Rede (R$397/mês) — 14 dias grátis' }
+  $('plano-info').textContent = info[p]
+}
+
+function fmtCnpj(inp) {
+  let v = inp.value.replace(/\D/g,'').slice(0,14)
+  v = v.replace(/^(\d{2})(\d)/,'$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3').replace(/\.(\d{3})(\d)/,'.$1/$2').replace(/(\d{4})(\d)/,'$1-$2')
+  inp.value = v
+}
+
+function fmtTel(inp) {
+  let v = inp.value.replace(/\D/g,'').slice(0,11)
+  v = v.replace(/^(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2')
+  inp.value = v
+}
+
+function traduzirErro(msg) {
+  const map = {
+    'Invalid login credentials': 'E-mail ou senha incorretos.',
+    'Email not confirmed': 'Confirme seu e-mail antes de entrar.',
+    'User already registered': 'Este e-mail já está cadastrado.',
+    'Password should be at least 6 characters': 'Senha muito curta (mínimo 6 caracteres).',
+    'Unable to validate email address': 'E-mail inválido.',
+  }
+  return map[msg] || msg
+}
+
+// ══════════════════════════════════════════
+// VERIFICAR SESSÃO ATIVA
+// ══════════════════════════════════════════
+;(async () => {
+  const { data: { session } } = await db.auth.getSession()
+  if (session) {
+    // já logado — redireciona direto
+    window.location.href = 'ctpro-completo.html'
+  }
+})()
+
+// Enter para login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && $('f-login').style.display !== 'none') doLogin()
+})
+
+// Verificar hash de reset de senha
+if (window.location.hash === '#reset') {
+  sf('rec')
+  document.querySelector('.fsub').textContent = 'Digite sua nova senha'
+}
+</script>
+</body>
+</html>
