@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CT Pro — Documentos Legais</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+:root{
+  --v:#1a6b4a;--vc:#22c55e;--vm:#d1fae5;
+  --c:#0f1a14;--ink:#162a1e;--ink2:#1a3d28;
+  --b:#e0e8e2;--t:#1c2b22;--m:#6b7f72;
+  --bg:#f5f7f5;--card:#fff;--warn-bg:#fef9ec;--warn-bd:#f5dca0;--warn-tx:#8a6d1f;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);line-height:1.7;}
+
+/* HEADER */
+.top{background:linear-gradient(150deg,var(--c) 0%,var(--ink) 55%,var(--ink2) 100%);color:#fff;padding:0;position:relative;overflow:hidden;}
+.top::before{content:'';position:absolute;top:-160px;right:-120px;width:480px;height:480px;background:radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 65%);pointer-events:none;}
+.top-inner{max-width:860px;margin:0 auto;padding:30px 28px 40px;position:relative;z-index:1;}
+.brand{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--vc);display:flex;align-items:center;gap:9px;text-decoration:none;}
+.brand b{background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.3);color:var(--vc);font-size:.58rem;padding:2px 7px;border-radius:4px;letter-spacing:.07em;}
+.top h1{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin:26px 0 8px;line-height:1.2;}
+.top p{color:rgba(255,255,255,.55);font-size:.92rem;max-width:540px;}
+.updated{margin-top:14px;font-size:.78rem;color:rgba(255,255,255,.4);}
+
+/* NAV TABS */
+.tabs{position:sticky;top:0;z-index:20;background:rgba(245,247,245,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--b);}
+.tabs-inner{max-width:860px;margin:0 auto;padding:0 28px;display:flex;gap:4px;overflow-x:auto;}
+.tab{padding:14px 16px;font-size:.82rem;font-weight:600;color:var(--m);cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;border-bottom:2px solid transparent;white-space:nowrap;transition:all .18s;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--v);border-bottom-color:var(--v);}
+
+/* WRAP */
+.wrap{max-width:860px;margin:0 auto;padding:36px 28px 80px;}
+.doc{display:none;animation:fade .35s ease;}
+.doc.show{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* WARNING BANNER */
+.banner{background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-tx);border-radius:12px;padding:14px 16px;font-size:.83rem;margin-bottom:28px;display:flex;gap:11px;align-items:flex-start;}
+.banner b{display:block;margin-bottom:2px;}
+
+/* DOC CARD */
+.card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:34px 38px;box-shadow:0 1px 3px rgba(15,26,20,.04);}
+.doc-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--t);margin-bottom:4px;}
+.doc-sub{color:var(--m);font-size:.86rem;margin-bottom:6px;}
+.doc-date{color:var(--m);font-size:.78rem;margin-bottom:26px;padding-bottom:20px;border-bottom:1px solid var(--b);}
+
+h2.sec{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--v);margin:28px 0 10px;display:flex;align-items:baseline;gap:9px;}
+h2.sec .n{font-size:.72rem;font-weight:700;color:#fff;background:var(--v);min-width:24px;height:24px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;align-self:center;}
+h3.sub{font-size:.92rem;font-weight:700;color:var(--t);margin:18px 0 7px;}
+.card p{font-size:.9rem;color:var(--t);margin:9px 0;}
+.card ul{margin:10px 0 10px 4px;list-style:none;}
+.card li{font-size:.89rem;color:var(--t);padding:5px 0 5px 22px;position:relative;}
+.card li::before{content:'';position:absolute;left:2px;top:13px;width:6px;height:6px;border-radius:50%;background:var(--vc);}
+
+/* placeholder fill chips */
+.fill{background:var(--vm);color:var(--v);font-weight:600;padding:1px 7px;border-radius:5px;font-size:.84em;border:1px dashed var(--vc);}
+
+.sign{margin-top:30px;padding-top:24px;border-top:1px solid var(--b);display:grid;grid-template-columns:1fr 1fr;gap:30px;}
+.sign-line{text-align:center;}
+.sign-line .ln{border-top:1.5px solid var(--t);margin-bottom:7px;padding-top:7px;}
+.sign-line span{font-size:.78rem;color:var(--m);}
+
+.foot{text-align:center;color:var(--m);font-size:.76rem;margin-top:36px;}
+.foot a{color:var(--v);text-decoration:none;}
+
+@media(max-width:600px){
+  .top h1{font-size:1.5rem;}
+  .card{padding:24px 20px;}
+  .wrap{padding:24px 16px 60px;}
+  .tabs-inner,.top-inner{padding-left:16px;padding-right:16px;}
+  .sign{grid-template-columns:1fr;gap:24px;}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <a href="index.html" class="brand">🌿 CT Pro <b>IA</b></a>
+    <h1>Documentos Legais</h1>
+    <p>Transparência sobre como tratamos dados, com base na LGPD (Lei 13.709/2018) e na RDC 29/2011.</p>
+    <div class="updated">Última atualização: <span class="fill">__/__/2026</span></div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab on" data-doc="termos">Termos de Uso</button>
+    <button class="tab" data-doc="privacidade">Política de Privacidade</button>
+    <button class="tab" data-doc="dpa">Acordo de Dados (DPA)</button>
+    <button class="tab" data-doc="consentimento">Termo de Consentimento</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="banner">
+    <span style="font-size:1.1rem;line-height:1">⚠️</span>
+    <div><b>Documento em configuração</b>Os campos destacados em <span class="fill">verde</span> são provisórios e devem ser substituídos pelos dados reais da empresa. Recomenda-se revisão por advogado antes do uso comercial definitivo.</div>
+  </div>
+
+  <!-- ══════════ TERMOS DE USO ══════════ -->
+  <section class="doc show" id="termos">
+    <div class="card">
+      <div class="doc-title">Termos de Uso</div>
+      <div class="doc-sub">Condições gerais de utilização da plataforma CT Pro</div>
+      <div class="doc-date">Última atualização: <span class="fill">__/__/2026</span></div>
+
+      <h2 class="sec"><span class="n">1</span>Aceitação dos Termos</h2>
+      <p>Estes Termos de Uso regem o acesso e a utilização da plataforma CT Pro ("plataforma", "serviço"). Ao criar uma conta, contratar ou utilizar o serviço, o usuário e a instituição contratante ("Cliente") declaram que leram, compreenderam e concordam integralmente com estas condições. Caso não concorde, não utilize a plataforma.</p>
+      <p>Plataforma fornecida por <span class="fill">[RAZÃO SOCIAL]</span>, CNPJ <span class="fill">[00.000.000/0001-00]</span>, sede em <span class="fill">[ENDEREÇO]</span>.</p>
+
+      <h2 class="sec"><span class="n">2</span>Descrição do serviço</h2>
+      <p>O CT Pro é um software de gestão (SaaS) destinado a Comunidades Terapêuticas, oferecendo funcionalidades de cadastro de acolhidos, planos de atendimento, prontuário, controle médico, financeiro, atividades, relatórios e recursos de inteligência artificial de apoio à gestão.</p>
+
+      <h2 class="sec"><span class="n">3</span>Cadastro e conta</h2>
+      <ul>
+        <li>O Cliente é responsável pela veracidade das informações fornecidas no cadastro.</li>
+        <li>As credenciais de acesso são pessoais e intransferíveis; o Cliente é responsável por mantê-las em sigilo.</li>
+        <li>O Cliente é responsável por todas as atividades realizadas com suas credenciais.</li>
+        <li>É vedado o uso por menores de 18 anos sem a devida representação institucional.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">4</span>Planos, pagamento e renovação</h2>
+      <ul>
+        <li>A plataforma oferece planos com funcionalidades e limites distintos, incluindo um plano gratuito e planos pagos.</li>
+        <li>Os valores, formas de pagamento e periodicidade são informados no momento da contratação.</li>
+        <li>As assinaturas pagas são renovadas automaticamente, salvo cancelamento prévio pelo Cliente.</li>
+        <li>O não pagamento pode acarretar suspensão ou cancelamento do acesso, observado aviso prévio.</li>
+        <li>Eventuais reajustes serão comunicados com antecedência razoável.</li>
+        <li>Política de reembolso: <span class="fill">[DEFINIR — ex.: teste de 14 dias]</span>.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">5</span>Responsabilidades do Cliente</h2>
+      <ul>
+        <li>Utilizar a plataforma conforme a legislação aplicável, incluindo a RDC 29/2011 e a LGPD.</li>
+        <li>Obter os consentimentos e bases legais necessários para o tratamento dos dados dos acolhidos, na qualidade de controlador desses dados.</li>
+        <li>Garantir que apenas profissionais autorizados acessem os dados.</li>
+        <li>Validar clinicamente todo conteúdo gerado por inteligência artificial antes de qualquer uso.</li>
+        <li>Não inserir conteúdo ilícito, ofensivo ou que viole direitos de terceiros.</li>
+        <li>Não tentar burlar a segurança, realizar engenharia reversa ou uso indevido da plataforma.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">6</span>Inteligência Artificial — limitações</h2>
+      <p>Os recursos de IA produzem sugestões automatizadas que podem conter imprecisões. O Cliente reconhece que:</p>
+      <ul>
+        <li>As saídas de IA são apoio e não constituem aconselhamento médico, jurídico ou profissional.</li>
+        <li>A responsabilidade pela revisão, validação e uso do conteúdo é integralmente do Cliente e de sua equipe técnica.</li>
+        <li>O CT Pro não se responsabiliza por decisões tomadas com base exclusiva em conteúdo gerado por IA sem a devida validação humana.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">7</span>Propriedade intelectual</h2>
+      <ul>
+        <li>A plataforma, seu código, design, marca e funcionalidades são de titularidade da <span class="fill">[RAZÃO SOCIAL]</span> e protegidos por lei.</li>
+        <li>É concedida ao Cliente uma licença de uso limitada, não exclusiva e intransferível, durante a vigência do contrato.</li>
+        <li>Os dados inseridos pelo Cliente permanecem de titularidade do Cliente/controlador.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">8</span>Disponibilidade e suporte</h2>
+      <ul>
+        <li>Empregamos esforços para manter a plataforma disponível, mas não garantimos funcionamento ininterrupto, podendo haver manutenções programadas ou interrupções por fatores externos.</li>
+        <li>O suporte é prestado pelos canais oficiais informados, conforme o plano contratado.</li>
+        <li>Nível de serviço (SLA): <span class="fill">[DEFINIR conforme plano]</span>.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">9</span>Limitação de responsabilidade</h2>
+      <p>Na máxima extensão permitida pela legislação:</p>
+      <ul>
+        <li>O CT Pro não se responsabiliza por danos decorrentes de uso indevido, decisões clínicas, descumprimento legal pelo Cliente ou inserção de dados incorretos.</li>
+        <li>A responsabilidade total do CT Pro, quando cabível, limita-se ao valor pago pelo Cliente nos 12 meses anteriores ao evento, salvo vedação legal.</li>
+        <li>Não há responsabilidade por danos indiretos, lucros cessantes ou perda de dados decorrente de fatores fora do controle razoável da plataforma.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">10</span>Suspensão e rescisão</h2>
+      <ul>
+        <li>O Cliente pode cancelar a qualquer tempo pelos canais oficiais.</li>
+        <li>Podemos suspender ou encerrar o acesso em caso de violação destes Termos, uso ilícito ou inadimplência, observado aviso quando cabível.</li>
+        <li>Após o encerramento, os dados ficam disponíveis para exportação por prazo razoável, sendo posteriormente eliminados conforme a Política de Privacidade.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">11</span>Confidencialidade</h2>
+      <p>As partes comprometem-se a manter sigilo sobre informações confidenciais a que tiverem acesso, especialmente os dados sensíveis dos acolhidos, durante e após a vigência do contrato.</p>
+
+      <h2 class="sec"><span class="n">12</span>Alterações dos Termos</h2>
+      <p>Estes Termos podem ser atualizados. A versão vigente estará disponível na plataforma. O uso continuado após alterações implica concordância com as novas condições.</p>
+
+      <h2 class="sec"><span class="n">13</span>Disposições gerais</h2>
+      <ul>
+        <li>A tolerância quanto a eventual descumprimento não implica renúncia de direitos.</li>
+        <li>Se qualquer cláusula for considerada inválida, as demais permanecem em vigor.</li>
+        <li>Estes Termos, em conjunto com a Política de Privacidade e o contrato de operador de dados, constituem o acordo integral entre as partes.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">14</span>Foro e legislação</h2>
+      <p>Regidos pela legislação brasileira. Foro eleito: comarca de <span class="fill">[CIDADE/UF]</span>, salvo disposição legal cogente em contrário.</p>
+    </div>
+  </section>
+
+  <!-- ══════════ POLÍTICA DE PRIVACIDADE ══════════ -->
+  <section class="doc" id="privacidade">
+    <div class="card">
+      <div class="doc-title">Política de Privacidade</div>
+      <div class="doc-sub">Tratamento de dados pessoais conforme a LGPD (Lei 13.709/2018)</div>
+      <div class="doc-date">Última atualização: <span class="fill">__/__/2026</span></div>
+
+      <h2 class="sec"><span class="n">1</span>Introdução e quem somos</h2>
+      <p>Esta Política de Privacidade descreve como o CT Pro ("nós", "nosso", "plataforma") trata os dados pessoais de usuários e demais titulares.</p>
+      <p>Controladora da plataforma: <span class="fill">[RAZÃO SOCIAL DA EMPRESA]</span>, CNPJ <span class="fill">[00.000.000/0001-00]</span>, <span class="fill">[ENDEREÇO COMPLETO]</span>.</p>
+      <p>Ao utilizar o CT Pro, o usuário declara ter lido e compreendido esta Política.</p>
+
+      <h2 class="sec"><span class="n">2</span>Definições importantes</h2>
+      <ul>
+        <li><b>Dados pessoais:</b> informação relacionada a pessoa natural identificada ou identificável.</li>
+        <li><b>Dados pessoais sensíveis:</b> dados sobre saúde, vida sexual, origem racial, entre outros previstos na LGPD.</li>
+        <li><b>Titular:</b> a pessoa natural a quem se referem os dados.</li>
+        <li><b>Controlador:</b> quem toma as decisões sobre o tratamento. No caso dos dados dos acolhidos, é a Comunidade Terapêutica.</li>
+        <li><b>Operador:</b> quem trata os dados em nome do controlador. O CT Pro atua como operador quanto aos dados dos acolhidos.</li>
+        <li><b>Encarregado (DPO):</b> pessoa indicada como canal de comunicação sobre proteção de dados.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">3</span>Papéis: controlador e operador</h2>
+      <p>É essencial distinguir dois contextos de tratamento:</p>
+      <ul>
+        <li>Dados de cadastro e uso da plataforma (profissionais que criam conta): o CT Pro atua como <b>controlador</b>.</li>
+        <li>Dados dos acolhidos e familiares inseridos pelas Comunidades Terapêuticas: a CT é a <b>controladora</b> e o CT Pro é o <b>operador</b>.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">4</span>Quais dados coletamos</h2>
+      <h3 class="sub">4.1 Dados dos usuários profissionais</h3>
+      <ul>
+        <li>Nome completo, e-mail, telefone, função e registro profissional (quando aplicável).</li>
+        <li>Dados de acesso (credenciais criptografadas) e registros de login.</li>
+        <li>Dados de navegação e uso (registros de auditoria, endereço IP, ações realizadas).</li>
+      </ul>
+      <h3 class="sub">4.2 Dados da Comunidade Terapêutica cliente</h3>
+      <ul>
+        <li>Razão social, CNPJ, CNES, endereço, telefone, dados do responsável técnico.</li>
+      </ul>
+      <h3 class="sub">4.3 Dados dos acolhidos (sob responsabilidade das CTs)</h3>
+      <ul>
+        <li>Dados de identificação (nome, documentos, data de nascimento, filiação).</li>
+        <li>Dados sensíveis de saúde: histórico de dependência química, comorbidades, prescrições, evoluções.</li>
+        <li>Dados de contato de familiares e responsáveis.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">5</span>Para que usamos os dados</h2>
+      <ul>
+        <li>Permitir o funcionamento da plataforma e a gestão das Comunidades Terapêuticas.</li>
+        <li>Gerar documentos, planos de atendimento, relatórios e análises por inteligência artificial.</li>
+        <li>Autenticar usuários, garantir segurança e prevenir fraudes.</li>
+        <li>Cumprir obrigações legais e regulatórias.</li>
+        <li>Comunicar-se com os usuários sobre o serviço, suporte e cobranças.</li>
+        <li>Aprimorar a plataforma, respeitando a confidencialidade.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">6</span>Bases legais do tratamento</h2>
+      <p>O tratamento se fundamenta nas hipóteses da LGPD:</p>
+      <ul>
+        <li>Execução de contrato (Art. 7º, V) — para prestar o serviço contratado.</li>
+        <li>Cumprimento de obrigação legal/regulatória (Art. 7º, II).</li>
+        <li>Consentimento (Art. 7º, I e Art. 11, I) — especialmente para dados sensíveis.</li>
+        <li>Tutela da saúde (Art. 11, II, "f") — para tratamento por profissionais de saúde.</li>
+        <li>Legítimo interesse (Art. 7º, IX) — para finalidades específicas.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">7</span>Uso de Inteligência Artificial</h2>
+      <p>O CT Pro utiliza recursos de inteligência artificial para gerar planos, resumos e relatórios de apoio.</p>
+      <ul>
+        <li>As respostas da IA são sugestões de apoio e não substituem a avaliação profissional.</li>
+        <li>A responsabilidade pela validação clínica e pela conduta final é sempre da equipe técnica.</li>
+        <li>O processamento por IA ocorre por meio de provedor de tecnologia contratado.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">8</span>Compartilhamento de dados</h2>
+      <p>Os dados podem ser compartilhados apenas nas seguintes hipóteses:</p>
+      <ul>
+        <li>Com provedores de infraestrutura e tecnologia necessários ao funcionamento.</li>
+        <li>Para cumprimento de obrigação legal ou ordem de autoridade competente.</li>
+        <li>Com a própria CT controladora e seus profissionais autorizados.</li>
+      </ul>
+      <p>Não vendemos nem comercializamos dados pessoais. Não há publicidade de terceiros.</p>
+
+      <h2 class="sec"><span class="n">9</span>Armazenamento e localização</h2>
+      <ul>
+        <li>Os dados são armazenados em servidores localizados preferencialmente no Brasil.</li>
+        <li>Aplicamos medidas de segurança como criptografia, controle de acesso por nível e isolamento entre clientes.</li>
+        <li>Os dados são mantidos pelo tempo necessário às finalidades e às obrigações legais.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">10</span>Segurança da informação</h2>
+      <ul>
+        <li>Criptografia de dados em trânsito e em repouso.</li>
+        <li>Controle de acesso por nível de permissão (cada usuário vê apenas o que lhe compete).</li>
+        <li>Isolamento dos dados entre diferentes Comunidades Terapêuticas (arquitetura multi-tenant).</li>
+        <li>Registros de auditoria de acessos e alterações.</li>
+        <li>Backups periódicos e plano de continuidade.</li>
+      </ul>
+      <p>Apesar das medidas adotadas, nenhum sistema é totalmente imune a incidentes.</p>
+
+      <h2 class="sec"><span class="n">11</span>Direitos dos titulares</h2>
+      <p>Nos termos da LGPD, o titular pode solicitar: confirmação da existência de tratamento, acesso, correção, anonimização, portabilidade, eliminação e revogação do consentimento.</p>
+      <p>Canal para exercício de direitos: <span class="fill">[E-MAIL DO ENCARREGADO/DPO]</span> — <span class="fill">[TELEFONE]</span>.</p>
+      <p>Quando os dados forem dos acolhidos, a solicitação será direcionada à CT controladora.</p>
+
+      <h2 class="sec"><span class="n">12</span>Cookies e tecnologias</h2>
+      <p>A plataforma utiliza cookies e tecnologias semelhantes estritamente necessárias ao funcionamento e à segurança.</p>
+
+      <h2 class="sec"><span class="n">13</span>Encarregado pelo tratamento (DPO)</h2>
+      <p>Encarregado(a): <span class="fill">[NOME DO ENCARREGADO]</span>. Contato: <span class="fill">[E-MAIL]</span> — <span class="fill">[TELEFONE]</span>.</p>
+
+      <h2 class="sec"><span class="n">14</span>Alterações desta Política</h2>
+      <p>Esta Política pode ser atualizada a qualquer tempo. A versão vigente estará sempre disponível na plataforma.</p>
+
+      <h2 class="sec"><span class="n">15</span>Foro e legislação aplicável</h2>
+      <p>Esta Política é regida pela legislação brasileira. Fica eleito o foro da comarca de <span class="fill">[CIDADE/UF]</span>.</p>
+    </div>
+  </section>
+
+  <!-- ══════════ DPA ══════════ -->
+  <section class="doc" id="dpa">
+    <div class="card">
+      <div class="doc-title">Acordo de Tratamento de Dados (DPA)</div>
+      <div class="doc-sub">Contrato entre Controlador (CT) e Operador (CT Pro) — LGPD</div>
+      <div class="doc-date">Última atualização: <span class="fill">__/__/2026</span></div>
+
+      <h2 class="sec"><span class="n">1</span>Partes e objeto</h2>
+      <p><b>CONTROLADOR:</b> <span class="fill">[RAZÃO SOCIAL DA CT]</span>, CNPJ <span class="fill">[____]</span>, doravante "Controlador".</p>
+      <p><b>OPERADOR:</b> <span class="fill">[RAZÃO SOCIAL DO CT PRO]</span>, CNPJ <span class="fill">[____]</span>, doravante "Operador".</p>
+      <p>Este Acordo regula o tratamento de dados pessoais realizado pelo Operador em nome do Controlador, no âmbito da utilização da plataforma CT Pro, em conformidade com a LGPD.</p>
+
+      <h2 class="sec"><span class="n">2</span>Objeto do tratamento</h2>
+      <ul>
+        <li><b>Natureza:</b> armazenamento, organização e processamento de dados para gestão de Comunidade Terapêutica.</li>
+        <li><b>Finalidade:</b> apoio à gestão de acolhidos, planos de atendimento, prontuário, relatórios e recursos de IA.</li>
+        <li><b>Categorias de titulares:</b> acolhidos, familiares, profissionais da CT.</li>
+        <li><b>Categorias de dados:</b> identificação, contato e dados sensíveis de saúde.</li>
+        <li><b>Duração:</b> enquanto vigente o contrato de prestação de serviços.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">3</span>Obrigações do Operador</h2>
+      <ul>
+        <li>Tratar os dados apenas conforme as instruções documentadas do Controlador.</li>
+        <li>Garantir confidencialidade, limitando o acesso a pessoas autorizadas e obrigadas ao sigilo.</li>
+        <li>Adotar medidas técnicas e organizacionais de segurança adequadas.</li>
+        <li>Auxiliar o Controlador no atendimento aos direitos dos titulares.</li>
+        <li>Auxiliar o Controlador no cumprimento de obrigações de segurança e comunicação de incidentes.</li>
+        <li>Comunicar ao Controlador, sem demora injustificada, qualquer incidente de segurança relevante.</li>
+        <li>Eliminar ou devolver os dados ao término do contrato, salvo obrigação legal de retenção.</li>
+        <li>Manter registro das operações de tratamento que realizar.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">4</span>Obrigações do Controlador</h2>
+      <ul>
+        <li>Definir as finalidades e fornecer instruções lícitas para o tratamento.</li>
+        <li>Obter o consentimento ou assegurar a base legal adequada para o tratamento dos dados dos acolhidos, especialmente os sensíveis.</li>
+        <li>Garantir a exatidão dos dados inseridos e a autorização de seus usuários.</li>
+        <li>Responder, como controlador, perante os titulares e a ANPD.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">5</span>Suboperadores</h2>
+      <p>O Controlador autoriza o Operador a contratar suboperadores (hospedagem, banco de dados, processamento de IA e envio de e-mails) necessários à prestação do serviço, garantindo obrigações de proteção de dados compatíveis com este Acordo.</p>
+      <p>Lista de suboperadores atuais: <span class="fill">[ex.: Supabase (infraestrutura), Anthropic (IA), Vercel (hospedagem)]</span>. O Operador informará alterações relevantes.</p>
+
+      <h2 class="sec"><span class="n">6</span>Segurança e incidentes</h2>
+      <ul>
+        <li>O Operador adota criptografia, controle de acesso, isolamento entre clientes e registros de auditoria.</li>
+        <li>Em caso de incidente, o Operador apoiará o Controlador na avaliação e nas comunicações exigidas pela LGPD.</li>
+      </ul>
+
+      <h2 class="sec"><span class="n">7</span>Transferência internacional</h2>
+      <p>Caso haja transferência internacional de dados (por exemplo, processamento por provedor de IA no exterior), o Operador adotará as salvaguardas exigidas pela LGPD. O Controlador declara ciência e concorda com tais transferências quando necessárias à prestação do serviço.</p>
+
+      <h2 class="sec"><span class="n">8</span>Responsabilidade</h2>
+      <p>Cada parte responde pelas obrigações que lhe cabem conforme a LGPD. O Operador responde quando descumprir suas obrigações legais ou as instruções lícitas do Controlador.</p>
+
+      <h2 class="sec"><span class="n">9</span>Vigência e disposições finais</h2>
+      <ul>
+        <li>Este Acordo acompanha a vigência do contrato de prestação de serviços.</li>
+        <li>Prevalece, quanto à proteção de dados, sobre disposições conflitantes de outros instrumentos.</li>
+      </ul>
+      <p>Foro: comarca de <span class="fill">[CIDADE/UF]</span>.</p>
+
+      <div class="sign">
+        <div class="sign-line"><div class="ln"></div><span>Controlador (CT cliente)</span></div>
+        <div class="sign-line"><div class="ln"></div><span>Operador (CT Pro)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ CONSENTIMENTO ══════════ -->
+  <section class="doc" id="consentimento">
+    <div class="card">
+      <div class="doc-title">Termo de Consentimento</div>
+      <div class="doc-sub">Tratamento de dados pessoais e sensíveis do acolhido — LGPD</div>
+      <div class="doc-date">Última atualização: <span class="fill">__/__/2026</span></div>
+
+      <h2 class="sec"><span class="n">✓</span>Consentimento para Tratamento de Dados</h2>
+      <p>Comunidade Terapêutica: <span class="fill">[NOME DA CT]</span>, CNPJ <span class="fill">[____]</span>.</p>
+      <p>Eu, <span class="fill">[NOME DO ACOLHIDO/RESPONSÁVEL]</span>, documento <span class="fill">[____]</span>, na qualidade de <span class="fill">[titular / responsável legal]</span>, declaro que fui informado(a) de forma clara sobre o tratamento dos meus dados pessoais e dados sensíveis de saúde, nos termos da Lei nº 13.709/2018 (LGPD).</p>
+
+      <h3 class="sub">Finalidades do tratamento</h3>
+      <ul>
+        <li>Registro e acompanhamento do meu processo de tratamento na Comunidade Terapêutica.</li>
+        <li>Elaboração de plano de atendimento, evoluções, prontuário e relatórios.</li>
+        <li>Controle médico, de atividades e administrativo.</li>
+        <li>Uso de ferramenta de gestão (CT Pro) que pode empregar inteligência artificial como apoio, sob supervisão da equipe técnica.</li>
+      </ul>
+
+      <h3 class="sub">Dados tratados</h3>
+      <p>Dados de identificação, contato e dados sensíveis de saúde (histórico de dependência química, condições clínicas, prescrições e evoluções), necessários ao acompanhamento.</p>
+
+      <h3 class="sub">Compartilhamento</h3>
+      <p>Os dados poderão ser acessados pela equipe autorizada da CT e processados por provedores de tecnologia contratados, sob obrigações de segurança e confidencialidade, além de eventuais órgãos quando exigido por lei.</p>
+
+      <h3 class="sub">Direitos</h3>
+      <p>Fui informado(a) de que posso solicitar acesso, correção, eliminação e demais direitos previstos na LGPD, bem como revogar este consentimento a qualquer tempo, ciente de que a revogação pode impactar a continuidade do acompanhamento.</p>
+
+      <h3 class="sub">Declaração de consentimento</h3>
+      <p>Declaro que li e compreendi este termo e <b>CONSINTO</b>, de forma livre, informada e inequívoca, com o tratamento dos meus dados para as finalidades acima.</p>
+      <p style="margin-top:18px">Local e data: <span class="fill">______________________, __/__/____</span></p>
+
+      <div class="sign">
+        <div class="sign-line"><div class="ln"></div><span>Assinatura do acolhido ou responsável legal</span></div>
+        <div class="sign-line"><div class="ln"></div><span>Assinatura do responsável pela CT</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    CT Pro — Gestão com inteligência para sua CT · <a href="index.html">Voltar ao início</a>
+  </div>
+
+</div>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+const docs = document.querySelectorAll('.doc');
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => x.classList.remove('on'));
+  docs.forEach(d => d.classList.remove('show'));
+  t.classList.add('on');
+  document.getElementById(t.dataset.doc).classList.add('show');
+  window.scrollTo({top:0, behavior:'smooth'});
+}));
+// Deep-link support: legal.html#privacidade
+const hash = location.hash.replace('#','');
+if (hash) {
+  const tab = document.querySelector('.tab[data-doc="'+hash+'"]');
+  if (tab) tab.click();
+}
+</script>
+</body>
+</html>
