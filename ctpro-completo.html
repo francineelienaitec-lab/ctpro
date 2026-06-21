@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CT Pro — Sistema Completo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+  --verde:#1a6b4a; --verde-claro:#22c55e; --verde-menta:#d1fae5; --verde-escuro:#0f3d29;
+  --chumbo:#0f1a14; --sidebar:#111c16; --sidebar-h:#1a2b1f;
+  --bg:#f4f6f5; --white:#fff; --border:#e0e8e2;
+  --text:#1c2b22; --muted:#6b7f72; --muted2:#9cafa4;
+  --danger:#ef4444; --danger-bg:#fee2e2;
+  --warn:#f59e0b; --warn-bg:#fef3c7;
+  --info:#3b82f6; --info-bg:#dbeafe;
+  --r:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:14px;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sb{width:214px;min-width:214px;background:var(--sidebar);display:flex;flex-direction:column;height:100vh;overflow-y:auto;border-right:1px solid rgba(255,255,255,.04);}
+.sb-logo{padding:18px 16px 14px;font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;color:var(--verde-claro);display:flex;align-items:center;gap:7px;border-bottom:1px solid rgba(255,255,255,.05);}
+.sb-logo b{background:var(--verde);color:#fff;font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.05em;}
+.sb-sec{padding:12px 10px 3px;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.2);}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 12px;margin:1px 5px;border-radius:7px;cursor:pointer;font-size:.8rem;color:rgba(255,255,255,.42);transition:all .15s;border:none;background:none;width:calc(100% - 10px);text-align:left;font-family:'Inter',sans-serif;}
+.ni:hover{background:var(--sidebar-h);color:rgba(255,255,255,.78);}
+.ni.on{background:rgba(34,197,94,.1);color:var(--verde-claro);}
+.ni .ico{width:16px;text-align:center;font-size:.85rem;}
+.ni .bd{margin-left:auto;background:var(--danger);color:#fff;font-size:.58rem;font-weight:700;padding:1px 5px;border-radius:50px;}
+.ni .bd.w{background:var(--warn);color:#000;}
+.sb-foot{margin-top:auto;padding:12px 8px;border-top:1px solid rgba(255,255,255,.05);}
+.uc{display:flex;align-items:center;gap:9px;padding:9px 8px;border-radius:7px;cursor:pointer;transition:background .15s;}
+.uc:hover{background:var(--sidebar-h);}
+.ua{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--verde),var(--verde-claro));display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0;}
+.un{font-size:.76rem;font-weight:600;color:rgba(255,255,255,.78);}
+.ur{font-size:.62rem;color:rgba(255,255,255,.32);}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.tb{background:#fff;border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.tb-title{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;}
+.tb-right{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.tb-search{position:relative;display:flex;align-items:center;}
+.tb-search input{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 10px 6px 30px;font-size:.78rem;color:var(--text);width:200px;font-family:'Inter',sans-serif;outline:none;}
+.tb-search::before{content:'🔍';position:absolute;left:9px;font-size:.7rem;pointer-events:none;}
+.ib{width:34px;height:34px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;position:relative;transition:background .15s;}
+.ib:hover{background:var(--bg);}
+.nd{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--danger);border-radius:50%;border:2px solid #fff;}
+
+.cnt{flex:1;overflow-y:auto;padding:20px;}
+
+/* ── PAGES ── */
+.pg{display:none;animation:fi .22s ease;}
+.pg.on{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARDS ── */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px;}
+.ct{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--text);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ct small{font-family:'Inter';font-weight:400;font-size:.68rem;color:var(--muted);}
+
+/* ── STAT CARDS ── */
+.sr{display:grid;gap:12px;margin-bottom:16px;}
+.sr4{grid-template-columns:repeat(4,1fr);}
+.sr3{grid-template-columns:repeat(3,1fr);}
+.sr2{grid-template-columns:repeat(2,1fr);}
+.sc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;}
+.sl{font-size:.68rem;color:var(--muted);font-weight:500;margin-bottom:5px;}
+.sv{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:var(--text);line-height:1;}
+.sch{font-size:.68rem;margin-top:4px;}
+.sch.up{color:var(--verde-claro);}
+.sch.dn{color:var(--danger);}
+.sch.wn{color:var(--warn);}
+.si{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;margin-bottom:10px;}
+.bg-g{background:var(--verde-menta);}
+.bg-b{background:#dbeafe;}
+.bg-y{background:#fef3c7;}
+.bg-r{background:#fee2e2;}
+.bg-p{background:#f3e8ff;}
+
+/* ── TABLE ── */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.8rem;}
+th{text-align:left;padding:9px 12px;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--border);background:var(--bg);white-space:nowrap;}
+td{padding:11px 12px;border-bottom:1px solid #f0f4f1;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafcfa;}
+
+/* ── BADGES ── */
+.bx{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:50px;font-size:.65rem;font-weight:600;white-space:nowrap;}
+.bg-green{background:var(--verde-menta);color:var(--verde);}
+.bg-yellow{background:var(--warn-bg);color:#92400e;}
+.bg-red{background:var(--danger-bg);color:#991b1b;}
+.bg-blue{background:var(--info-bg);color:#1d4ed8;}
+.bg-gray{background:#f0f4f1;color:var(--muted);}
+.bg-purple{background:#f3e8ff;color:#6b21a8;}
+.bg-ai{background:linear-gradient(135deg,#1a6b4a,#22c55e);color:#fff;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:'Inter',sans-serif;text-decoration:none;}
+.bp{background:var(--verde);color:#fff;} .bp:hover{background:#155a3d;}
+.bs{background:var(--bg);color:var(--text);border:1px solid var(--border);} .bs:hover{background:#edf2ee;}
+.bd2{background:var(--danger-bg);color:var(--danger);} .bd2:hover{background:#fecaca;}
+.bai{background:linear-gradient(135deg,#1a6b4a,#22c55e);color:#fff;} .bai:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.bw{background:var(--warn-bg);color:#92400e;} .bw:hover{background:#fde68a;}
+.btn-sm{padding:5px 10px;font-size:.72rem;}
+.bico{padding:6px;border-radius:7px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:.85rem;transition:background .15s;} .bico:hover{background:#edf2ee;}
+
+/* ── INPUTS ── */
+.ig{margin-bottom:12px;}
+.lbl{display:block;font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:4px;}
+.inp,.sel,.ta{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:.82rem;color:var(--text);font-family:'Inter',sans-serif;outline:none;background:#fff;transition:border .15s;}
+.inp:focus,.sel:focus,.ta:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(26,107,74,.08);}
+.ta{resize:vertical;min-height:80px;}
+.ir2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ir3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* ── MODAL ── */
+.mbk{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.mbk.op{display:flex;}
+.mod{background:#fff;border-radius:14px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.2);animation:su .22s ease;}
+@keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.mh{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.mh h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;}
+.mc{padding:22px;}
+.mf{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;}
+.mx{cursor:pointer;font-size:1.1rem;color:var(--muted);background:none;border:none;line-height:1;}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+
+/* ── AI BOX ── */
+.aib{background:linear-gradient(135deg,rgba(26,107,74,.06),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.2);border-radius:var(--r);padding:14px;}
+.aibh{display:flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;color:var(--verde);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.aibh::before{content:'✦';color:var(--verde-claro);}
+.aibt{font-size:.8rem;color:var(--muted);line-height:1.6;}
+.aic{display:inline-flex;align-items:center;gap:4px;background:var(--verde);color:#fff;font-size:.67rem;font-weight:600;padding:4px 9px;border-radius:5px;margin-top:8px;cursor:pointer;transition:background .15s;border:none;font-family:'Inter',sans-serif;}
+.aic:hover{background:#155a3d;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto;}
+.tab{padding:9px 14px;font-size:.78rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',sans-serif;white-space:nowrap;}
+.tab.on{color:var(--verde);border-bottom-color:var(--verde);}
+
+/* ── PROGRESS ── */
+.pb{background:#e8ede9;border-radius:50px;height:5px;overflow:hidden;}
+.pf{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--verde),var(--verde-claro));transition:width .5s;}
+
+/* ── AVATAR ── */
+.av{width:32px;height:32px;border-radius:50%;background:var(--verde-menta);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--verde);flex-shrink:0;}
+
+/* ── TIMELINE ── */
+.tl{display:flex;flex-direction:column;gap:0;}
+.tli{display:flex;gap:12px;padding-bottom:16px;position:relative;}
+.tli::before{content:'';position:absolute;left:13px;top:28px;bottom:0;width:1px;background:var(--border);}
+.tli:last-child::before{display:none;}
+.tld{width:26px;height:26px;border-radius:50%;background:var(--verde-menta);border:2px solid var(--verde);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;z-index:1;}
+.tlc{flex:1;padding-top:3px;}
+.tlt{font-size:.65rem;color:var(--muted);margin-bottom:3px;}
+.tlx{font-size:.78rem;color:var(--text);line-height:1.5;}
+
+/* ── CHAT ── */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 108px);}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;}
+.cb{max-width:78%;padding:11px 14px;border-radius:10px;font-size:.82rem;line-height:1.6;}
+.cb.u{background:var(--verde);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+.cb.a{background:#fff;border:1px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;}
+.chat-bar{background:#fff;border-top:1px solid var(--border);padding:14px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;}
+.chat-bar textarea{flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:.82rem;font-family:'Inter',sans-serif;color:var(--text);resize:none;min-height:40px;max-height:110px;outline:none;transition:border .15s;}
+.chat-bar textarea:focus{border-color:var(--verde);}
+.chat-send{background:var(--verde);border:none;border-radius:8px;width:40px;height:40px;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.chat-send:hover{background:#155a3d;}
+.chat-send:disabled{background:#9ca3af;cursor:not-allowed;}
+.chat-sugs{padding:0 16px 10px;display:flex;gap:6px;flex-wrap:wrap;}
+.csug{background:#fff;border:1px solid var(--border);border-radius:7px;padding:5px 11px;font-size:.72rem;color:var(--muted);cursor:pointer;transition:all .15s;}
+.csug:hover{border-color:var(--verde);color:var(--verde);background:var(--verde-menta);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;z-index:999;background:var(--chumbo,#0f1a14);color:#fff;padding:11px 16px;border-radius:9px;font-size:.78rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:7px;max-width:340px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-left:3px solid var(--verde-claro);}
+.toast.er{border-left:3px solid var(--danger);}
+
+/* ── SCORE RING ── */
+.ring{position:relative;width:72px;height:72px;flex-shrink:0;}
+.ring svg{transform:rotate(-90deg);}
+.ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.9rem;font-weight:800;}
+
+/* ── KANBAN ── */
+.kb{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start;}
+.kbc{background:var(--bg);border-radius:var(--r);padding:12px;}
+.kbch{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.kbn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--border);font-size:.65rem;font-weight:700;}
+.kbi{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s;}
+.kbi:hover{border-color:var(--verde);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.kbi-name{font-weight:600;font-size:.8rem;margin-bottom:4px;}
+.kbi-sub{font-size:.68rem;color:var(--muted);}
+
+/* ── FORMULÁRIOS ESPECÍFICOS ── */
+.audit-grid{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.audit-grid:last-child{border-bottom:none;}
+.audit-q{font-size:.8rem;color:var(--text);line-height:1.4;}
+.audit-opts{display:flex;gap:6px;}
+.audit-opt{padding:4px 10px;border:1.5px solid var(--border);border-radius:5px;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .15s;background:#fff;}
+.audit-opt.sel{background:var(--verde);color:#fff;border-color:var(--verde);}
+
+/* ── MAPA DE RISCO ── */
+.risk-map{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
+.rmc{height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;cursor:pointer;transition:transform .15s;}
+.rmc:hover{transform:scale(1.05);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sb{display:none;}
+  .sr4{grid-template-columns:repeat(2,1fr);}
+  .g2,.g3,.g4,.kb{grid-template-columns:1fr;}
+  .ir2,.ir3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sb">
+  <div class="sb-logo">CT Pro <b>IA</b></div>
+  <div class="sb-sec">Principal</div>
+  <button class="ni on" onclick="P('dash')"><span class="ico">⊞</span>Dashboard</button>
+  <button class="ni" onclick="P('acolhidos')"><span class="ico">👤</span>Acolhidos</button>
+  <button class="ni" onclick="P('pas')"><span class="ico">📋</span>PAS <span class="bd w">7</span></button>
+  <button class="ni" onclick="P('prontuario')"><span class="ico">📁</span>Prontuário</button>
+  <div class="sb-sec">Clínico</div>
+  <button class="ni" onclick="P('avaliacoes')"><span class="ico">🧪</span>Avaliações</button>
+  <button class="ni" onclick="P('medico')"><span class="ico">💊</span>Módulo Médico</button>
+  <button class="ni" onclick="P('ocorrencias')"><span class="ico">⚠️</span>Ocorrências <span class="bd">2</span></button>
+  <div class="sb-sec">Gestão</div>
+  <button class="ni" onclick="P('atividades')"><span class="ico">📅</span>Atividades</button>
+  <button class="ni" onclick="P('visitas')"><span class="ico">🤝</span>Visitas</button>
+  <button class="ni" onclick="P('financeiro')"><span class="ico">💰</span>Financeiro</button>
+  <button class="ni" onclick="P('documentos')"><span class="ico">📄</span>Documentos</button>
+  <div class="sb-sec">Diferencial IA</div>
+  <button class="ni" onclick="P('ia')"><span class="ico">✦</span>Assistente IA</button>
+  <button class="ni" onclick="P('alertas')"><span class="ico">🔔</span>Alertas <span class="bd">4</span></button>
+  <button class="ni" onclick="P('reinsercao')"><span class="ico">🌱</span>Reinserção Social</button>
+  <button class="ni" onclick="P('relatorios')"><span class="ico">📊</span>Relatórios</button>
+  <div class="sb-sec">Admin</div>
+  <button class="ni" onclick="P('equipe')"><span class="ico">👥</span>Equipe</button>
+  <button class="ni" onclick="P('config')"><span class="ico">⚙️</span>Configurações</button>
+  <div class="sb-foot">
+    <div class="uc">
+      <div class="ua">AN</div>
+      <div><div class="un">Ana Nascimento</div><div class="ur">Coordenadora · Pro</div></div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="tb">
+    <div class="tb-title" id="tbt">Dashboard</div>
+    <div class="tb-right">
+      <div class="tb-search"><input type="text" placeholder="Buscar acolhido..."></div>
+      <div class="ib" onclick="P('alertas')">🔔<div class="nd"></div></div>
+      <div class="ib" onclick="P('ia')">✦</div>
+      <div class="ib">⚙️</div>
+    </div>
+  </div>
+  <div class="cnt">
+
+<!-- ═══════════════════════════════════════════════════
+     DASHBOARD
+═══════════════════════════════════════════════════ -->
+<div class="pg on" id="pg-dash">
+  <div class="sr sr4">
+    <div class="sc"><div class="si bg-g">👤</div><div class="sl">Acolhidos Ativos</div><div class="sv">48</div><div class="sch up">↑ +3 esta semana</div></div>
+    <div class="sc"><div class="si bg-b">🏠</div><div class="sl">Ocupação</div><div class="sv">96%</div><div class="sch up">48 de 50 vagas</div></div>
+    <div class="sc"><div class="si bg-y">📋</div><div class="sl">PAS Pendentes</div><div class="sv">7</div><div class="sch wn">⚠ Revisar hoje</div></div>
+    <div class="sc"><div class="si bg-g">🎓</div><div class="sl">Altas este mês</div><div class="sv">5</div><div class="sch up">↑ 2 conclusão</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:14px">
+    <!-- Alertas IA -->
+    <div class="card">
+      <div class="ct">🚨 Alertas da IA <small>Tempo real</small>
+        <button class="btn bs btn-sm" onclick="P('alertas')">Ver todos</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:#fff5f5;border-radius:8px;border:1px solid #fecaca">
+          <div style="font-size:1.2rem">🚨</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:.8rem">João Silva — Risco crítico</div><div style="font-size:.72rem;color:var(--muted);margin-top:2px">3 intercorrências em 7 dias + queda de adesão. IA: probabilidade de crise 78%</div></div>
+          <button class="btn bd2 btn-sm" onclick="P('alertas')">Ver</button>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a">
+          <div style="font-size:1.2rem">⚠️</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:.8rem">Maria Santos — PAS vencido</div><div style="font-size:.72rem;color:var(--muted);margin-top:2px">45 dias sem revisão. Não conformidade RDC 29.</div></div>
+          <button class="btn bw btn-sm" onclick="P('pas')">PAS</button>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe">
+          <div style="font-size:1.2rem">💊</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:.8rem">4 medicações pendentes hoje</div><div style="font-size:.72rem;color:var(--muted);margin-top:2px">Carlos O., Roberto M. e outros 2 aguardam administração das 14h</div></div>
+          <button class="btn bs btn-sm" onclick="P('medico')">Ver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Atividades hoje -->
+    <div class="card">
+      <div class="ct">📅 Hoje — 17/06/2026 <small>3 atividades</small></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px;background:var(--bg);border-radius:7px">
+          <div style="width:36px;text-align:center"><div style="font-size:.6rem;color:var(--muted)">08:00</div><div style="color:var(--verde);font-size:.8rem">✓</div></div>
+          <div style="flex:1"><div style="font-weight:600;font-size:.8rem">Oração e devocional</div><div style="font-size:.68rem;color:var(--muted)">48 participantes</div></div>
+          <span class="bx bg-green">Realizada</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px;background:var(--bg);border-radius:7px">
+          <div style="width:36px;text-align:center"><div style="font-size:.6rem;color:var(--muted)">10:00</div><div style="color:var(--warn);font-size:.8rem">→</div></div>
+          <div style="flex:1"><div style="font-weight:600;font-size:.8rem">Grupo terapêutico A</div><div style="font-size:.68rem;color:var(--muted)">15 acolhidos · Psic. Patrícia</div></div>
+          <span class="bx bg-yellow">Em andamento</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px;background:var(--bg);border-radius:7px">
+          <div style="width:36px;text-align:center"><div style="font-size:.6rem;color:var(--muted)">14:00</div><div style="color:var(--muted);font-size:.8rem">○</div></div>
+          <div style="flex:1"><div style="font-weight:600;font-size:.8rem">Atendimento psicológico</div><div style="font-size:.68rem;color:var(--muted)">5 agendados</div></div>
+          <span class="bx bg-gray">Aguardando</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px;background:var(--bg);border-radius:7px">
+          <div style="width:36px;text-align:center"><div style="font-size:.6rem;color:var(--muted)">19:00</div><div style="color:var(--muted);font-size:.8rem">○</div></div>
+          <div style="flex:1"><div style="font-weight:600;font-size:.8rem">Reunião de familiares</div><div style="font-size:.68rem;color:var(--muted)">12 famílias</div></div>
+          <span class="bx bg-gray">Aguardando</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <!-- Ocupação por fase -->
+    <div class="card">
+      <div class="ct">🏠 Ocupação por fase</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Fase 1 — Acolhimento</span><strong>12/15</strong></div><div class="pb"><div class="pf" style="width:80%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Fase 2 — Desintoxicação</span><strong>18/20</strong></div><div class="pb"><div class="pf" style="width:90%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Fase 3 — Reabilitação</span><strong>10/10</strong></div><div class="pb"><div class="pf" style="width:100%;background:var(--warn)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Fase 4 — Reinserção</span><strong>8/5</strong></div><div class="pb"><div class="pf" style="width:60%"></div></div></div>
+      </div>
+    </div>
+
+    <!-- Insight IA -->
+    <div class="card">
+      <div class="ct">✦ Insight semanal da IA</div>
+      <div class="aib" style="margin-bottom:10px">
+        <div class="aibh">Análise de adesão</div>
+        <div class="aibt">Taxa de participação caiu 8% às quartas. Acolhidos na Fase 2 têm menor engajamento pós-prandial (14h). Sugestão: mover atividades de reflexão para 10h.</div>
+      </div>
+      <div class="aib">
+        <div class="aibh">Previsão de altas (30 dias)</div>
+        <div class="aibt">4 acolhidos com perfil de alta: Carlos M., Ana P., Roberto S. e Luísa T. Recomendo iniciar planejamento de reinserção social já.</div>
+        <button class="aic" onclick="P('reinsercao')">Ver plano de reinserção →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ACOLHIDOS — KANBAN + LISTA
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-acolhidos">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div style="display:flex;gap:6px">
+      <button class="btn bs btn-sm tab-view on" onclick="vwAco('lista',this)">☰ Lista</button>
+      <button class="btn bs btn-sm tab-view" onclick="vwAco('kanban',this)">⊞ Kanban</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input class="inp" style="max-width:180px" placeholder="🔍 Buscar...">
+      <select class="sel" style="max-width:150px"><option>Todas as fases</option><option>Fase 1</option><option>Fase 2</option><option>Fase 3</option><option>Fase 4</option></select>
+      <select class="sel" style="max-width:150px"><option>Todos os riscos</option><option>🔴 Crítico</option><option>🟡 Médio</option><option>🟢 Baixo</option></select>
+      <button class="btn bai" onclick="om('m-aco')">+ Novo acolhido</button>
+    </div>
+  </div>
+
+  <!-- LISTA -->
+  <div id="v-lista">
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Acolhido</th><th>Entrada</th><th>Dias</th><th>Fase</th><th>Substância</th><th>Tipo vaga</th><th>PAS</th><th>Risco IA</th><th>Ações</th></tr></thead>
+          <tbody>
+            <tr onclick="om('m-perfil','João Silva')" style="cursor:pointer">
+              <td><div style="display:flex;align-items:center;gap:9px"><div class="av">JS</div><div><div style="font-weight:600">João Silva</div><div style="font-size:.66rem;color:var(--muted)">34 anos</div></div></div></td>
+              <td>12/03/2026</td><td>97</td>
+              <td><span class="bx bg-blue">Fase 2</span></td>
+              <td>Álcool</td>
+              <td><span class="bx bg-green">Paga</span></td>
+              <td><span class="bx bg-red">Vencido</span></td>
+              <td><span class="bx bg-red">🔴 Crítico</span></td>
+              <td><div style="display:flex;gap:4px"><button class="bico" onclick="event.stopPropagation();om('m-perfil','João Silva')">👁</button><button class="bico" onclick="event.stopPropagation();om('m-pas','João Silva')">📋</button><button class="bico" onclick="event.stopPropagation();om('m-evo','João Silva')">📝</button></div></td>
+            </tr>
+            <tr onclick="om('m-perfil','Maria Santos')" style="cursor:pointer">
+              <td><div style="display:flex;align-items:center;gap:9px"><div class="av">MS</div><div><div style="font-weight:600">Maria Santos</div><div style="font-size:.66rem;color:var(--muted)">28 anos</div></div></div></td>
+              <td>01/05/2026</td><td>47</td>
+              <td><span class="bx bg-green">Fase 3</span></td>
+              <td>Múltiplas</td>
+              <td><span class="bx bg-blue">Conv. Federal</span></td>
+              <td><span class="bx bg-yellow">Vencido</span></td>
+              <td><span class="bx bg-yellow">🟡 Médio</span></td>
+              <td><div style="display:flex;gap:4px"><button class="bico" onclick="event.stopPropagation();om('m-perfil','Maria Santos')">👁</button><button class="bico" onclick="event.stopPropagation();om('m-pas','Maria Santos')">📋</button><button class="bico" onclick="event.stopPropagation();om('m-evo','Maria Santos')">📝</button></div></td>
+            </tr>
+            <tr onclick="om('m-perfil','Carlos Oliveira')" style="cursor:pointer">
+              <td><div style="display:flex;align-items:center;gap:9px"><div class="av">CO</div><div><div style="font-weight:600">Carlos Oliveira</div><div style="font-size:.66rem;color:var(--muted)">45 anos</div></div></div></td>
+              <td>20/04/2026</td><td>58</td>
+              <td><span class="bx bg-blue">Fase 2</span></td>
+              <td>Crack</td>
+              <td><span class="bx bg-green">Paga</span></td>
+              <td><span class="bx bg-green">Vigente</span></td>
+              <td><span class="bx bg-green">🟢 Baixo</span></td>
+              <td><div style="display:flex;gap:4px"><button class="bico" onclick="event.stopPropagation();om('m-perfil','Carlos Oliveira')">👁</button><button class="bico" onclick="event.stopPropagation()">📋</button><button class="bico" onclick="event.stopPropagation()">📝</button></div></td>
+            </tr>
+            <tr onclick="om('m-perfil','Luísa Torres')" style="cursor:pointer">
+              <td><div style="display:flex;align-items:center;gap:9px"><div class="av">LT</div><div><div style="font-weight:600">Luísa Torres</div><div style="font-size:.66rem;color:var(--muted)">22 anos</div></div></div></td>
+              <td>15/02/2026</td><td>122</td>
+              <td><span class="bx bg-purple">Fase 4</span></td>
+              <td>Cocaína</td>
+              <td><span class="bx bg-gray">Gratuidade</span></td>
+              <td><span class="bx bg-green">Vigente</span></td>
+              <td><span class="bx bg-green">🟢 Baixo</span></td>
+              <td><div style="display:flex;gap:4px"><button class="bico">👁</button><button class="bico">📋</button><button class="bico">📝</button></div></td>
+            </tr>
+            <tr onclick="om('m-perfil','Roberto Melo')" style="cursor:pointer">
+              <td><div style="display:flex;align-items:center;gap:9px"><div class="av">RM</div><div><div style="font-weight:600">Roberto Melo</div><div style="font-size:.66rem;color:var(--muted)">38 anos</div></div></div></td>
+              <td>05/06/2026</td><td>12</td>
+              <td><span class="bx bg-yellow">Fase 1</span></td>
+              <td>Álcool</td>
+              <td><span class="bx bg-blue">Conv. Municipal</span></td>
+              <td><span class="bx bg-red">Pendente</span></td>
+              <td><span class="bx bg-yellow">🟡 Médio</span></td>
+              <td><div style="display:flex;gap:4px"><button class="bico">👁</button><button class="bico">📋</button><button class="bico">📝</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- KANBAN -->
+  <div id="v-kanban" style="display:none">
+    <div class="kb">
+      <div class="kbc">
+        <div class="kbch">Fase 1 — Acolhimento <span class="kbn" style="background:#fef3c7;border-color:#fde68a;color:#92400e">12</span></div>
+        <div class="kbi" onclick="om('m-perfil','Roberto Melo')"><div class="kbi-name">Roberto Melo</div><div class="kbi-sub">38a · Álcool · 12 dias</div><div style="margin-top:6px"><span class="bx bg-yellow" style="font-size:.6rem">🟡 Médio</span></div></div>
+        <div class="kbi"><div class="kbi-name">Ana Paula Costa</div><div class="kbi-sub">31a · Crack · 5 dias</div><div style="margin-top:6px"><span class="bx bg-green" style="font-size:.6rem">🟢 Baixo</span></div></div>
+      </div>
+      <div class="kbc">
+        <div class="kbch">Fase 2 — Reabilitação <span class="kbn">18</span></div>
+        <div class="kbi" onclick="om('m-perfil','João Silva')"><div class="kbi-name">João Silva</div><div class="kbi-sub">34a · Álcool · 97 dias</div><div style="margin-top:6px"><span class="bx bg-red" style="font-size:.6rem">🔴 Crítico</span></div></div>
+        <div class="kbi" onclick="om('m-perfil','Carlos Oliveira')"><div class="kbi-name">Carlos Oliveira</div><div class="kbi-sub">45a · Crack · 58 dias</div><div style="margin-top:6px"><span class="bx bg-green" style="font-size:.6rem">🟢 Baixo</span></div></div>
+      </div>
+      <div class="kbc">
+        <div class="kbch">Fase 3 — Terapia <span class="kbn">10</span></div>
+        <div class="kbi" onclick="om('m-perfil','Maria Santos')"><div class="kbi-name">Maria Santos</div><div class="kbi-sub">28a · Múltiplas · 47 dias</div><div style="margin-top:6px"><span class="bx bg-yellow" style="font-size:.6rem">🟡 Médio</span></div></div>
+      </div>
+      <div class="kbc">
+        <div class="kbch">Fase 4 — Reinserção <span class="kbn" style="background:#f3e8ff;border-color:#e9d5ff;color:#6b21a8">8</span></div>
+        <div class="kbi" onclick="om('m-perfil','Luísa Torres')"><div class="kbi-name">Luísa Torres</div><div class="kbi-sub">22a · Cocaína · 122 dias</div><div style="margin-top:6px"><span class="bx bg-purple" style="font-size:.6rem">Alta prevista</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAS
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-pas">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div class="aib" style="flex:1;min-width:280px"><div class="aibh">7 PAS precisam de atenção</div><div class="aibt">3 vencidos (+30 dias) e 4 pendentes. A IA pode gerar ou revisar automaticamente cada plano com base no perfil atual do acolhido.</div></div>
+    <button class="btn bai" onclick="om('m-genpas')">✦ Gerar PAS com IA</button>
+  </div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Acolhido</th><th>Fase</th><th>Criado</th><th>Última revisão</th><th>Próxima revisão</th><th>Progresso</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody>
+          <tr><td><strong>João Silva</strong></td><td>Fase 2</td><td>15/03/2026</td><td>01/06/2026</td><td>01/07/2026</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:70px"><div class="pf" style="width:65%"></div></div><span style="font-size:.68rem">65%</span></div></td><td><span class="bx bg-red">Vencido</span></td><td><div style="display:flex;gap:4px"><button class="btn bs btn-sm">Ver</button><button class="btn bai btn-sm" onclick="om('m-genpas')">✦ IA</button></div></td></tr>
+          <tr><td><strong>Maria Santos</strong></td><td>Fase 3</td><td>05/05/2026</td><td>02/05/2026</td><td>02/06/2026</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:70px"><div class="pf" style="width:78%"></div></div><span style="font-size:.68rem">78%</span></div></td><td><span class="bx bg-yellow">Vencido</span></td><td><div style="display:flex;gap:4px"><button class="btn bs btn-sm">Ver</button><button class="btn bai btn-sm" onclick="om('m-genpas')">✦ IA</button></div></td></tr>
+          <tr><td><strong>Carlos Oliveira</strong></td><td>Fase 2</td><td>22/04/2026</td><td>10/06/2026</td><td>10/07/2026</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:70px"><div class="pf" style="width:50%"></div></div><span style="font-size:.68rem">50%</span></div></td><td><span class="bx bg-green">Vigente</span></td><td><div style="display:flex;gap:4px"><button class="btn bs btn-sm">Ver</button><button class="btn bai btn-sm" onclick="om('m-genpas')">✦ IA</button></div></td></tr>
+          <tr><td><strong>Roberto Melo</strong></td><td>Fase 1</td><td>—</td><td>—</td><td>—</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:70px"><div class="pf" style="width:0%"></div></div><span style="font-size:.68rem">0%</span></div></td><td><span class="bx bg-red">Pendente</span></td><td><button class="btn bai btn-sm" onclick="om('m-genpas')">✦ Criar com IA</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PRONTUÁRIO ELETRÔNICO
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-prontuario">
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📁 Selecionar acolhido</div>
+      <select class="sel" id="pront-sel" onchange="mudarProntuario(this.value)" style="margin-bottom:14px">
+        <option value="joao">João Silva — Fase 2 — 97 dias</option>
+        <option value="maria">Maria Santos — Fase 3 — 47 dias</option>
+        <option value="carlos">Carlos Oliveira — Fase 2 — 58 dias</option>
+        <option value="luisa">Luísa Torres — Fase 4 — 122 dias</option>
+      </select>
+      <div class="aib">
+        <div class="aibh">Resumo IA — João Silva</div>
+        <div class="aibt" id="pront-resumo">Acolhido com dependência grave de álcool (8 anos). Fase 2. Risco crítico identificado — 3 intercorrências na semana. PAS desatualizado. Recomenda-se avaliação psiquiátrica urgente e revisão do plano terapêutico.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">📊 Indicadores</div>
+      <div class="sr sr2" style="margin-bottom:0">
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px"><div style="font-size:1.4rem;font-weight:800;color:var(--verde)" id="pront-dias">97</div><div style="font-size:.68rem;color:var(--muted)">dias internado</div></div>
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px"><div style="font-size:1.4rem;font-weight:800;color:var(--verde)" id="pront-adesao">82%</div><div style="font-size:.68rem;color:var(--muted)">adesão atividades</div></div>
+        <div style="text-align:center;padding:12px;background:#fff5f5;border-radius:8px"><div style="font-size:1.4rem;font-weight:800;color:var(--danger)" id="pront-occ">3</div><div style="font-size:.68rem;color:var(--muted)">ocorrências</div></div>
+        <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px"><div style="font-size:1.4rem;font-weight:800;color:var(--verde)" id="pront-evo">14</div><div style="font-size:.68rem;color:var(--muted)">evoluções</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="ct">📝 Evoluções e registros</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="btn bp" onclick="om('m-evo','João Silva')">+ Nova evolução</button>
+      <button class="btn bai" onclick="om('m-voz')">🎙️ Evolução por voz (IA)</button>
+      <button class="btn bs">📎 Anexar documento</button>
+    </div>
+    <div class="tl">
+      <div class="tli"><div class="tld">📝</div><div class="tlc"><div class="tlt">16/06/2026 · 14h32 — Psic. Patrícia Silva</div><div class="tlx"><strong>Sessão de psicoterapia individual:</strong> Acolhido apresentou resistência inicial. Trabalhou-se técnicas de TCC para manejo do craving. Houve avanço na identificação de gatilhos situacionais. Sem intercorrências. Próxima sessão: 19/06.</div></div></div>
+      <div class="tli"><div class="tld">⚠️</div><div class="tlc"><div class="tlt">14/06/2026 · 22h15 — Felipe Santos (Terapeuta)</div><div class="tlx"><strong>Intercorrência:</strong> Acolhido apresentou agitação após visita familiar. Relatou conflito com cônjuge. Aplicado protocolo de contenção emocional. Notificada equipe e psicóloga.</div></div></div>
+      <div class="tli"><div class="tld">👥</div><div class="tlc"><div class="tlt">12/06/2026 · 10h00 — Grupo terapêutico</div><div class="tlx">Participou ativamente. Compartilhou experiência de forma construtiva com os demais acolhidos. Demonstrou empatia com relatos do grupo.</div></div></div>
+      <div class="tli"><div class="tld">💊</div><div class="tlc"><div class="tlt">10/06/2026 · 08h00 — Enf. Rosa</div><div class="tlx">Medicação administrada: Dissulfiram 250mg. Acolhido aceitou sem resistência. Sem reações adversas observadas.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     AVALIAÇÕES — AUDIT, ASSIST, PHQ-9
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-avaliacoes">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bs btn-sm" onclick="om('m-audit')">📋 Aplicar AUDIT</button>
+      <button class="btn bs btn-sm" onclick="om('m-audit')">📋 Aplicar ASSIST</button>
+      <button class="btn bs btn-sm" onclick="om('m-audit')">📋 Aplicar PHQ-9</button>
+      <button class="btn bai btn-sm" onclick="om('m-audit')">✦ Análise IA dos scores</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Acolhido</th><th>Instrumento</th><th>Data</th><th>Score</th><th>Classificação</th><th>Recomendação IA</th><th>Ações</th></tr></thead>
+        <tbody>
+          <tr><td><strong>João Silva</strong></td><td>AUDIT</td><td>15/03/2026</td><td><strong style="color:var(--danger)">32/40</strong></td><td><span class="bx bg-red">Dependência grave</span></td><td><span class="bx bg-ai">✦ Revisão urgente</span></td><td><div style="display:flex;gap:4px"><button class="btn bs btn-sm" onclick="om('m-audit')">Ver</button><button class="btn bai btn-sm" onclick="aiAnalyzeScore('João Silva','AUDIT',32)">✦ Analisar</button></div></td></tr>
+          <tr><td><strong>Maria Santos</strong></td><td>ASSIST</td><td>03/05/2026</td><td><strong style="color:var(--warn)">24/39</strong></td><td><span class="bx bg-yellow">Risco moderado</span></td><td><span class="bx bg-yellow">Intervenção breve</span></td><td><div style="display:flex;gap:4px"><button class="btn bs btn-sm">Ver</button><button class="btn bai btn-sm" onclick="aiAnalyzeScore('Maria Santos','ASSIST',24)">✦ Analisar</button></div></td></tr>
+          <tr><td><strong>Carlos Oliveira</strong></td><td>PHQ-9</td><td>22/04/2026</td><td><strong style="color:var(--verde)">8/27</strong></td><td><span class="bx bg-green">Depressão leve</span></td><td><span class="bx bg-green">Monitoramento</span></td><td><div style="display:flex;gap:4px"><button class="btn bs btn-sm">Ver</button><button class="btn bai btn-sm" onclick="aiAnalyzeScore('Carlos Oliveira','PHQ-9',8)">✦ Analisar</button></div></td></tr>
+          <tr><td><strong>Luísa Torres</strong></td><td>WHOQOL</td><td>10/05/2026</td><td><strong style="color:var(--verde)">74/100</strong></td><td><span class="bx bg-green">Boa qualidade de vida</span></td><td><span class="bx bg-green">Manter conduta</span></td><td><div style="display:flex;gap:4px"><button class="btn bs btn-sm">Ver</button><button class="btn bai btn-sm" onclick="aiAnalyzeScore('Luísa Torres','WHOQOL',74)">✦ Analisar</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     MÓDULO MÉDICO
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-medico">
+  <div class="tabs">
+    <button class="tab on" onclick="st(this,'med-med')">💊 Medicamentos</button>
+    <button class="tab" onclick="st(this,'med-cons')">📅 Consultas</button>
+    <button class="tab" onclick="st(this,'med-adm')">✅ Administração</button>
+    <button class="tab" onclick="st(this,'med-exam')">🔬 Exames</button>
+  </div>
+  <div id="med-med">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;gap:8px">
+      <button class="btn bai" onclick="om('m-presc')">✦ Nova prescrição com IA</button>
+      <button class="btn bp">+ Prescrição manual</button>
+    </div>
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Acolhido</th><th>Medicamento</th><th>Dosagem</th><th>Via</th><th>Frequência</th><th>Horários</th><th>Início</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>João Silva</strong></td><td>Dissulfiram</td><td>250mg</td><td>Oral</td><td>1x/dia</td><td>08h</td><td>15/03/2026</td><td><span class="bx bg-green">Ativo</span></td></tr>
+            <tr><td><strong>Maria Santos</strong></td><td>Buprenorfina/Naloxona</td><td>8/2mg</td><td>Sublingual</td><td>2x/dia</td><td>07h · 19h</td><td>05/05/2026</td><td><span class="bx bg-green">Ativo</span></td></tr>
+            <tr><td><strong>Carlos Oliveira</strong></td><td>Haloperidol</td><td>5mg</td><td>Oral</td><td>1x/dia</td><td>21h</td><td>22/04/2026</td><td><span class="bx bg-green">Ativo</span></td></tr>
+            <tr><td><strong>Roberto Melo</strong></td><td>Tiamina (Vit. B1)</td><td>300mg</td><td>Oral</td><td>3x/dia</td><td>08h · 14h · 20h</td><td>05/06/2026</td><td><span class="bx bg-green">Ativo</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="med-cons" style="display:none">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn bp">+ Agendar consulta</button></div>
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Acolhido</th><th>Data/Hora</th><th>Tipo</th><th>Médico</th><th>Status</th><th>CID</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Carlos Oliveira</strong></td><td>18/06/2026 08:30</td><td>Psiquiatria</td><td>Dr. Marcos</td><td><span class="bx bg-yellow">Amanhã</span></td><td>F19.2</td></tr>
+            <tr><td><strong>João Silva</strong></td><td>20/06/2026 10:00</td><td>Clínica geral</td><td>Dra. Paula</td><td><span class="bx bg-blue">Agendada</span></td><td>F10.2</td></tr>
+            <tr><td><strong>Luísa Torres</strong></td><td>25/06/2026 14:00</td><td>Avaliação de alta</td><td>Dr. Marcos</td><td><span class="bx bg-green">Alta prevista</span></td><td>F14.1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="med-adm" style="display:none">
+    <div class="aib" style="margin-bottom:14px"><div class="aibh">Administração de hoje — 17/06/2026</div><div class="aibt">4 medicamentos pendentes para administração. Marque cada um após a administração para registrar automaticamente no prontuário.</div></div>
+    <div class="card">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg);border-radius:8px">
+          <div><strong style="font-size:.82rem">João Silva</strong> — Dissulfiram 250mg<div style="font-size:.68rem;color:var(--muted)">08:00 · Oral</div></div>
+          <div style="display:flex;gap:6px"><button class="btn bp btn-sm" onclick="registrarAdm(this,'Administrado')">✓ Administrado</button><button class="btn bd2 btn-sm">✗ Recusou</button></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg);border-radius:8px">
+          <div><strong style="font-size:.82rem">Maria Santos</strong> — Buprenorfina 8mg<div style="font-size:.68rem;color:var(--muted)">07:00 · Sublingual</div></div>
+          <div style="display:flex;gap:6px"><button class="btn bp btn-sm" onclick="registrarAdm(this,'Administrado')">✓ Administrado</button><button class="btn bd2 btn-sm">✗ Recusou</button></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+          <div><strong style="font-size:.82rem">Carlos Oliveira</strong> — Haloperidol 5mg<div style="font-size:.68rem;color:var(--verde)">✓ Administrado às 08h02</div></div>
+          <span class="bx bg-green">✓ OK</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg);border-radius:8px">
+          <div><strong style="font-size:.82rem">Roberto Melo</strong> — Tiamina 300mg<div style="font-size:.68rem;color:var(--muted)">08:00 · Oral</div></div>
+          <div style="display:flex;gap:6px"><button class="btn bp btn-sm" onclick="registrarAdm(this,'Administrado')">✓ Administrado</button><button class="btn bd2 btn-sm">✗ Recusou</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="med-exam" style="display:none">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn bp">+ Solicitar exame</button></div>
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Acolhido</th><th>Exame</th><th>Solicitado</th><th>Resultado</th><th>Status</th><th>Arquivo</th></tr></thead>
+          <tbody>
+            <tr><td><strong>João Silva</strong></td><td>Hemograma completo</td><td>01/06/2026</td><td>10/06/2026</td><td><span class="bx bg-yellow">Alterado</span></td><td><button class="btn bs btn-sm">📄 Ver</button></td></tr>
+            <tr><td><strong>Maria Santos</strong></td><td>Toxicológico</td><td>05/05/2026</td><td>12/05/2026</td><td><span class="bx bg-green">Normal</span></td><td><button class="btn bs btn-sm">📄 Ver</button></td></tr>
+            <tr><td><strong>Carlos Oliveira</strong></td><td>ECG</td><td>10/06/2026</td><td>—</td><td><span class="bx bg-gray">Aguardando</span></td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     OCORRÊNCIAS (DIFERENCIAL)
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-ocorrencias">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div class="aib" style="flex:1;min-width:240px"><div class="aibh">IA monitorando padrões</div><div class="aibt">2 ocorrências abertas. João Silva tem 3 ocorrências em 7 dias — padrão atípico detectado.</div></div>
+    <button class="btn bp" onclick="om('m-occ')">+ Registrar ocorrência</button>
+  </div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Acolhido</th><th>Tipo</th><th>Data/Hora</th><th>Gravidade</th><th>Família</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody>
+          <tr><td><strong>João Silva</strong></td><td>Agitação/comportamento</td><td>14/06/2026 22:15</td><td><span class="bx bg-yellow">Média</span></td><td><span class="bx bg-green">Notificada</span></td><td><span class="bx bg-blue">Em análise</span></td><td><div style="display:flex;gap:4px"><button class="bico">👁</button><button class="btn bai btn-sm" onclick="aiOcc('João Silva')">✦ IA</button></div></td></tr>
+          <tr><td><strong>João Silva</strong></td><td>Fuga tentada</td><td>10/06/2026 03:40</td><td><span class="bx bg-red">Alta</span></td><td><span class="bx bg-green">Notificada</span></td><td><span class="bx bg-green">Resolvida</span></td><td><div style="display:flex;gap:4px"><button class="bico">👁</button><button class="btn bai btn-sm" onclick="aiOcc('João Silva')">✦ IA</button></div></td></tr>
+          <tr><td><strong>Roberto Melo</strong></td><td>Recusa de medicação</td><td>07/06/2026 08:30</td><td><span class="bx bg-yellow">Média</span></td><td><span class="bx bg-gray">Não</span></td><td><span class="bx bg-green">Resolvida</span></td><td><div style="display:flex;gap:4px"><button class="bico">👁</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ATIVIDADES
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-atividades">
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📅 Cronograma semanal <button class="btn bp btn-sm" onclick="om('m-atv')">+ Nova atividade</button></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg);border-radius:8px"><div><strong style="font-size:.8rem">Oração e devocional</strong><div style="font-size:.68rem;color:var(--muted)">Diária · 06:30 · Todos</div></div><span class="bx bg-green">Ativo</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg);border-radius:8px"><div><strong style="font-size:.8rem">Grupo terapêutico A</strong><div style="font-size:.68rem;color:var(--muted)">Seg/Qua/Sex · 10h · Psic. Patrícia</div></div><span class="bx bg-green">Ativo</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg);border-radius:8px"><div><strong style="font-size:.8rem">Atividade física</strong><div style="font-size:.68rem;color:var(--muted)">Diária · 07h</div></div><span class="bx bg-green">Ativo</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg);border-radius:8px"><div><strong style="font-size:.8rem">Atendimento psicológico individual</strong><div style="font-size:.68fn;color:var(--muted)">Ter/Qui · 14h</div></div><span class="bx bg-green">Ativo</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg);border-radius:8px"><div><strong style="font-size:.8rem">Oficina de artesanato</strong><div style="font-size:.68rem;color:var(--muted)">Quarta · 15h</div></div><span class="bx bg-yellow">Baixa adesão</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg);border-radius:8px"><div><strong style="font-size:.8rem">Reunião de familiares</strong><div style="font-size:.68rem;color:var(--muted)">Quinzenal · Sex · 19h</div></div><span class="bx bg-blue">Quinzenal</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">📊 Taxa de adesão (semana)</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Grupo terapêutico</span><strong style="color:var(--verde)">94%</strong></div><div class="pb"><div class="pf" style="width:94%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Atendimento individual</span><strong style="color:var(--verde)">100%</strong></div><div class="pb"><div class="pf" style="width:100%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Atividade física</span><strong style="color:var(--verde)">88%</strong></div><div class="pb"><div class="pf" style="width:88%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Oração/devocional</span><strong style="color:var(--verde)">96%</strong></div><div class="pb"><div class="pf" style="width:96%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span>Oficina artesanato</span><strong style="color:var(--warn)">72%</strong></div><div class="pb"><div class="pf" style="width:72%;background:var(--warn)"></div></div></div>
+      </div>
+      <div class="aib" style="margin-top:14px"><div class="aibh">Sugestão IA</div><div class="aibt">A oficina de artesanato tem a menor adesão. A IA sugere trocar o horário de 15h para 16h30 e torná-la competição semanal com premiação simbólica.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     VISITAS FAMILIARES (DIFERENCIAL)
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-visitas">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div class="aib" style="flex:1;min-width:240px"><div class="aibh">Visitas — diferencial CT Pro</div><div class="aibt">Controle completo de visitantes: cadastro, autorização, data, duração e registro de observações. Nenhum concorrente tem módulo dedicado a visitas.</div></div>
+    <button class="btn bp" onclick="om('m-vis')">+ Registrar visita</button>
+  </div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Acolhido</th><th>Visitante</th><th>Parentesco</th><th>Data/Hora</th><th>Duração</th><th>Tipo</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>João Silva</strong></td><td>Maria Silva</td><td>Cônjuge</td><td>14/06/2026 14:00</td><td>60 min</td><td><span class="bx bg-blue">Presencial</span></td><td><span class="bx bg-green">Realizada</span></td></tr>
+          <tr><td><strong>Carlos Oliveira</strong></td><td>Pedro Oliveira</td><td>Pai</td><td>18/06/2026 10:00</td><td>45 min</td><td><span class="bx bg-blue">Presencial</span></td><td><span class="bx bg-yellow">Agendada</span></td></tr>
+          <tr><td><strong>Luísa Torres</strong></td><td>Família Torres</td><td>Pais</td><td>21/06/2026 14:00</td><td>90 min</td><td><span class="bx bg-blue">Presencial</span></td><td><span class="bx bg-gray">Agendada</span></td></tr>
+          <tr><td><strong>Maria Santos</strong></td><td>Carlos Santos</td><td>Irmão</td><td>08/06/2026 15:00</td><td>30 min</td><td><span class="bx bg-purple">Videochamada</span></td><td><span class="bx bg-green">Realizada</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     FINANCEIRO
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-financeiro">
+  <div class="sr sr3" style="margin-bottom:14px">
+    <div class="sc"><div class="si bg-g">💵</div><div class="sl">Receita junho</div><div class="sv" style="font-size:1.3rem">R$48.600</div><div class="sch up">↑ +12% vs. maio</div></div>
+    <div class="sc"><div class="si bg-r">💸</div><div class="sl">Despesas junho</div><div class="sv" style="font-size:1.3rem">R$31.200</div><div class="sch dn">↑ +5% vs. maio</div></div>
+    <div class="sc"><div class="si bg-g">📊</div><div class="sl">Saldo junho</div><div class="sv" style="font-size:1.3rem;color:var(--verde)">R$17.400</div><div class="sch up">Margem 35,8%</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="st(this,'fin-men')">💳 Mensalidades</button>
+    <button class="tab" onclick="st(this,'fin-lan')">📒 Lançamentos</button>
+    <button class="tab" onclick="st(this,'fin-vag')">🏠 Tipos de vaga</button>
+    <button class="tab" onclick="st(this,'fin-gra')">📜 Gratuidades CEBAS</button>
+  </div>
+  <div id="fin-men">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;gap:8px"><button class="btn bai" onclick="om('m-cobranca')">✦ Gerar cobranças IA</button><button class="btn bp">+ Lançar recebimento</button></div>
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Acolhido</th><th>Mês/Ano</th><th>Valor</th><th>Vencimento</th><th>Pagamento</th><th>Forma</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>João Silva</strong></td><td>Jun/2026</td><td>R$2.500</td><td>05/06/2026</td><td>03/06/2026</td><td>PIX</td><td><span class="bx bg-green">Pago</span></td></tr>
+            <tr><td><strong>Carlos Oliveira</strong></td><td>Jun/2026</td><td>R$1.800</td><td>05/06/2026</td><td>—</td><td>—</td><td><span class="bx bg-red">Atrasado</span></td></tr>
+            <tr><td><strong>Maria Santos</strong></td><td>Jun/2026</td><td>R$600</td><td>10/06/2026</td><td>08/06/2026</td><td>Conv. Federal</td><td><span class="bx bg-blue">Convênio</span></td></tr>
+            <tr><td><strong>Luísa Torres</strong></td><td>Jun/2026</td><td>R$0</td><td>—</td><td>—</td><td>—</td><td><span class="bx bg-gray">Gratuidade</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="fin-lan" style="display:none">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn bp" onclick="om('m-lan')">+ Novo lançamento</button></div>
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>01/06/2026</td><td><span class="bx bg-green">Receita</span></td><td>Mensalidade</td><td>Mensalidades junho — 22 acolhidos pagos</td><td class="text-green" style="color:var(--verde);font-weight:700">+R$39.600</td><td><span class="bx bg-green">Recebido</span></td></tr>
+            <tr><td>05/06/2026</td><td><span class="bx bg-red">Despesa</span></td><td>Alimentação</td><td>Compras do mês — fornecedor XYZ</td><td style="color:var(--danger);font-weight:700">-R$8.400</td><td><span class="bx bg-green">Pago</span></td></tr>
+            <tr><td>08/06/2026</td><td><span class="bx bg-blue">Receita</span></td><td>Convênio</td><td>Repasse SENAD — 15 vagas</td><td style="color:var(--verde);font-weight:700">+R$9.000</td><td><span class="bx bg-green">Recebido</span></td></tr>
+            <tr><td>10/06/2026</td><td><span class="bx bg-red">Despesa</span></td><td>Folha</td><td>Salários junho — 8 profissionais</td><td style="color:var(--danger);font-weight:700">-R$18.200</td><td><span class="bx bg-yellow">Pendente</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="fin-vag" style="display:none">
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Tipo de vaga</th><th>Quantidade</th><th>Valor/mês</th><th>Receita total</th><th>%</th></tr></thead>
+          <tbody>
+            <tr><td><span class="bx bg-green">Paga</span></td><td>22</td><td>R$1.800</td><td style="color:var(--verde);font-weight:700">R$39.600</td><td>81%</td></tr>
+            <tr><td><span class="bx bg-blue">Convênio Federal (SENAD)</span></td><td>15</td><td>R$600</td><td style="color:var(--verde);font-weight:700">R$9.000</td><td>19%</td></tr>
+            <tr><td><span class="bx bg-purple">Convênio Estadual</span></td><td>2</td><td>R$400</td><td style="color:var(--verde);font-weight:700">R$800</td><td>2%</td></tr>
+            <tr><td><span class="bx bg-gray">Gratuidade CEBAS</span></td><td>11</td><td>R$0</td><td>—</td><td>Contrapartida</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="fin-gra" style="display:none">
+    <div class="aib" style="margin-bottom:14px"><div class="aibh">CEBAS — Gratuidade (diferencial CT Pro)</div><div class="aibt">O CT Pro calcula automaticamente o percentual de gratuidade e gera o relatório de contrapartida social para renovação do CEBAS. Nenhum concorrente tem essa funcionalidade automática.</div></div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div><div style="font-size:1.2rem;font-weight:800;color:var(--verde)">22% de gratuidade</div><div style="font-size:.75rem;color:var(--muted)">Mínimo CEBAS: 20% · CT Pro: ✅ Em conformidade</div></div><button class="btn bai" onclick="aiRelatorio('CEBAS')">✦ Gerar relatório CEBAS</button></div>
+      <div class="sr sr3" style="margin-bottom:0">
+        <div style="padding:12px;background:var(--verde-menta);border-radius:8px;text-align:center"><div style="font-weight:800;font-size:1.1rem;color:var(--verde)">11</div><div style="font-size:.68rem;color:var(--muted)">vagas gratuitas</div></div>
+        <div style="padding:12px;background:var(--bg);border-radius:8px;text-align:center"><div style="font-weight:800;font-size:1.1rem">R$19.800</div><div style="font-size:.68rem;color:var(--muted)">contrapartida/mês</div></div>
+        <div style="padding:12px;background:var(--bg);border-radius:8px;text-align:center"><div style="font-weight:800;font-size:1.1rem">R$237.600</div><div style="font-size:.68rem;color:var(--muted)">contrapartida/ano</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     DOCUMENTOS
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-documentos">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div class="aib" style="flex:1;min-width:240px"><div class="aibh">Geração automática com IA</div><div class="aibt">Todos os documentos são gerados com os dados do sistema. Sem copiar e colar. Clique e imprima.</div></div>
+    <button class="btn bai" onclick="om('m-doc')">✦ Gerar documento com IA</button>
+  </div>
+  <div class="g3">
+    <div class="card" style="text-align:center;padding:20px"><div style="font-size:1.8rem;margin-bottom:10px">📋</div><div style="font-weight:700;font-size:.88rem;margin-bottom:5px">Termo de Adesão</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Gerado na admissão com dados do acolhido</div><button class="btn bai" style="width:100%" onclick="gerarDoc('Termo de Adesão')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:20px"><div style="font-size:1.8rem;margin-bottom:10px">📄</div><div style="font-weight:700;font-size:.88rem;margin-bottom:5px">Contrato de Tratamento</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Contrato formal com acolhido e responsável</div><button class="btn bai" style="width:100%" onclick="gerarDoc('Contrato')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:20px"><div style="font-size:1.8rem;margin-bottom:10px">📜</div><div style="font-weight:700;font-size:.88rem;margin-bottom:5px">Declaração de Internação</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Para planos de saúde e órgãos</div><button class="btn bai" style="width:100%" onclick="gerarDoc('Declaração')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:20px"><div style="font-size:1.8rem;margin-bottom:10px">🎓</div><div style="font-weight:700;font-size:.88rem;margin-bottom:5px">Certificado de Alta</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Celebra conclusão do tratamento</div><button class="btn bai" style="width:100%" onclick="gerarDoc('Certificado de Alta')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:20px"><div style="font-size:1.8rem;margin-bottom:10px">🚪</div><div style="font-weight:700;font-size:.88rem;margin-bottom:5px">Termo de Desligamento</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Para evasão, transferência ou admin.</div><button class="btn bai" style="width:100%" onclick="gerarDoc('Desligamento')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:20px"><div style="font-size:1.8rem;margin-bottom:10px">🏛️</div><div style="font-weight:700;font-size:.88rem;margin-bottom:5px">Ficha SENAPRED</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Formulário oficial para fiscalização</div><button class="btn bai" style="width:100%" onclick="gerarDoc('Ficha SENAPRED')">✦ Gerar</button></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     REINSERÇÃO SOCIAL (SUPER DIFERENCIAL)
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-reinsercao">
+  <div class="aib" style="margin-bottom:16px"><div class="aibh">✦ Módulo exclusivo CT Pro — Reinserção Social</div><div class="aibt">Acompanhe cada acolhido após a alta: emprego, moradia, família, educação e grupos de apoio. A IA sugere o plano de reinserção ideal com base no perfil de cada um. Nenhum sistema concorrente tem esse módulo.</div></div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn bai" onclick="om('m-rein')">✦ Criar plano com IA</button></div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Acolhido</th><th>Data alta</th><th>Emprego</th><th>Moradia</th><th>Família</th><th>Grupo apoio</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Luísa Torres</strong></td><td>25/06/2026 (prev.)</td><td><span class="bx bg-yellow">Em processo</span></td><td><span class="bx bg-green">Com família</span></td><td><span class="bx bg-green">Reintegrada</span></td><td><span class="bx bg-blue">NA — CODA</span></td><td><span class="bx bg-blue">Planejamento</span></td><td><button class="btn bai btn-sm" onclick="aiRein('Luísa Torres')">✦ Plano IA</button></td></tr>
+          <tr><td><strong>Pedro Alves</strong> <span class="bx bg-gray" style="font-size:.6rem">Alta</span></td><td>10/05/2026</td><td><span class="bx bg-green">Empregado</span></td><td><span class="bx bg-green">Própria</span></td><td><span class="bx bg-green">Boa</span></td><td><span class="bx bg-green">AA semanal</span></td><td><span class="bx bg-green">Concluído</span></td><td><button class="btn bs btn-sm">Ver</button></td></tr>
+          <tr><td><strong>Sandra Lima</strong> <span class="bx bg-gray" style="font-size:.6rem">Alta</span></td><td>20/04/2026</td><td><span class="bx bg-red">Desempregada</span></td><td><span class="bx bg-yellow">Aluguel</span></td><td><span class="bx bg-yellow">Parcial</span></td><td><span class="bx bg-blue">NA mensal</span></td><td><span class="bx bg-yellow">Em andamento</span></td><td><button class="btn bai btn-sm" onclick="aiRein('Sandra Lima')">✦ Revisar</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ALERTAS
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-alertas">
+  <div style="margin-bottom:16px;font-size:.78rem;color:var(--muted)">Alertas gerados em tempo real pela IA com base nos dados do sistema</div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div class="card" style="border-left:4px solid var(--danger)">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="font-size:1.4rem">🚨</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><strong>João Silva — Risco crítico de recaída</strong><span class="bx bg-red">Urgente</span></div>
+          <div style="font-size:.8rem;color:var(--muted);margin-bottom:10px">A IA detectou 3 intercorrências em 7 dias, queda de 40% na participação em atividades, isolamento social e mudança de comportamento. Probabilidade de crise: <strong style="color:var(--danger)">78%</strong>. PAS desatualizado há 16 dias.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn bd2 btn-sm">Convocar equipe urgente</button>
+            <button class="btn bai btn-sm" onclick="aiAlt('João Silva')">✦ Pedir análise IA</button>
+            <button class="btn bs btn-sm" onclick="om('m-pas','João Silva')">Atualizar PAS</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--warn)">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="font-size:1.4rem">⚠️</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><strong>Maria Santos — PAS vencido (45 dias)</strong><span class="bx bg-yellow">Atenção</span></div>
+          <div style="font-size:.8rem;color:var(--muted);margin-bottom:10px">Plano sem revisão há 45 dias. RDC 29 exige revisão periódica. Risco de irregularidade em fiscalização da SENAPRED.</div>
+          <div style="display:flex;gap:8px"><button class="btn bai btn-sm" onclick="om('m-genpas')">✦ Atualizar com IA</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--info)">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="font-size:1.4rem">💊</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><strong>4 medicações pendentes — 14h00</strong><span class="bx bg-blue">Medicação</span></div>
+          <div style="font-size:.8rem;color:var(--muted);margin-bottom:10px">Carlos O. (Haloperidol), Roberto M. (Tiamina × 2), Maria S. (Buprenorfina) aguardam administração.</div>
+          <div style="display:flex;gap:8px"><button class="btn bp btn-sm" onclick="P('medico');setTimeout(()=>st(document.querySelectorAll('#pg-medico .tab')[2],'med-adm'),100)">Ir para administração</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--verde-claro)">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="font-size:1.4rem">🌱</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><strong>4 acolhidos com perfil de alta nos próximos 30 dias</strong><span class="bx bg-green">Positivo</span></div>
+          <div style="font-size:.8rem;color:var(--muted);margin-bottom:10px">Luísa T., Carlos M., Ana P. e Roberto S. atingiram critérios de progressão. Recomenda-se iniciar planejamento de reinserção social.</div>
+          <div style="display:flex;gap:8px"><button class="btn bai btn-sm" onclick="P('reinsercao')">✦ Criar plano de reinserção</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     RELATÓRIOS
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-relatorios">
+  <div class="aib" style="margin-bottom:16px"><div class="aibh">Geração automática com IA — diferencial CT Pro</div><div class="aibt">Relatórios gerados com dados reais do sistema em segundos. Formatados exatamente como exigido pelos órgãos reguladores. Nenhum concorrente tem isso.</div></div>
+  <div class="g3">
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:2rem;margin-bottom:10px">📋</div><div style="font-weight:700;margin-bottom:5px">Relatório SENAPRED</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:14px">Mensal/semestral/anual — dados oficiais</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('SENAPRED')">✦ Gerar com IA</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:2rem;margin-bottom:10px">🏛️</div><div style="font-weight:700;margin-bottom:5px">Relatório CONAD</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:14px">Indicadores e resultados do tratamento</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('CONAD')">✦ Gerar com IA</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:2rem;margin-bottom:10px">📜</div><div style="font-weight:700;margin-bottom:5px">Relatório CEBAS</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:14px">Gratuidades e contrapartida social</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('CEBAS')">✦ Gerar com IA</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:2rem;margin-bottom:10px">📊</div><div style="font-weight:700;margin-bottom:5px">Relatório Gerencial</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:14px">Dashboard executivo para diretoria</div><button class="btn bp" style="width:100%">Gerar relatório</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:2rem;margin-bottom:10px">🧾</div><div style="font-weight:700;margin-bottom:5px">DRE Financeiro</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:14px">Receitas, despesas e saldo mensal</div><button class="btn bp" style="width:100%">Gerar relatório</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:2rem;margin-bottom:10px">🌱</div><div style="font-weight:700;margin-bottom:5px">Relatório de Reinserção</div><div style="font-size:.72rem;color:var(--muted);margin-bottom:14px">Taxa de sucesso pós-alta — exclusivo</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('Reinserção Social')">✦ Gerar com IA</button></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ASSISTENTE IA
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-ia">
+  <div class="chat-wrap card" style="padding:0;overflow:hidden">
+    <div style="background:linear-gradient(135deg,var(--chumbo),#1a3d28);padding:14px 18px;display:flex;align-items:center;gap:10px">
+      <div style="width:34px;height:34px;background:linear-gradient(135deg,var(--verde),var(--verde-claro));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff">IA</div>
+      <div><div style="font-weight:700;color:#fff;font-size:.88rem">Assistente CT Pro</div><div style="font-size:.65rem;color:var(--verde-claro);display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;background:var(--verde-claro);border-radius:50%;display:inline-block;animation:pulse 2s infinite"></span>Online — IA ativa</div></div>
+    </div>
+    <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>
+    <div class="chat-sugs">
+      <div class="csug" onclick="cs('Gere o PAS completo para João Silva, 34 anos, álcool há 8 anos, fase 2')">📋 Gerar PAS</div>
+      <div class="csug" onclick="cs('Quais acolhidos têm maior risco de recaída esta semana?')">🔔 Análise de risco</div>
+      <div class="csug" onclick="cs('Crie a evolução do grupo terapêutico de hoje com 14 participantes, sem intercorrências')">📝 Registrar evolução</div>
+      <div class="csug" onclick="cs('Gere o relatório mensal para o SENAPRED de junho/2026 com base nos dados da CT')">📊 Relatório SENAPRED</div>
+      <div class="csug" onclick="cs('Sugira 5 atividades terapêuticas para a próxima semana com base nos perfis dos acolhidos')">📅 Planejar atividades</div>
+      <div class="csug" onclick="cs('Quais são os critérios obrigatórios da RDC 29 para alta terapêutica?')">⚖️ RDC 29</div>
+      <div class="csug" onclick="cs('Crie um plano de reinserção social para Luísa Torres, 22 anos, fase 4, alta prevista em 25/06')">🌱 Reinserção social</div>
+    </div>
+    <div class="chat-msgs" id="chat-msgs">
+      <div class="cb a"><strong style="color:var(--verde)">✦ Assistente CT Pro</strong><br><br>Olá, Ana! Sou seu assistente com IA. Posso ajudar com:<br><br>• Gerar e revisar <strong>PAS</strong> completos (RDC 29)<br>• Registrar <strong>evoluções</strong> por texto ou voz<br>• Analisar <strong>scores</strong> AUDIT/ASSIST/PHQ-9<br>• Criar <strong>relatórios</strong> para SENAPRED, CONAD e CEBAS<br>• Detectar <strong>riscos</strong> e sugerir intervenções<br>• Planejar <strong>reinserção social</strong> pós-alta<br>• Tirar dúvidas sobre <strong>RDC 29 e legislação</strong><br><br>Como posso ajudar hoje?</div>
+    </div>
+    <div class="chat-bar">
+      <textarea id="ci" placeholder="Digite sua pergunta ou pedido..." rows="1" onkeydown="ck(event)"></textarea>
+      <button class="chat-send" id="csb" onclick="cm()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     EQUIPE
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-equipe">
+  <div style="display:flex;justify-content:flex-end;margin-bottom:14px"><button class="btn bp" onclick="om('m-eq')">+ Adicionar profissional</button></div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Profissional</th><th>Função</th><th>Conselho</th><th>Perfil de acesso</th><th>Último acesso</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="av">AN</div><div><strong>Ana Nascimento</strong><div style="font-size:.65rem;color:var(--muted)">ana@ctpro.com.br</div></div></div></td><td>Coordenadora</td><td>—</td><td><span class="bx bg-red">Admin</span></td><td>Agora</td><td><span class="bx bg-green">Ativo</span></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="av">PS</div><div><strong>Patrícia Silva</strong><div style="font-size:.65rem;color:var(--muted)">patricia@ctpro.com.br</div></div></div></td><td>Psicóloga</td><td>CRP 06/12345</td><td><span class="bx bg-blue">Técnico</span></td><td>Hoje 09h14</td><td><span class="bx bg-green">Ativo</span></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="av">DM</div><div><strong>Dr. Marcos Souza</strong><div style="font-size:.65rem;color:var(--muted)">marcos@ctpro.com.br</div></div></div></td><td>Psiquiatra</td><td>CRM SP 54321</td><td><span class="bx bg-purple">Médico</span></td><td>Hoje 08h30</td><td><span class="bx bg-green">Ativo</span></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="av">FS</div><div><strong>Felipe Santos</strong><div style="font-size:.65rem;color:var(--muted)">felipe@ctpro.com.br</div></div></div></td><td>Terapeuta</td><td>—</td><td><span class="bx bg-green">Operador</span></td><td>Ontem</td><td><span class="bx bg-green">Ativo</span></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:9px"><div class="av">RO</div><div><strong>Rosa Oliveira</strong><div style="font-size:.65rem;color:var(--muted)">rosa@ctpro.com.br</div></div></div></td><td>Enfermeira</td><td>COREN SP 87654</td><td><span class="bx bg-green">Operador</span></td><td>Hoje 07h55</td><td><span class="bx bg-green">Ativo</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     CONFIGURAÇÕES
+═══════════════════════════════════════════════════ -->
+<div class="pg" id="pg-config">
+  <div class="g2">
+    <div class="card">
+      <div class="ct">🏠 Dados da CT</div>
+      <div class="ig"><label class="lbl">Nome da CT</label><input class="inp" value="CT Esperança"></div>
+      <div class="ig"><label class="lbl">CNPJ</label><input class="inp" value="12.345.678/0001-90"></div>
+      <div class="ig"><label class="lbl">CNES</label><input class="inp" value="1234567"></div>
+      <div class="ir2">
+        <div class="ig"><label class="lbl">Total de vagas</label><input class="inp" type="number" value="50"></div>
+        <div class="ig"><label class="lbl">Vagas gratuitas</label><input class="inp" type="number" value="11"></div>
+      </div>
+      <div class="ig"><label class="lbl">Responsável técnico</label><input class="inp" value="Patrícia Silva — CRP 06/12345"></div>
+      <button class="btn bp">Salvar alterações</button>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="ct">✦ Configurações de IA</div>
+        <div class="ig"><label class="lbl">Sensibilidade dos alertas</label><select class="sel"><option>Alta — alertar qualquer risco</option><option>Média — riscos moderados+</option><option>Baixa — apenas críticos</option></select></div>
+        <div class="ig"><label class="lbl">Frequência de análise IA</label><select class="sel"><option>Tempo real (recomendado)</option><option>A cada 6 horas</option><option>Diário</option></select></div>
+        <div class="aib"><div class="aibh">Status da IA</div><div class="aibt">✅ IA conectada e operacional. Análises em tempo real ativadas. Último scan: agora.</div></div>
+      </div>
+      <div class="card">
+        <div class="ct">🔒 Segurança e LGPD</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:.8rem">
+          <div style="display:flex;justify-content:space-between;padding:9px;background:var(--bg);border-radius:7px"><span>Criptografia de dados (AES-256)</span><span class="bx bg-green">✓ Ativo</span></div>
+          <div style="display:flex;justify-content:space-between;padding:9px;background:var(--bg);border-radius:7px"><span>Log de auditoria (LGPD)</span><span class="bx bg-green">✓ Ativo</span></div>
+          <div style="display:flex;justify-content:space-between;padding:9px;background:var(--bg);border-radius:7px"><span>Autenticação 2 fatores</span><span class="bx bg-yellow">Recomendado</span></div>
+          <div style="display:flex;justify-content:space-between;padding:9px;background:var(--bg);border-radius:7px"><span>Backup automático diário</span><span class="bx bg-green">✓ Ativo</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /cnt -->
+</div><!-- /main -->
+
+<!-- ══════════════════════ MODAIS ══════════════════════ -->
+
+<!-- MODAL: NOVO ACOLHIDO -->
+<div class="mbk" id="m-aco">
+  <div class="mod" style="max-width:600px">
+    <div class="mh"><h3>👤 Novo acolhido</h3><button class="mx" onclick="cm2('m-aco')">✕</button></div>
+    <div class="mc">
+      <div class="tabs"><button class="tab on" onclick="st(this,'aco-t1')">Dados pessoais</button><button class="tab" onclick="st(this,'aco-t2')">Dependência</button><button class="tab" onclick="st(this,'aco-t3')">Família</button><button class="tab" onclick="st(this,'aco-t4')">Internação</button></div>
+      <div id="aco-t1">
+        <div class="ir2"><div class="ig"><label class="lbl">Nome completo *</label><input class="inp" placeholder="Nome do acolhido"></div><div class="ig"><label class="lbl">Data de nascimento *</label><input class="inp" type="date"></div></div>
+        <div class="ir3"><div class="ig"><label class="lbl">CPF</label><input class="inp" placeholder="000.000.000-00"></div><div class="ig"><label class="lbl">RG</label><input class="inp" placeholder="00.000.000-0"></div><div class="ig"><label class="lbl">Sexo</label><select class="sel"><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div></div>
+        <div class="ir2"><div class="ig"><label class="lbl">Estado civil</label><select class="sel"><option>Solteiro(a)</option><option>Casado(a)</option><option>Divorciado(a)</option><option>Viúvo(a)</option></select></div><div class="ig"><label class="lbl">Escolaridade</label><select class="sel"><option>Fundamental incompleto</option><option>Fundamental completo</option><option>Médio</option><option>Superior</option></select></div></div>
+        <div class="ir2"><div class="ig"><label class="lbl">Cidade</label><input class="inp" placeholder="Cidade de origem"></div><div class="ig"><label class="lbl">Estado</label><select class="sel"><option>SP</option><option>MG</option><option>RJ</option><option>PR</option><option>GO</option></select></div></div>
+      </div>
+      <div id="aco-t2" style="display:none">
+        <div class="ir2"><div class="ig"><label class="lbl">Substância principal *</label><select class="sel"><option>Álcool</option><option>Crack</option><option>Cocaína</option><option>Maconha</option><option>Múltiplas</option><option>Outras</option></select></div><div class="ig"><label class="lbl">Tempo de uso (anos)</label><input class="inp" type="number" min="0"></div></div>
+        <div class="ir2"><div class="ig"><label class="lbl">Tentativas de tratamento</label><input class="inp" type="number" min="0" value="0"></div><div class="ig"><label class="lbl">CID principal</label><input class="inp" placeholder="Ex: F10.2"></div></div>
+        <div class="ig"><label class="lbl">Comorbidades</label><textarea class="ta" placeholder="Ex: Depressão, ansiedade, hipertensão..."></textarea></div>
+        <div class="aib"><div class="aibh">Triagem IA</div><div class="aibt">Após salvar, a IA fará triagem automática do perfil de risco, sugerirá a fase inicial e gerará um PAS preliminar.</div></div>
+      </div>
+      <div id="aco-t3" style="display:none">
+        <div class="ir2"><div class="ig"><label class="lbl">Nome do responsável</label><input class="inp" placeholder="Nome completo"></div><div class="ig"><label class="lbl">Parentesco</label><input class="inp" placeholder="Pai, mãe, cônjuge..."></div></div>
+        <div class="ir2"><div class="ig"><label class="lbl">Telefone</label><input class="inp" placeholder="(00) 00000-0000"></div><div class="ig"><label class="lbl">E-mail</label><input class="inp" type="email"></div></div>
+      </div>
+      <div id="aco-t4" style="display:none">
+        <div class="ir2"><div class="ig"><label class="lbl">Data de entrada *</label><input class="inp" type="date"></div><div class="ig"><label class="lbl">Tipo de vaga *</label><select class="sel"><option>Paga</option><option>Gratuidade</option><option>Convênio Federal</option><option>Convênio Estadual</option><option>Convênio Municipal</option></select></div></div>
+        <div class="ig"><label class="lbl">Número do prontuário</label><input class="inp" placeholder="Gerado automaticamente se vazio"></div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-aco')">Cancelar</button><button class="btn bai" onclick="salvarAco()">✦ Salvar e triagem IA</button></div>
+  </div>
+</div>
+
+<!-- MODAL: GERAR PAS -->
+<div class="mbk" id="m-genpas">
+  <div class="mod" style="max-width:540px">
+    <div class="mh"><h3>✦ Gerar PAS com IA</h3><button class="mx" onclick="cm2('m-genpas')">✕</button></div>
+    <div class="mc">
+      <div class="ig"><label class="lbl">Acolhido *</label><select class="sel" id="gp-aco"><option>João Silva — 34a — Álcool — Fase 2</option><option>Maria Santos — 28a — Múltiplas — Fase 3</option><option>Roberto Melo — 38a — Álcool — Fase 1</option><option>Carlos Oliveira — 45a — Crack — Fase 2</option></select></div>
+      <div class="ig"><label class="lbl">Fase atual</label><select class="sel" id="gp-fase"><option>Fase 1 — Acolhimento e desintoxicação</option><option>Fase 2 — Reabilitação inicial</option><option>Fase 3 — Reabilitação avançada</option><option>Fase 4 — Reinserção social</option></select></div>
+      <div class="ig"><label class="lbl">Contexto adicional para a IA</label><textarea class="ta" id="gp-ctx" placeholder="Ex: acolhido demonstrou boa adesão esta semana, família participativa, pediu para trabalhar foco em habilidades sociais..."></textarea></div>
+      <div class="aib"><div class="aibh">O que a IA vai gerar</div><div class="aibt">PAS completo seguindo RDC 29: diagnóstico situacional, objetivos gerais e específicos, metas com prazos, intervenções por área (psicossocial, médica, espiritual, laboral, familiar) e indicadores de progresso.</div></div>
+    </div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-genpas')">Cancelar</button><button class="btn bai" onclick="execPas()">✦ Gerar PAS agora</button></div>
+  </div>
+</div>
+
+<!-- MODAL: RESULTADO PAS -->
+<div class="mbk" id="m-rpas">
+  <div class="mod" style="max-width:700px">
+    <div class="mh"><h3>✦ PAS gerado pela IA</h3><button class="mx" onclick="cm2('m-rpas')">✕</button></div>
+    <div class="mc"><div id="rpas-body" style="font-size:.82rem;line-height:1.75;color:var(--text)"></div></div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-rpas')">Fechar</button><button class="btn bp" onclick="t('📋 PAS salvo no prontuário!','ok');cm2('m-rpas')">💾 Salvar no prontuário</button></div>
+  </div>
+</div>
+
+<!-- MODAL: NOVA EVOLUÇÃO -->
+<div class="mbk" id="m-evo">
+  <div class="mod" style="max-width:560px">
+    <div class="mh"><h3 id="m-evo-title">📝 Nova evolução</h3><button class="mx" onclick="cm2('m-evo')">✕</button></div>
+    <div class="mc">
+      <div class="ig"><label class="lbl">Acolhido</label><select class="sel"><option>João Silva</option><option>Maria Santos</option><option>Carlos Oliveira</option><option>Luísa Torres</option></select></div>
+      <div class="ir2"><div class="ig"><label class="lbl">Tipo de registro</label><select class="sel"><option>Evolução terapêutica</option><option>Intercorrência</option><option>Avaliação</option><option>Nota médica</option><option>Relato familiar</option></select></div><div class="ig"><label class="lbl">Profissional</label><select class="sel"><option>Patrícia Silva — Psicóloga</option><option>Dr. Marcos — Psiquiatra</option><option>Felipe Santos — Terapeuta</option><option>Rosa — Enfermeira</option></select></div></div>
+      <div class="ig"><label class="lbl">Conteúdo da evolução *</label><textarea class="ta" id="evo-txt" placeholder="Descreva a evolução, intercorrência ou observação..." style="min-height:120px"></textarea></div>
+      <div class="aib"><div class="aibh">IA — Resumo automático</div><div class="aibt">A IA irá gerar um resumo estruturado da evolução e identificar palavras-chave relevantes para o prontuário.</div><button class="aic" onclick="aiEvo()">✦ Estruturar com IA</button></div>
+    </div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-evo')">Cancelar</button><button class="btn bp" onclick="salvarEvo()">Salvar evolução</button></div>
+  </div>
+</div>
+
+<!-- MODAL: EVOLUÇÃO POR VOZ -->
+<div class="mbk" id="m-voz">
+  <div class="mod" style="max-width:480px">
+    <div class="mh"><h3>🎙️ Evolução por voz</h3><button class="mx" onclick="cm2('m-voz')">✕</button></div>
+    <div class="mc" style="text-align:center;padding:32px">
+      <div id="voz-status" style="font-size:3rem;margin-bottom:16px">🎙️</div>
+      <div id="voz-label" style="font-weight:700;font-size:.95rem;margin-bottom:8px">Clique para gravar</div>
+      <div id="voz-sub" style="font-size:.78rem;color:var(--muted);margin-bottom:24px">A IA transcreve e estrutura automaticamente no formato de evolução</div>
+      <button id="voz-btn" class="btn bai" style="width:100%;padding:14px" onclick="toggleVoz(this)">🎙️ Iniciar gravação</button>
+      <div id="voz-result" style="display:none;margin-top:16px;text-align:left">
+        <div class="aib"><div class="aibh">Transcrição + estruturação IA</div><div class="aibt" id="voz-text"></div></div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-voz')">Fechar</button><button class="btn bp" id="voz-save" style="display:none" onclick="cm2('m-voz');t('✅ Evolução salva via voz!','ok')">Salvar evolução</button></div>
+  </div>
+</div>
+
+<!-- MODAL: OCORRÊNCIA -->
+<div class="mbk" id="m-occ">
+  <div class="mod" style="max-width:520px">
+    <div class="mh"><h3>⚠️ Registrar ocorrência</h3><button class="mx" onclick="cm2('m-occ')">✕</button></div>
+    <div class="mc">
+      <div class="ir2"><div class="ig"><label class="lbl">Acolhido *</label><select class="sel"><option>João Silva</option><option>Maria Santos</option><option>Carlos Oliveira</option><option>Roberto Melo</option></select></div><div class="ig"><label class="lbl">Tipo *</label><select class="sel"><option>Indisciplina</option><option>Agressão</option><option>Fuga tentada</option><option>Uso de substância</option><option>Automutilação</option><option>Crise</option><option>Acidente</option><option>Outro</option></select></div></div>
+      <div class="ir2"><div class="ig"><label class="lbl">Data/hora *</label><input class="inp" type="datetime-local"></div><div class="ig"><label class="lbl">Gravidade</label><select class="sel"><option>Baixa</option><option>Média</option><option>Alta</option><option>Crítica</option></select></div></div>
+      <div class="ig"><label class="lbl">Descrição detalhada *</label><textarea class="ta" placeholder="Descreva o que aconteceu, onde, como e quem estava presente..."></textarea></div>
+      <div class="ig"><label class="lbl">Providências tomadas</label><textarea class="ta" style="min-height:60px" placeholder="Ações realizadas imediatamente..."></textarea></div>
+      <div class="ir2"><div class="ig"><label class="lbl">Família notificada?</label><select class="sel"><option>Não</option><option>Sim</option></select></div><div class="ig"><label class="lbl">Conselho notificado?</label><select class="sel"><option>Não</option><option>Sim</option></select></div></div>
+    </div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-occ')">Cancelar</button><button class="btn bp" onclick="cm2('m-occ');t('⚠️ Ocorrência registrada','ok')">Registrar</button></div>
+  </div>
+</div>
+
+<!-- MODAL: PERFIL ACOLHIDO -->
+<div class="mbk" id="m-perfil">
+  <div class="mod" style="max-width:640px">
+    <div class="mh"><h3 id="mp-title">👤 Perfil</h3><button class="mx" onclick="cm2('m-perfil')">✕</button></div>
+    <div class="mc" id="mp-body"></div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-perfil')">Fechar</button><button class="btn bai" onclick="P('ia');cm2('m-perfil')">✦ Consultar IA sobre este acolhido</button></div>
+  </div>
+</div>
+
+<!-- MODAL: AUDITORIA/AUDIT -->
+<div class="mbk" id="m-audit">
+  <div class="mod" style="max-width:560px">
+    <div class="mh"><h3>📋 Aplicar AUDIT-C</h3><button class="mx" onclick="cm2('m-audit')">✕</button></div>
+    <div class="mc">
+      <div class="ig"><label class="lbl">Acolhido</label><select class="sel"><option>João Silva</option><option>Maria Santos</option><option>Carlos Oliveira</option></select></div>
+      <div style="margin-top:8px">
+        <div class="audit-grid"><div class="audit-q">1. Com que frequência você consome álcool?</div><div class="audit-opts"><span class="audit-opt" onclick="so(this)">Nunca</span><span class="audit-opt" onclick="so(this)">1-2/mês</span><span class="audit-opt" onclick="so(this)">Semanal</span><span class="audit-opt sel" onclick="so(this)">Diário</span></div></div>
+        <div class="audit-grid"><div class="audit-q">2. Quantas doses consome num dia típico?</div><div class="audit-opts"><span class="audit-opt" onclick="so(this)">1-2</span><span class="audit-opt" onclick="so(this)">3-4</span><span class="audit-opt" onclick="so(this)">5-6</span><span class="audit-opt sel" onclick="so(this)">7+</span></div></div>
+        <div class="audit-grid"><div class="audit-q">3. Com que frequência bebe 6 ou mais doses de uma vez?</div><div class="audit-opts"><span class="audit-opt" onclick="so(this)">Nunca</span><span class="audit-opt" onclick="so(this)">Mensal</span><span class="audit-opt sel" onclick="so(this)">Semanal</span><span class="audit-opt" onclick="so(this)">Diário</span></div></div>
+      </div>
+      <div class="aib" style="margin-top:14px"><div class="aibh">Score atual: 11/12 — Dependência grave</div><div class="aibt" id="audit-ia">A IA analisará o score e sugerirá condutas baseadas nas diretrizes SENAD e OMS ao salvar.</div></div>
+    </div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-audit')">Cancelar</button><button class="btn bai" onclick="cm2('m-audit');t('📋 AUDIT salvo e análise IA gerada!','ok')">✦ Salvar e analisar</button></div>
+  </div>
+</div>
+
+<!-- MODAL: PRESCRIÇÃO -->
+<div class="mbk" id="m-presc">
+  <div class="mod" style="max-width:520px">
+    <div class="mh"><h3>✦ Nova prescrição com IA</h3><button class="mx" onclick="cm2('m-presc')">✕</button></div>
+    <div class="mc">
+      <div class="ig"><label class="lbl">Acolhido</label><select class="sel"><option>João Silva</option><option>Maria Santos</option><option>Carlos Oliveira</option></select></div>
+      <div class="ig"><label class="lbl">Diagnóstico / CID</label><input class="inp" placeholder="Ex: F10.2 — Dependência de álcool"></div>
+      <div class="ig"><label class="lbl">Contexto clínico</label><textarea class="ta" placeholder="Ex: Fase de desintoxicação, sem comorbidades cardíacas, já usou Dissulfiram antes..."></textarea></div>
+      <div class="aib"><div class="aibh">Sugestão IA</div><div class="aibt">Baseado no perfil do acolhido, a IA sugerirá medicamentos, dosagens e horários conforme protocolos SENAD. O médico deve revisar antes de salvar.</div></div>
+    </div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-presc')">Cancelar</button><button class="btn bai" onclick="aiPresc()">✦ Sugerir prescrição</button></div>
+  </div>
+</div>
+
+<!-- MODAL: RELATÓRIO RESULTADO -->
+<div class="mbk" id="m-rel">
+  <div class="mod" style="max-width:680px">
+    <div class="mh"><h3 id="m-rel-title">📊 Relatório gerado</h3><button class="mx" onclick="cm2('m-rel')">✕</button></div>
+    <div class="mc"><div id="m-rel-body" style="font-size:.82rem;line-height:1.75"></div></div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-rel')">Fechar</button><button class="btn bp" onclick="t('📥 Relatório exportado!','ok');cm2('m-rel')">📥 Exportar PDF</button></div>
+  </div>
+</div>
+
+<!-- MODAL: REINSERÇÃO -->
+<div class="mbk" id="m-rein">
+  <div class="mod" style="max-width:560px">
+    <div class="mh"><h3>🌱 Plano de reinserção social com IA</h3><button class="mx" onclick="cm2('m-rein')">✕</button></div>
+    <div class="mc">
+      <div class="ig"><label class="lbl">Acolhido</label><select class="sel" id="rein-aco"><option>Luísa Torres — Fase 4 — Alta prevista 25/06</option><option>Carlos Oliveira</option></select></div>
+      <div class="ir2"><div class="ig"><label class="lbl">Situação de emprego</label><select class="sel"><option>Desempregado</option><option>Empregado</option><option>Autônomo</option><option>Estudante</option></select></div><div class="ig"><label class="lbl">Situação de moradia</label><select class="sel"><option>Com família</option><option>Aluguel</option><option>Abrigo</option><option>Sem moradia</option></select></div></div>
+      <div class="ig"><label class="lbl">Rede de apoio disponível</label><textarea class="ta" style="min-height:60px" placeholder="Família, amigos, igreja, grupo AA/NA..."></textarea></div>
+      <div class="aib"><div class="aibh">O que a IA vai gerar</div><div class="aibt">Plano personalizado de reinserção com metas para emprego, moradia, família, educação e grupos de apoio — com prazos e responsáveis definidos.</div></div>
+    </div>
+    <div class="mf"><button class="btn bs" onclick="cm2('m-rein')">Cancelar</button><button class="btn bai" onclick="execRein()">✦ Gerar plano</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"></div>
+
+<script>
+// ═══════════ NAVEGAÇÃO ═══════════
+const titles = {dash:'Dashboard',acolhidos:'Acolhidos',pas:'Planos de Atendimento (PAS)',prontuario:'Prontuário Eletrônico',avaliacoes:'Avaliações Clínicas',medico:'Módulo Médico',ocorrencias:'Ocorrências',atividades:'Atividades Terapêuticas',visitas:'Visitas Familiares',financeiro:'Financeiro',documentos:'Documentos',ia:'Assistente IA',alertas:'Alertas',reinsercao:'Reinserção Social',relatorios:'Relatórios',equipe:'Equipe',config:'Configurações'};
+function P(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  const pg=document.getElementById('pg-'+id);
+  if(pg)pg.classList.add('on');
+  document.getElementById('tbt').textContent=titles[id]||id;
+  document.querySelectorAll('.ni').forEach(n=>{
+    if(n.textContent.trim().startsWith(titles[id]?.split(' ')[0]||'')) n.classList.add('on');
+  });
+}
+
+// ═══════════ TABS ═══════════
+function st(btn,targetId){
+  const wrap=btn.closest('.card,.pg');
+  if(!wrap)return;
+  wrap.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  // Esconde todos os painéis do mesmo prefixo
+  const prefix=targetId.split('-')[0]+'-';
+  document.querySelectorAll('[id^="'+prefix+'"]').forEach(el=>el.style.display='none');
+  const el=document.getElementById(targetId);
+  if(el)el.style.display='block';
+}
+
+// ═══════════ MODAIS ═══════════
+function om(id,arg){
+  if(arg){
+    if(id==='m-perfil') abrirPerfil(arg);
+    else if(id==='m-evo') document.getElementById('m-evo-title').textContent='📝 Nova evolução — '+arg;
+    else if(id==='m-pas') { document.getElementById('gp-aco').value=document.getElementById('gp-aco').options[0].value; }
+  }
+  document.getElementById(id).classList.add('op');
+}
+function cm2(id){document.getElementById(id).classList.remove('op');}
+document.querySelectorAll('.mbk').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('op');}));
+
+// ═══════════ PERFIL ═══════════
+const ACO_DATA = {
+  'João Silva':{idade:34,sub:'Álcool',tempo:'8 anos',fase:'Fase 2 — Reabilitação',dias:97,risco:'🔴 Crítico',occ:3,adesao:'72%',notas:'3 intercorrências na última semana. PAS desatualizado. IA recomenda revisão urgente e avaliação psiquiátrica.'},
+  'Maria Santos':{idade:28,sub:'Múltiplas substâncias',tempo:'5 anos',fase:'Fase 3 — Terapia',dias:47,risco:'🟡 Médio',occ:0,adesao:'88%',notas:'PAS vencido há 45 dias. Boa adesão às atividades. Família participativa.'},
+  'Carlos Oliveira':{idade:45,sub:'Crack',tempo:'12 anos',fase:'Fase 2',dias:58,risco:'🟢 Baixo',occ:1,adesao:'91%',notas:'Consulta psiquiátrica amanhã. Boa evolução geral.'},
+  'Luísa Torres':{idade:22,sub:'Cocaína',tempo:'3 anos',fase:'Fase 4 — Reinserção',dias:122,risco:'🟢 Baixo',occ:0,adesao:'97%',notas:'Alta prevista em 25/06. Família engajada. Emprego sendo negociado.'}
+};
+function abrirPerfil(nome){
+  const d=ACO_DATA[nome]||{};
+  document.getElementById('mp-title').textContent='👤 '+nome;
+  document.getElementById('mp-body').innerHTML=`
+    <div class="sr sr2" style="margin-bottom:14px">
+      <div style="padding:11px;background:var(--bg);border-radius:8px"><div style="font-size:.65rem;color:var(--muted)">Idade / Substância</div><strong>${d.idade}a · ${d.sub}</strong></div>
+      <div style="padding:11px;background:var(--bg);border-radius:8px"><div style="font-size:.65rem;color:var(--muted)">Fase / Dias</div><strong>${d.fase} · ${d.dias} dias</strong></div>
+      <div style="padding:11px;background:var(--bg);border-radius:8px"><div style="font-size:.65rem;color:var(--muted)">Risco IA</div><strong>${d.risco}</strong></div>
+      <div style="padding:11px;background:var(--bg);border-radius:8px"><div style="font-size:.65rem;color:var(--muted)">Adesão / Ocorrências</div><strong>${d.adesao} · ${d.occ} occ.</strong></div>
+    </div>
+    <div class="aib" style="margin-bottom:14px"><div class="aibh">Análise IA</div><div class="aibt">${d.notas}</div></div>
+    <div style="font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Últimas evoluções</div>
+    <div class="tl">
+      <div class="tli"><div class="tld">📝</div><div class="tlc"><div class="tlt">16/06/2026 · Psic. Patrícia</div><div class="tlx">Sessão individual. Boa adesão às técnicas de TCC. Trabalhou-se manejo do craving. Sem intercorrências.</div></div></div>
+      <div class="tli"><div class="tld">👥</div><div class="tlc"><div class="tlt">14/06/2026 · Grupo terapêutico</div><div class="tlx">Participou ativamente. Compartilhou experiência de forma construtiva com os demais.</div></div></div>
+    </div>`;
+  document.getElementById('m-perfil').classList.add('op');
+}
+
+// ═══════════ VIEW KANBAN/LISTA ═══════════
+function vwAco(view,btn){
+  document.querySelectorAll('.tab-view').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('v-lista').style.display=view==='lista'?'block':'none';
+  document.getElementById('v-kanban').style.display=view==='kanban'?'block':'none';
+}
+
+// ═══════════ TOAST ═══════════
+function t(msg,type='ok'){
+  const el=document.getElementById('toast-el');
+  el.textContent=msg; el.className='toast '+type+' show';
+  setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+// ═══════════ HELPERS ═══════════
+function salvarAco(){cm2('m-aco');t('✦ Triagem IA iniciada — acolhido cadastrado!','ok');}
+function salvarEvo(){cm2('m-evo');t('✅ Evolução salva no prontuário','ok');}
+function registrarAdm(btn,status){btn.closest('div[style]').innerHTML=btn.closest('div[style]').innerHTML.replace(/<div style="display:flex;gap:6px">[\s\S]*<\/div>/,'<span class="bx bg-green">✓ Administrado</span>');t('💊 Medicação registrada!','ok');}
+function so(el){el.closest('.audit-opts').querySelectorAll('.audit-opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+function gerarDoc(nome){t('✦ Gerando '+nome+'...','ok');setTimeout(()=>t('✅ '+nome+' pronto para impressão!','ok'),2000);}
+function aiAnalyzeScore(nome,inst,score){P('ia');setTimeout(()=>{document.getElementById('ci').value=`Analise o score ${inst} = ${score} de ${nome} e sugira condutas clínicas conforme protocolos SENAD`;cm();},300);}
+function aiOcc(nome){P('ia');setTimeout(()=>{document.getElementById('ci').value=`${nome} teve múltiplas ocorrências recentes. Analise o padrão e sugira intervenções preventivas urgentes`;cm();},300);}
+function aiAlt(nome){P('ia');setTimeout(()=>{document.getElementById('ci').value=`Análise de risco urgente para ${nome}: 3 intercorrências em 7 dias, queda de adesão, isolamento. Sugira intervenções imediatas e revisão do PAS`;cm();},300);}
+function aiRein(nome){om('m-rein');}
+function aiPresc(){cm2('m-presc');t('✦ Prescrição sugerida pela IA — revisar com médico','ok');}
+function aiEvo(){document.getElementById('evo-txt').value='[IA estruturada] Sessão terapêutica realizada. Acolhido demonstrou engajamento. Sem intercorrências. Próximos passos conforme PAS vigente.';}
+async function aiRelatorio(tipo){
+  t('✦ Gerando relatório '+tipo+' com IA...','ok');
+  const prompt=`Gere um relatório ${tipo} resumido para uma Comunidade Terapêutica com: 48 acolhidos ativos, 96% de ocupação (50 vagas), 22% de gratuidade (11 vagas), 5 altas este mês, 8 profissionais na equipe. Período: junho/2026. Formato oficial, linguagem técnica, em português brasileiro.`;
+  const resposta=await callAI(prompt);
+  document.getElementById('m-rel-title').textContent='📊 Relatório '+tipo+' — Junho/2026';
+  document.getElementById('m-rel-body').innerHTML=md(resposta);
+  cm2('m-genpas');om('m-rel');
+}
+
+// ═══════════ PAS com IA ═══════════
+async function execPas(){
+  const aco=document.getElementById('gp-aco').value;
+  const fase=document.getElementById('gp-fase').value;
+  const ctx=document.getElementById('gp-ctx').value;
+  cm2('m-genpas');
+  t('✦ Gerando PAS com IA...','ok');
+  const prompt=`Gere um PAS (Plano de Atendimento Singular) completo conforme RDC 29/2011 para:\nAcolhido: ${aco}\nFase: ${fase}\n${ctx?'Contexto adicional: '+ctx:''}\n\nEstrutura obrigatória:\n1. DIAGNÓSTICO SITUACIONAL\n2. OBJETIVOS GERAIS\n3. OBJETIVOS ESPECÍFICOS\n4. METAS COM PRAZOS\n5. INTERVENÇÕES (Psicossocial / Médica / Espiritual / Laboral / Familiar)\n6. INDICADORES DE PROGRESSO\n\nSeja específico, técnico e prático. Use linguagem clínica adequada.`;
+  const r=await callAI(prompt);
+  document.getElementById('rpas-body').innerHTML=md(r);
+  om('m-rpas');
+}
+
+async function execRein(){
+  const aco=document.getElementById('rein-aco').value;
+  cm2('m-rein');t('✦ Gerando plano de reinserção...','ok');
+  const prompt=`Crie um plano de reinserção social completo para: ${aco}\nIncluir: metas de emprego, moradia, reintegração familiar, educação continuada, grupos de apoio (AA/NA/CODA), acompanhamento pós-alta. Com prazos realistas e responsáveis.`;
+  const r=await callAI(prompt);
+  document.getElementById('m-rel-title').textContent='🌱 Plano de Reinserção — '+aco.split('—')[0];
+  document.getElementById('m-rel-body').innerHTML=md(r);
+  om('m-rel');
+}
+
+// ═══════════ CHAT IA ═══════════
+let hist=[];
+const SYS=`Você é o Assistente IA do CT Pro — sistema de gestão para Comunidades Terapêuticas (CTs) no Brasil.
+Ajude a equipe técnica com:
+- PAS (Plano de Atendimento Singular) conforme RDC 29/2011
+- Evoluções terapêuticas estruturadas
+- Análise de scores AUDIT, ASSIST, PHQ-9, WHOQOL
+- Relatórios para SENAPRED, CONAD, CEBAS
+- Alertas de risco e intervenções preventivas
+- Planos de reinserção social pós-alta
+- Dúvidas sobre RDC 29, SENAD, legislação de CTs
+- Planejamento de atividades terapêuticas
+
+Contexto atual da CT:
+- 48 acolhidos ativos | 50 vagas | 96% ocupação
+- 7 PAS pendentes | 4 alertas ativos
+- João Silva: risco crítico (3 ocorrências/7 dias)
+- 5 altas este mês | 22% gratuidade (CEBAS)
+- Coordenadora: Ana Nascimento
+
+Responda sempre em português brasileiro, de forma técnica e direta.
+Use **negrito** para destaques e • para listas. Seja específico e prático.`;
+
+function cs(txt){document.getElementById('ci').value=txt;cm();}
+function ck(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();cm();}}
+
+async function cm(){
+  const inp=document.getElementById('ci');
+  const msg=inp.value.trim(); if(!msg)return;
+  inp.value='';
+  addb(msg,'u');
+  hist.push({role:'user',content:msg});
+  const btn=document.getElementById('csb');
+  btn.disabled=true;
+  const ld=addb('<em style="color:var(--muted)">✦ Analisando...</em>','a');
+  const r=await callAI(msg,true);
+  hist.push({role:'assistant',content:r});
+  ld.className='cb a'; ld.innerHTML=md(r);
+  btn.disabled=false;
+  document.getElementById('chat-msgs').scrollTop=9999;
+}
+
+function addb(html,tipo){
+  const area=document.getElementById('chat-msgs');
+  const d=document.createElement('div');
+  d.className='cb '+tipo;
+  d.innerHTML=html;
+  area.appendChild(d);
+  area.scrollTop=9999;
+  return d;
+}
+
+// ═══════════ API ANTHROPIC ═══════════
+async function callAI(userMsg,useHist=false){
+  try{
+    const messages=useHist?[...hist]:[{role:'user',content:userMsg}];
+    if(!useHist)messages[0]={role:'user',content:userMsg};
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:SYS,messages})
+    });
+    const data=await res.json();
+    return data.content?.map(c=>c.text||'').join('')||'Não consegui processar. Tente novamente.';
+  }catch(e){
+    return '⚠️ Erro de conexão com a IA. Verifique sua chave API nas configurações.';
+  }
+}
+
+function md(txt){
+  return txt
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/^###\s(.+)$/gm,'<div style="font-family:Syne,sans-serif;font-weight:700;font-size:.88rem;color:var(--verde);margin:14px 0 6px">$1</div>')
+    .replace(/^##\s(.+)$/gm,'<div style="font-family:Syne,sans-serif;font-weight:700;font-size:.92rem;color:var(--text);margin:10px 0 6px">$1</div>')
+    .replace(/^•\s(.+)$/gm,'<div style="padding-left:14px;margin:3px 0">• $1</div>')
+    .replace(/^-\s(.+)$/gm,'<div style="padding-left:14px;margin:3px 0">• $1</div>')
+    .replace(/^(\d+)\.\s(.+)$/gm,'<div style="padding-left:14px;margin:3px 0"><strong>$1.</strong> $2</div>')
+    .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+}
+
+// ═══════════ VOZ ═══════════
+let gravando=false,voiceTimer=null;
+function toggleVoz(btn){
+  if(!gravando){
+    gravando=true;
+    btn.textContent='⏹️ Parar gravação';
+    btn.style.background='var(--danger)';
+    document.getElementById('voz-status').textContent='🔴';
+    document.getElementById('voz-label').textContent='Gravando... fale a evolução';
+    voiceTimer=setTimeout(()=>pararVoz(btn),8000);
+  } else { clearTimeout(voiceTimer); pararVoz(btn); }
+}
+async function pararVoz(btn){
+  gravando=false; btn.textContent='✦ Processando com IA...'; btn.disabled=true;
+  document.getElementById('voz-status').textContent='⏳';
+  document.getElementById('voz-label').textContent='IA transcrevendo e estruturando...';
+  const r=await callAI('Simule a transcrição e estruturação de uma evolução terapêutica de grupo de reflexão com 12 participantes, sem intercorrências, conduzida pela psicóloga, duração 60 minutos. Formate como evolução clínica estruturada.');
+  document.getElementById('voz-text').innerHTML=md(r);
+  document.getElementById('voz-result').style.display='block';
+  document.getElementById('voz-status').textContent='✅';
+  document.getElementById('voz-label').textContent='Evolução estruturada pela IA';
+  btn.textContent='🎙️ Gravar novamente'; btn.disabled=false; btn.style.background='';
+  document.getElementById('voz-save').style.display='inline-flex';
+}
+
+// ═══════════ INIT ═══════════
+P('dash');
+// Atualiza a aba ativa do sidebar ao carregar
+document.querySelector('.ni').classList.add('on');
+</script>
+</body>
+</html>
