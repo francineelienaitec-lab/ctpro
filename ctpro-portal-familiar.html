@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CT Pro — Portal da Família</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+:root{
+  --v:#1a6b4a;--vc:#22c55e;--vm:#d1fae5;--c:#0f1a14;
+  --bg:#f3f6f4;--w:#fff;--b:#e0e8e2;--t:#1c2b22;--m:#6b7f72;
+  --d:#ef4444;--db:#fee2e2;--wn:#f59e0b;--wb:#fef3c7;--in:#3b82f6;
+  --r:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--c) 0%,#162a1e 60%,#1a3d28 100%);padding:0;position:sticky;top:0;z-index:100;}
+.hdr-inner{max-width:1000px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
+.hdr-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--vc);display:flex;align-items:center;gap:7px;}
+.hdr-logo b{background:rgba(34,197,94,.2);border:1px solid rgba(34,197,94,.3);font-size:.58rem;padding:2px 7px;border-radius:4px;letter-spacing:.06em;color:var(--vc);}
+.hdr-logo small{font-size:.65rem;color:rgba(255,255,255,.4);font-family:'Inter';}
+.hdr-user{display:flex;align-items:center;gap:10px;}
+.hdr-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--vc));display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#fff;}
+.hdr-info{display:none;}
+@media(min-width:500px){.hdr-info{display:block;}.hdr-info .name{font-size:.82rem;font-weight:600;color:#fff;}.hdr-info .role{font-size:.68rem;color:rgba(255,255,255,.4);}}
+.hdr-notif{position:relative;width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:background .15s;}
+.hdr-notif:hover{background:rgba(255,255,255,.15);}
+.hdr-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--d);border-radius:50%;border:2px solid #0f1a14;}
+
+/* NAV TABS */
+.nav-tabs{background:rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.06);}
+.nav-tabs-inner{max-width:1000px;margin:0 auto;padding:0 20px;display:flex;gap:0;overflow-x:auto;}
+.ntab{padding:12px 16px;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',sans-serif;}
+.ntab:hover{color:rgba(255,255,255,.8);}
+.ntab.on{color:var(--vc);border-bottom-color:var(--vc);}
+
+/* MAIN */
+.main{max-width:1000px;margin:0 auto;padding:20px;}
+.pg{display:none;animation:fi .22s ease;}
+.pg.on{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--w);border:1px solid var(--b);border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.ct{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+
+/* HERO DO ACOLHIDO */
+.aco-hero{background:linear-gradient(135deg,var(--c),#1a3d28);border-radius:var(--r);padding:22px;margin-bottom:14px;position:relative;overflow:hidden;}
+.aco-hero::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 65%);pointer-events:none;}
+.aco-hero-top{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.aco-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--vc));display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#fff;flex-shrink:0;border:2px solid rgba(34,197,94,.3);}
+.aco-nome{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;}
+.aco-sub{font-size:.75rem;color:rgba(255,255,255,.5);margin-top:2px;}
+.aco-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.as{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:11px;text-align:center;}
+.as-v{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;}
+.as-l{font-size:.62rem;color:rgba(255,255,255,.4);margin-top:2px;}
+.as.ok .as-v{color:var(--vc);}
+.as.wn .as-v{color:var(--wn);}
+
+/* BADGES */
+.bx{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:50px;font-size:.64rem;font-weight:600;white-space:nowrap;}
+.bg-g{background:var(--vm);color:var(--v);}
+.bg-y{background:var(--wb);color:#92400e;}
+.bg-r{background:var(--db);color:#991b1b;}
+.bg-b{background:#dbeafe;color:#1d4ed8;}
+.bg-gr{background:#f0f4f1;color:var(--m);}
+.bg-p{background:#f3e8ff;color:#6b21a8;}
+
+/* PROGRESS */
+.pb{background:#e8ede9;border-radius:50px;height:8px;overflow:hidden;}
+.pf{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--v),var(--vc));transition:width .6s;}
+
+/* TIMELINE */
+.tl{display:flex;flex-direction:column;}
+.tli{display:flex;gap:12px;padding-bottom:18px;position:relative;}
+.tli::before{content:'';position:absolute;left:14px;top:30px;bottom:0;width:1px;background:var(--b);}
+.tli:last-child::before{display:none;}
+.tld{width:28px;height:28px;border-radius:50%;background:var(--vm);border:2px solid var(--v);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;z-index:1;}
+.tlc{flex:1;padding-top:3px;}
+.tlt{font-size:.66rem;color:var(--m);margin-bottom:3px;}
+.tlx{font-size:.8rem;color:var(--t);line-height:1.55;}
+
+/* ATIVIDADE ROW */
+.atv-row{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:7px;}
+.atv-icon{width:32px;height:32px;border-radius:8px;background:var(--vm);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.atv-info{flex:1;}
+.atv-name{font-weight:600;font-size:.82rem;}
+.atv-sub{font-size:.68rem;color:var(--m);margin-top:1px;}
+
+/* CHAT */
+.chat-wrap{background:var(--w);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;height:420px;}
+.chat-hdr{background:linear-gradient(135deg,var(--c),#1a3d28);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;}
+.cb{max-width:80%;padding:10px 13px;border-radius:10px;font-size:.82rem;line-height:1.6;}
+.cb.u{background:var(--v);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+.cb.a{background:var(--bg);border:1px solid var(--b);color:var(--t);align-self:flex-start;border-bottom-left-radius:3px;}
+.chat-bar{padding:12px;border-top:1px solid var(--b);display:flex;gap:8px;align-items:flex-end;background:var(--w);flex-shrink:0;}
+.chat-bar textarea{flex:1;padding:8px 11px;border:1.5px solid var(--b);border-radius:8px;font-size:.82rem;font-family:'Inter',sans-serif;color:var(--t);resize:none;min-height:38px;max-height:90px;outline:none;transition:border .15s;}
+.chat-bar textarea:focus{border-color:var(--v);}
+.chat-send{background:var(--v);border:none;border-radius:8px;width:38px;height:38px;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.chat-send:hover{background:#155a3d;}
+.chat-send:disabled{background:#9ca3af;}
+
+/* AI BOX */
+.aib{background:linear-gradient(135deg,rgba(26,107,74,.06),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.2);border-radius:var(--r);padding:14px;margin-bottom:12px;}
+.aibh{display:flex;align-items:center;gap:6px;font-size:.66rem;font-weight:700;color:var(--v);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;}
+.aibh::before{content:'✦';color:var(--vc);}
+.aibt{font-size:.8rem;color:var(--m);line-height:1.6;}
+
+/* MODAL */
+.mbk{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.mbk.op{display:flex;}
+.mod{background:#fff;border-radius:14px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.2);animation:su .22s ease;}
+@keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.mh{padding:16px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.mh h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;}
+.mc{padding:20px;}
+.mf{padding:12px 20px;border-top:1px solid var(--b);display:flex;gap:8px;justify-content:flex-end;}
+.mx{cursor:pointer;font-size:1.1rem;color:var(--m);background:none;border:none;}
+
+/* INPUTS */
+.ig{margin-bottom:12px;}
+.lbl{display:block;font-size:.7rem;font-weight:600;color:var(--m);margin-bottom:4px;}
+.inp,.sel,.ta{width:100%;padding:8px 11px;border:1.5px solid var(--b);border-radius:7px;font-size:.82rem;color:var(--t);font-family:'Inter',sans-serif;outline:none;background:#fff;transition:border .15s;}
+.inp:focus,.sel:focus,.ta:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(26,107,74,.08);}
+.ta{resize:vertical;min-height:80px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:'Inter',sans-serif;}
+.bp{background:var(--v);color:#fff;} .bp:hover{background:#155a3d;}
+.bs{background:var(--bg);color:var(--t);border:1px solid var(--b);} .bs:hover{background:#edf2ee;}
+.bai{background:linear-gradient(135deg,#1a6b4a,#22c55e);color:#fff;} .bai:hover{filter:brightness(1.08);}
+.bsm{padding:5px 11px;font-size:.73rem;}
+.btn-full{width:100%;justify-content:center;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:600px){.g2{grid-template-columns:1fr;}.aco-stats{grid-template-columns:repeat(2,1fr);}}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;z-index:999;background:var(--c);color:#fff;padding:11px 16px;border-radius:9px;font-size:.78rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:7px;max-width:320px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-left:3px solid var(--vc);}
+
+/* LOGIN */
+.login-box{max-width:420px;margin:60px auto;background:var(--w);border-radius:16px;padding:36px;border:1px solid var(--b);box-shadow:0 8px 30px rgba(0,0,0,.06);}
+.login-logo{text-align:center;margin-bottom:24px;}
+.login-logo div{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--v);}
+.login-logo small{font-size:.75rem;color:var(--m);}
+
+/* STATUS PILL */
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:50px;font-size:.75rem;font-weight:600;}
+.sp-ok{background:var(--vm);color:var(--v);}
+.sp-wn{background:var(--wb);color:#92400e;}
+.sp-info{background:#dbeafe;color:#1d4ed8;}
+
+/* AVISO LGPD */
+.lgpd-bar{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#92400e;display:flex;align-items:flex-start;gap:8px;margin-bottom:14px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN (mostrado se não logado) -->
+<div id="login-screen" style="display:none">
+  <header><div class="hdr-inner"><div class="hdr-logo">CT Pro <b>IA</b> <small>· Portal Família</small></div></div></header>
+  <div class="main">
+    <div class="login-box">
+      <div class="login-logo">
+        <div>CT Pro</div>
+        <small>Portal de Acompanhamento Familiar</small>
+      </div>
+      <div style="background:var(--vm);border:1px solid rgba(26,107,74,.2);border-radius:8px;padding:12px;font-size:.8rem;color:var(--v);margin-bottom:20px;line-height:1.6">
+        👨‍👩‍👧 Acompanhe o progresso do seu familiar em tratamento de forma segura e privada.
+      </div>
+      <div class="ig"><label class="lbl">Código de acesso familiar</label><input class="inp" id="login-code" placeholder="Ex: CT2026-SILVA-A4F8" value="CT2026-SILVA-A4F8"></div>
+      <div class="ig"><label class="lbl">Seu CPF (para verificação)</label><input class="inp" id="login-cpf" placeholder="000.000.000-00" value="123.456.789-00"></div>
+      <button class="btn bp btn-full" onclick="fazerLogin()">Acessar portal</button>
+      <div style="text-align:center;font-size:.73rem;color:var(--m);margin-top:16px">Código fornecido pela equipe da CT ao familiar autorizado</div>
+    </div>
+  </div>
+</div>
+
+<!-- PORTAL (mostrado após login) -->
+<div id="portal-screen">
+  <header>
+    <div class="hdr-inner">
+      <div class="hdr-logo">CT Pro <b>IA</b> <small>· Portal Família</small></div>
+      <div class="hdr-user">
+        <div class="hdr-notif" onclick="om('m-notif')">🔔<div class="hdr-dot"></div></div>
+        <div class="hdr-av">MS</div>
+        <div class="hdr-info">
+          <div class="name">Maria Silva</div>
+          <div class="role">Cônjuge de João Silva</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <div class="nav-tabs-inner">
+        <button class="ntab on" onclick="P('inicio')">🏠 Início</button>
+        <button class="ntab" onclick="P('evolucao')">📈 Evolução</button>
+        <button class="ntab" onclick="P('atividades')">📅 Atividades</button>
+        <button class="ntab" onclick="P('visitas')">🤝 Visitas</button>
+        <button class="ntab" onclick="P('mensagens')">💬 Mensagens</button>
+        <button class="ntab" onclick="P('orientacoes')">📚 Orientações</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="lgpd-bar">🔒 <span>Acesso autorizado e monitorado. Os dados exibidos são controlados pela equipe da CT. <strong>Lei 13.709/2018 (LGPD)</strong> — suas informações são protegidas.</span></div>
+
+<!-- ══════════ INÍCIO ══════════ -->
+<div class="pg on" id="pg-inicio">
+  <!-- HERO DO ACOLHIDO -->
+  <div class="aco-hero">
+    <div class="aco-hero-top">
+      <div class="aco-av">JS</div>
+      <div>
+        <div class="aco-nome">João Silva</div>
+        <div class="aco-sub">CT Esperança · São Paulo, SP · Internado desde 12/03/2026</div>
+        <div style="margin-top:6px"><span class="status-pill sp-ok">✓ Em tratamento ativo</span></div>
+      </div>
+    </div>
+    <div class="aco-stats">
+      <div class="as ok">
+        <div class="as-v">97</div>
+        <div class="as-l">Dias em tratamento</div>
+      </div>
+      <div class="as ok">
+        <div class="as-v">Fase 2</div>
+        <div class="as-l">Etapa atual</div>
+      </div>
+      <div class="as">
+        <div class="as-v">82%</div>
+        <div class="as-l">Adesão às atividades</div>
+      </div>
+      <div class="as wn">
+        <div class="as-v">Médio</div>
+        <div class="as-l">Estágio de progresso</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📊 Progresso do tratamento</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px"><span>Fase 1 — Acolhimento</span><span class="bx bg-g">Concluída ✓</span></div>
+          <div class="pb"><div class="pf" style="width:100%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px"><span>Fase 2 — Reabilitação</span><span class="bx bg-y">Em andamento</span></div>
+          <div class="pb"><div class="pf" style="width:65%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px"><span>Fase 3 — Consolidação</span><span class="bx bg-gr">Aguardando</span></div>
+          <div class="pb"><div class="pf" style="width:0%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px"><span>Fase 4 — Reinserção</span><span class="bx bg-gr">Aguardando</span></div>
+          <div class="pb"><div class="pf" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:10px;background:var(--bg);border-radius:8px;font-size:.75rem;color:var(--m);line-height:1.5">
+        💡 A duração de cada fase varia por acolhido. A equipe técnica define o ritmo com base na evolução individual.
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="ct">🔔 Avisos recentes da CT</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="padding:10px;background:var(--vm);border-radius:8px;border:1px solid rgba(26,107,74,.15)">
+            <div style="font-weight:600;font-size:.8rem;color:var(--v)">Visita autorizada — 21/06</div>
+            <div style="font-size:.72rem;color:var(--m);margin-top:2px">Sua visita presencial foi agendada para sábado, 21/06 às 14h. Local: sala de visitas.</div>
+          </div>
+          <div style="padding:10px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe">
+            <div style="font-weight:600;font-size:.8rem;color:#1d4ed8">Reunião de família — 28/06</div>
+            <div style="font-size:.72rem;color:var(--m);margin-top:2px">Você foi convidada para a reunião quinzenal de familiares. Sexta, 28/06 às 19h.</div>
+          </div>
+          <div style="padding:10px;background:var(--bg);border-radius:8px">
+            <div style="font-weight:600;font-size:.8rem">Medicação ajustada</div>
+            <div style="font-size:.72rem;color:var(--m);margin-top:2px">O médico responsável ajustou a medicação em 10/06. Dose mantida, horário alterado.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ct">📅 Próxima visita</div>
+        <div style="text-align:center;padding:16px">
+          <div style="font-size:2.5rem;margin-bottom:8px">🤝</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem">Sábado, 21/06/2026</div>
+          <div style="font-size:.8rem;color:var(--m);margin-top:4px">14h00 — Sala de visitas · CT Esperança</div>
+          <div style="margin-top:12px"><span class="status-pill sp-ok">✓ Autorizada</span></div>
+          <button class="btn bs btn-full" style="margin-top:14px" onclick="om('m-vis')">Reagendar ou cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EVOLUÇÃO ══════════ -->
+<div class="pg" id="pg-evolucao">
+  <div class="aib">
+    <div class="aibh">Resumo do período — gerado pela equipe técnica</div>
+    <div class="aibt">João está na Fase 2 há 67 dias. Demonstra boa adesão às atividades terapêuticas (82%) e engajamento crescente nas sessões individuais com a psicóloga. Houve 2 momentos de maior dificuldade esta semana, que já foram trabalhados pela equipe. O progresso geral é positivo e compatível com o Plano de Atendimento.</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">📈 Indicadores de progresso</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px">
+        <div style="font-size:1.5rem;font-weight:800;color:var(--v)">82%</div>
+        <div style="font-size:.68rem;color:var(--m);margin-top:2px">Adesão às atividades</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px">
+        <div style="font-size:1.5rem;font-weight:800;color:var(--in)">14</div>
+        <div style="font-size:.68rem;color:var(--m);margin-top:2px">Sessões realizadas</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px">
+        <div style="font-size:1.5rem;font-weight:800;color:var(--wn)">97</div>
+        <div style="font-size:.68rem;color:var(--m);margin-top:2px">Dias sem substância</div>
+      </div>
+    </div>
+    <div style="font-size:.8rem;color:var(--m);margin-bottom:8px;font-weight:600">Adesão semanal (últimas 6 semanas)</div>
+    <div style="display:flex;align-items:flex-end;gap:6px;height:80px">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="height:60%;width:100%;background:var(--vm);border-radius:4px 4px 0 0;border:1px solid rgba(26,107,74,.2)"></div>
+        <div style="font-size:.6rem;color:var(--m)">S1</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="height:70%;width:100%;background:var(--vm);border-radius:4px 4px 0 0;border:1px solid rgba(26,107,74,.2)"></div>
+        <div style="font-size:.6rem;color:var(--m)">S2</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="height:55%;width:100%;background:#fef3c7;border-radius:4px 4px 0 0;border:1px solid #fde68a"></div>
+        <div style="font-size:.6rem;color:var(--m)">S3</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="height:80%;width:100%;background:var(--vm);border-radius:4px 4px 0 0;border:1px solid rgba(26,107,74,.2)"></div>
+        <div style="font-size:.6rem;color:var(--m)">S4</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="height:88%;width:100%;background:var(--vm);border-radius:4px 4px 0 0;border:1px solid rgba(26,107,74,.2)"></div>
+        <div style="font-size:.6rem;color:var(--m)">S5</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="height:82%;width:100%;background:linear-gradient(180deg,#22c55e,#1a6b4a);border-radius:4px 4px 0 0"></div>
+        <div style="font-size:.6rem;color:var(--v);font-weight:700">S6</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">📋 Registros recentes <small style="font-size:.68rem;color:var(--m)">(versão resumida — dados clínicos são confidenciais)</small></div>
+    <div class="tl">
+      <div class="tli">
+        <div class="tld">📝</div>
+        <div class="tlc">
+          <div class="tlt">16/06/2026 — Psicóloga responsável</div>
+          <div class="tlx">Sessão de terapia individual realizada. João demonstrou maior abertura para discutir gatilhos. Progresso positivo nas técnicas de manejo. <span class="bx bg-g">Evolução positiva</span></div>
+        </div>
+      </div>
+      <div class="tli">
+        <div class="tld">👥</div>
+        <div class="tlc">
+          <div class="tlt">14/06/2026 — Grupo terapêutico</div>
+          <div class="tlx">Participou ativamente do grupo. Compartilhou experiências de forma construtiva com os colegas. <span class="bx bg-g">Participação ativa</span></div>
+        </div>
+      </div>
+      <div class="tli">
+        <div class="tld">💊</div>
+        <div class="tlc">
+          <div class="tlt">10/06/2026 — Equipe médica</div>
+          <div class="tlx">Consulta de rotina realizada. Medicação em uso sendo tolerada bem. Próxima consulta em 24/06. <span class="bx bg-b">Acompanhamento médico</span></div>
+        </div>
+      </div>
+      <div class="tli">
+        <div class="tld">🏃</div>
+        <div class="tlc">
+          <div class="tlt">08/06/2026 — Atividade física</div>
+          <div class="tlx">Participou das atividades físicas com engajamento. Semana com 5/5 presenças nas atividades. <span class="bx bg-g">100% presença</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:10px;background:#fffbeb;border-radius:8px;font-size:.75rem;color:#92400e;margin-top:4px">
+      ⚠️ Os registros exibidos são resumos elaborados pela equipe técnica. Detalhes clínicos são confidenciais por ética profissional.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ATIVIDADES ══════════ -->
+<div class="pg" id="pg-atividades">
+  <div class="card">
+    <div class="ct">📅 Rotina semanal — João Silva</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="atv-row">
+        <div class="atv-icon">🙏</div>
+        <div class="atv-info"><div class="atv-name">Oração e devocional</div><div class="atv-sub">Diária · 06h30 · Participação: 97%</div></div>
+        <span class="bx bg-g">Excelente</span>
+      </div>
+      <div class="atv-row">
+        <div class="atv-icon">👥</div>
+        <div class="atv-info"><div class="atv-name">Grupo terapêutico</div><div class="atv-sub">Seg/Qua/Sex · 10h · Participação: 94%</div></div>
+        <span class="bx bg-g">Excelente</span>
+      </div>
+      <div class="atv-row">
+        <div class="atv-icon">🧠</div>
+        <div class="atv-info"><div class="atv-name">Psicoterapia individual</div><div class="atv-sub">Ter/Qui · 14h · Participação: 100%</div></div>
+        <span class="bx bg-g">Excelente</span>
+      </div>
+      <div class="atv-row">
+        <div class="atv-icon">🏃</div>
+        <div class="atv-info"><div class="atv-name">Atividade física</div><div class="atv-sub">Diária · 07h · Participação: 88%</div></div>
+        <span class="bx bg-g">Boa</span>
+      </div>
+      <div class="atv-row">
+        <div class="atv-icon">🎨</div>
+        <div class="atv-info"><div class="atv-name">Oficina de artesanato</div><div class="atv-sub">Quarta · 15h · Participação: 67%</div></div>
+        <span class="bx bg-y">Regular</span>
+      </div>
+      <div class="atv-row">
+        <div class="atv-icon">📖</div>
+        <div class="atv-info"><div class="atv-name">Estudo e leitura</div><div class="atv-sub">Diário · 20h · Participação: 91%</div></div>
+        <span class="bx bg-g">Boa</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="aib">
+    <div class="aibh">O que você pode fazer para apoiar</div>
+    <div class="aibt">
+      A equipe técnica orienta que o apoio familiar é essencial nesta fase. Algumas sugestões:<br><br>
+      • <strong>Nas visitas</strong> — Evite assuntos que gerem conflito ou pressão. Foque em momentos positivos e demonstre apoio incondicional.<br>
+      • <strong>Comunicação</strong> — Mensagens encorajadoras (enviadas pela equipe) ajudam na motivação.<br>
+      • <strong>Reunião familiar</strong> — Participe das reuniões quinzenais para receber orientações da equipe terapêutica.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ VISITAS ══════════ -->
+<div class="pg" id="pg-visitas">
+  <div class="card">
+    <div class="ct">🤝 Próxima visita agendada</div>
+    <div style="background:linear-gradient(135deg,var(--c),#1a3d28);border-radius:10px;padding:20px;text-align:center;margin-bottom:14px">
+      <div style="font-size:2rem;margin-bottom:8px">🤝</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:#fff">Sábado, 21 de junho</div>
+      <div style="color:rgba(255,255,255,.6);font-size:.82rem;margin-top:4px">14h00 às 15h00 · Sala de visitas</div>
+      <div style="margin-top:10px"><span class="status-pill sp-ok">✓ Visita autorizada</span></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn bs" onclick="om('m-vis')">🔄 Reagendar</button>
+      <button class="btn" style="background:var(--db);color:var(--d)">✗ Cancelar visita</button>
+      <button class="btn bp" onclick="om('m-vis')">+ Agendar próxima</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">📋 Histórico de visitas</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">Visita presencial</div><div style="font-size:.68rem;color:var(--m)">14/06/2026 · 14h · 60 min</div></div>
+        <span class="bx bg-g">Realizada</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">Videochamada</div><div style="font-size:.68rem;color:var(--m)">01/06/2026 · 20h · 30 min</div></div>
+        <span class="bx bg-g">Realizada</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">Visita presencial</div><div style="font-size:.68rem;color:var(--m)">17/05/2026 · 14h · 60 min</div></div>
+        <span class="bx bg-g">Realizada</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">Visita presencial</div><div style="font-size:.68rem;color:var(--m)">03/05/2026 · 14h · 45 min</div></div>
+        <span class="bx bg-y">Cancelada</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="aib">
+    <div class="aibh">Regras de visita — CT Esperança</div>
+    <div class="aibt">
+      • Visitas presenciais: <strong>sábados, 13h às 16h</strong> (agendar com antecedência)<br>
+      • Videochamadas: <strong>ter/qui após 19h</strong> (solicitar via portal)<br>
+      • Não trazer: celulares, bebidas alcoólicas, alimentos não autorizados<br>
+      • Dúvidas: (11) 3456-7890 — secretaria da CT
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MENSAGENS ══════════ -->
+<div class="pg" id="pg-mensagens">
+  <div style="font-size:.78rem;color:var(--m);margin-bottom:12px">💬 Envie mensagens de apoio. A equipe revisa antes de entregar ao seu familiar.</div>
+  <div class="chat-wrap">
+    <div class="chat-hdr">
+      <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--v),var(--vc));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff">CT</div>
+      <div style="margin-left:4px">
+        <div style="font-size:.82rem;font-weight:700;color:#fff">Equipe CT Esperança</div>
+        <div style="font-size:.65rem;color:var(--vc)">Mensagens revisadas pela equipe · Horário: 08h às 18h</div>
+      </div>
+    </div>
+    <div class="chat-msgs" id="chat-msgs">
+      <div class="cb a">
+        <strong>Equipe CT Esperança</strong><br><br>
+        Olá Maria! Este canal é para enviar mensagens de apoio ao João. Todas as mensagens são revisadas pela equipe terapêutica antes de serem entregues. Mensagens com conteúdo inadequado (álcool, conflitos familiares, pressão) podem não ser entregues para preservar o tratamento.
+      </div>
+      <div class="cb u">Oi! Quero mandar uma mensagem de carinho pro João. Estou com saudades e muito orgulhosa da força dele!</div>
+      <div class="cb a"><strong>Equipe CT</strong> · 14h32<br>Mensagem entregue ✓ — João ficou muito feliz! 😊 A equipe informa que ele está bem e pediu para dizer que está com saudades também e que está dando o melhor de si.</div>
+      <div class="cb u">Fico tão feliz de saber! Posso perguntar como ele está se alimentando? Ele sempre foi muito seletivo com comida...</div>
+      <div class="cb a"><strong>Equipe CT</strong> · 15h08<br>Boa notícia! João está se alimentando muito bem. A nutricionista fez um cardápio personalizado e ele tem mantido boa adesão às refeições. Ganhou 2kg desde a entrada, o que é ótimo para esta fase do tratamento.</div>
+    </div>
+    <div class="chat-bar">
+      <textarea id="msg-input" placeholder="Escreva uma mensagem de apoio..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg();}"></textarea>
+      <button class="chat-send" id="chat-send-btn" onclick="enviarMsg()">➤</button>
+    </div>
+  </div>
+  <div style="margin-top:10px;padding:10px;background:#fffbeb;border-radius:8px;font-size:.73rem;color:#92400e">
+    ⏱️ Tempo de resposta: em dias úteis, as mensagens são revisadas e entregues em até 2 horas durante o horário de funcionamento (08h às 18h).
+  </div>
+</div>
+
+<!-- ══════════ ORIENTAÇÕES ══════════ -->
+<div class="pg" id="pg-orientacoes">
+  <div class="aib" style="margin-bottom:14px">
+    <div class="aibh">Guia para familiares — CT Esperança</div>
+    <div class="aibt">Estas orientações foram elaboradas pela equipe técnica para ajudar você a apoiar seu familiar da melhor forma durante o tratamento.</div>
+  </div>
+
+  <div class="card">
+    <div class="ct">🤝 Como apoiar sem atrapalhar</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="padding:12px;background:var(--vm);border-radius:8px;border:1px solid rgba(26,107,74,.15)">
+        <div style="font-weight:700;font-size:.85rem;color:var(--v);margin-bottom:5px">✅ O que AJUDA</div>
+        <div style="font-size:.8rem;color:var(--t);line-height:1.6">Demonstrar amor incondicional · Evitar cobranças sobre o passado · Focar no presente · Celebrar cada pequena conquista · Participar das reuniões familiares · Manter rotina saudável em casa para a chegada dele</div>
+      </div>
+      <div style="padding:12px;background:var(--db);border-radius:8px;border:1px solid #fecaca">
+        <div style="font-weight:700;font-size:.85rem;color:var(--d);margin-bottom:5px">❌ O que DIFICULTA</div>
+        <div style="font-size:.8rem;color:var(--t);line-height:1.6">Pressionar por datas de alta · Falar sobre problemas familiares nas visitas · Trazer bebidas alcoólicas · Questionar o tratamento · Criar expectativas irreais · Ignorar as orientações da equipe</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">📚 Material de apoio para a família</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">📄 Guia: Como conversar durante as visitas</div><div style="font-size:.68rem;color:var(--m)">PDF · 12 páginas</div></div>
+        <button class="btn bs bsm">Baixar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">📄 Entendendo a dependência química</div><div style="font-size:.68rem;color:var(--m)">PDF · 8 páginas</div></div>
+        <button class="btn bs bsm">Baixar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">📄 Como preparar o lar para a alta</div><div style="font-size:.68rem;color:var(--m)">PDF · 6 páginas</div></div>
+        <button class="btn bs bsm">Baixar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">🎥 Webinar: Família e recuperação</div><div style="font-size:.68rem;color:var(--m)">Vídeo · 45 min</div></div>
+        <button class="btn bp bsm">Assistir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">📞 Contatos úteis</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">Secretaria da CT</div><div style="font-size:.68rem;color:var(--m)">(11) 3456-7890 · Seg–Sex 08h–18h</div></div>
+        <button class="btn bp bsm">Ligar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">Plantão 24h</div><div style="font-size:.68rem;color:var(--m)">(11) 99876-5432 · Urgências</div></div>
+        <button class="btn bp bsm">Ligar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">Al-Anon (apoio a familiares)</div><div style="font-size:.68rem;color:var(--m)">www.al-anon.org.br · Grupos presenciais</div></div>
+        <button class="btn bs bsm">Acessar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+        <div><div style="font-weight:600;font-size:.82rem">CVV — Centro de Valorização da Vida</div><div style="font-size:.68rem;color:var(--m)">188 · 24 horas · gratuito</div></div>
+        <button class="btn bp bsm">Ligar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /main -->
+</div><!-- /portal-screen -->
+
+<!-- MODAIS -->
+<div class="mbk" id="m-vis">
+  <div class="mod">
+    <div class="mh"><h3>🤝 Agendar visita</h3><button class="mx" onclick="cm('m-vis')">✕</button></div>
+    <div class="mc">
+      <div class="ig"><label class="lbl">Tipo de visita</label>
+        <select class="sel">
+          <option>Visita presencial — Sala de visitas</option>
+          <option>Videochamada (plataforma CT Pro)</option>
+          <option>Ligação telefônica</option>
+        </select>
+      </div>
+      <div class="ig"><label class="lbl">Data preferida</label><input class="inp" type="date"></div>
+      <div class="ig"><label class="lbl">Horário</label>
+        <select class="sel">
+          <option>13h00</option><option>13h30</option><option>14h00</option>
+          <option>14h30</option><option>15h00</option><option>15h30</option>
+        </select>
+      </div>
+      <div class="ig"><label class="lbl">Visitantes (além de você)</label><input class="inp" placeholder="Ex: Pedro Silva (filho) — CPF 000.000.000-00"></div>
+      <div class="ig"><label class="lbl">Observações</label><textarea class="ta" placeholder="Ex: levarei um bolo, preciso de sala com cadeira de rodas..."></textarea></div>
+      <div style="padding:10px;background:var(--wb);border-radius:8px;font-size:.75rem;color:#92400e">⏱️ Agendamentos precisam ser aprovados pela equipe com até 48h de antecedência.</div>
+    </div>
+    <div class="mf">
+      <button class="btn bs" onclick="cm('m-vis')">Cancelar</button>
+      <button class="btn bp" onclick="cm('m-vis');t('✅ Solicitação enviada! A equipe confirmará em breve.','ok')">Solicitar visita</button>
+    </div>
+  </div>
+</div>
+
+<div class="mbk" id="m-notif">
+  <div class="mod">
+    <div class="mh"><h3>🔔 Notificações</h3><button class="mx" onclick="cm('m-notif')">✕</button></div>
+    <div class="mc">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="padding:11px;background:var(--vm);border-radius:8px;border:1px solid rgba(26,107,74,.15)">
+          <div style="font-weight:600;font-size:.82rem;color:var(--v)">✓ Visita confirmada — 21/06</div>
+          <div style="font-size:.72rem;color:var(--m);margin-top:2px">Sua visita de sábado foi aprovada pela equipe. 14h · Sala de visitas.</div>
+        </div>
+        <div style="padding:11px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe">
+          <div style="font-weight:600;font-size:.82rem">📅 Reunião familiar — 28/06</div>
+          <div style="font-size:.72rem;color:var(--m);margin-top:2px">Você foi convidada. Sexta, 19h. Confirme presença pela secretaria.</div>
+        </div>
+        <div style="padding:11px;background:var(--bg);border-radius:8px">
+          <div style="font-weight:600;font-size:.82rem">💬 Mensagem respondida</div>
+          <div style="font-size:.72rem;color:var(--m);margin-top:2px">A equipe respondeu sua mensagem de 16/06 às 15h08.</div>
+        </div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn bp btn-full" onclick="cm('m-notif')">Marcar tudo como lido</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<script>
+// ── NAVEGAÇÃO ──
+function P(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(n=>n.classList.remove('on'));
+  const pg=document.getElementById('pg-'+id);
+  if(pg)pg.classList.add('on');
+  event?.currentTarget?.classList.add('on');
+}
+
+function om(id){document.getElementById(id).classList.add('op');}
+function cm(id){document.getElementById(id).classList.remove('op');}
+document.querySelectorAll('.mbk').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('op');}));
+
+function t(msg,type='ok'){
+  const el=document.getElementById('toast-el');
+  el.textContent=msg;el.className='toast '+type+' show';
+  setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+// ── LOGIN ──
+function fazerLogin(){
+  const code=document.getElementById('login-code').value.trim();
+  const cpf=document.getElementById('login-cpf').value.trim();
+  if(!code||!cpf){alert('Preencha o código e CPF.');return;}
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('portal-screen').style.display='block';
+}
+
+// ── CHAT ──
+let chatHist=[];
+async function enviarMsg(){
+  const inp=document.getElementById('msg-input');
+  const msg=inp.value.trim();
+  if(!msg)return;
+  inp.value='';
+  addBolha(msg,'u');
+  chatHist.push({role:'user',content:msg});
+  const ld=addBolha('Equipe revisando mensagem...','a');
+  const SYS=`Você é a equipe terapêutica da CT Esperança respondendo a Maria Silva, cônjuge de João Silva (acolhido, 34 anos, dependência de álcool, Fase 2, 97 dias de tratamento).
+
+Responda como uma equipe acolhedora, profissional e empática. Forneça informações tranquilizadoras sobre o progresso (sem revelar detalhes clínicos confidenciais). Incentive o apoio familiar saudável. Esclareça dúvidas sobre visitas, rotinas e como ela pode ajudar.
+
+Seja caloroso, humano e encorajador. Use linguagem simples, sem jargões técnicos excessivos. Se João enviou recado, invente algo positivo e encorajador.`;
+  const r=await callAI(msg,chatHist,SYS);
+  chatHist.push({role:'assistant',content:r});
+  ld.innerHTML='<strong>Equipe CT</strong> · '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'<br>'+r;
+  document.getElementById('chat-msgs').scrollTop=9999;
+}
+
+function addBolha(html,tipo){
+  const area=document.getElementById('chat-msgs');
+  const d=document.createElement('div');
+  d.className='cb '+tipo;d.innerHTML=html;
+  area.appendChild(d);area.scrollTop=9999;return d;
+}
+
+async function callAI(msg,hist,sys){
+  try{
+    const messages=hist.length>0?[...hist]:[{role:'user',content:msg}];
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,system:sys,messages})});
+    const d=await r.json();
+    return d.content?.map(c=>c.text||'').join('')||'Mensagem recebida. Retornaremos em breve.';
+  }catch(e){return 'Mensagem recebida! A equipe responderá em breve durante o horário de atendimento.';}
+}
+
+// ── INIT ──
+// Mostra portal direto (em produção mostraria login primeiro)
+document.getElementById('login-screen').style.display='none';
+document.getElementById('portal-screen').style.display='block';
+// Para mostrar o login: document.getElementById('login-screen').style.display='block'; document.getElementById('portal-screen').style.display='none';
+</script>
+</body>
+</html>

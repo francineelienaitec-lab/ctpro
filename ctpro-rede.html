@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CT Pro Rede — Painel Multi-Unidade</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+:root{
+  --v:#1a6b4a;--vc:#22c55e;--vm:#d1fae5;--c:#0f1a14;
+  --sb:#0c1610;--sbh:#172212;--bg:#f3f5f4;--w:#fff;
+  --b:#e0e8e2;--t:#1c2b22;--m:#6b7f72;--m2:#9cafa4;
+  --d:#ef4444;--db:#fee2e2;--wn:#f59e0b;--wb:#fef3c7;
+  --in:#3b82f6;--ib:#dbeafe;--r:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:14px;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);display:flex;height:100vh;overflow:hidden;}
+
+/* SIDEBAR */
+.sb{width:220px;min-width:220px;background:var(--sb);display:flex;flex-direction:column;height:100vh;overflow-y:auto;border-right:1px solid rgba(255,255,255,.04);}
+.sb-logo{padding:18px 16px 14px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--vc);display:flex;align-items:center;gap:7px;border-bottom:1px solid rgba(255,255,255,.05);}
+.sb-logo b{background:rgba(34,197,94,.2);border:1px solid rgba(34,197,94,.3);color:var(--vc);font-size:.58rem;padding:2px 7px;border-radius:4px;letter-spacing:.05em;}
+.sb-logo small{font-size:.6rem;color:rgba(255,255,255,.3);margin-left:2px;}
+.sb-sec{padding:12px 10px 3px;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.2);}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 12px;margin:1px 5px;border-radius:7px;cursor:pointer;font-size:.8rem;color:rgba(255,255,255,.42);transition:all .15s;border:none;background:none;width:calc(100% - 10px);text-align:left;font-family:'Inter',sans-serif;}
+.ni:hover{background:var(--sbh);color:rgba(255,255,255,.8);}
+.ni.on{background:rgba(34,197,94,.1);color:var(--vc);}
+.ni .ico{width:16px;text-align:center;font-size:.85rem;}
+.sb-foot{margin-top:auto;padding:12px 8px;border-top:1px solid rgba(255,255,255,.05);}
+.uc{display:flex;align-items:center;gap:9px;padding:9px 8px;border-radius:7px;cursor:pointer;}
+.ua{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--vc));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0;}
+.un{font-size:.76rem;font-weight:600;color:rgba(255,255,255,.8);}
+.ur{font-size:.6rem;color:rgba(255,255,255,.3);}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.tb{background:var(--w);border-bottom:1px solid var(--b);padding:0 20px;height:54px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.tb-title{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;}
+.tb-r{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.ib{width:34px;height:34px;border-radius:7px;border:1px solid var(--b);background:var(--w);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:background .15s;}
+.ib:hover{background:var(--bg);}
+.cnt{flex:1;overflow-y:auto;padding:20px;}
+.pg{display:none;animation:fi .22s ease;}
+.pg.on{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--w);border:1px solid var(--b);border-radius:var(--r);padding:18px;}
+.ct{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ct small{font-family:'Inter';font-weight:400;font-size:.68rem;color:var(--m);}
+
+/* STAT CARDS */
+.sr{display:grid;gap:12px;margin-bottom:16px;}
+.sr4{grid-template-columns:repeat(4,1fr);}
+.sr3{grid-template-columns:repeat(3,1fr);}
+.sr2{grid-template-columns:repeat(2,1fr);}
+.sc{background:var(--w);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;}
+.sl{font-size:.68rem;color:var(--m);font-weight:500;margin-bottom:5px;}
+.sv{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;line-height:1;}
+.sch{font-size:.68rem;margin-top:4px;}
+.sch.up{color:var(--vc);}
+.sch.dn{color:var(--d);}
+.sch.wn{color:var(--wn);}
+.si{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;margin-bottom:10px;}
+.bg-g{background:var(--vm);}
+.bg-b{background:var(--ib);}
+.bg-y{background:var(--wb);}
+.bg-r{background:var(--db);}
+.bg-p{background:#f3e8ff;}
+
+/* TABLE */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.8rem;}
+th{text-align:left;padding:9px 12px;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--m);border-bottom:1px solid var(--b);background:var(--bg);white-space:nowrap;}
+td{padding:11px 12px;border-bottom:1px solid #f0f4f1;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafcfa;}
+
+/* BADGES */
+.bx{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:50px;font-size:.64rem;font-weight:600;white-space:nowrap;}
+.g{background:var(--vm);color:var(--v);}
+.y{background:var(--wb);color:#92400e;}
+.r{background:var(--db);color:#991b1b;}
+.bl{background:var(--ib);color:#1d4ed8;}
+.gr{background:#f0f4f1;color:var(--m);}
+.pu{background:#f3e8ff;color:#6b21a8;}
+.ai{background:linear-gradient(135deg,#1a6b4a,#22c55e);color:#fff;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:'Inter',sans-serif;}
+.bp{background:var(--v);color:#fff;} .bp:hover{background:#155a3d;}
+.bs{background:var(--bg);color:var(--t);border:1px solid var(--b);} .bs:hover{background:#edf2ee;}
+.bai{background:linear-gradient(135deg,#1a6b4a,#22c55e);color:#fff;} .bai:hover{filter:brightness(1.08);}
+.btn-sm{padding:5px 10px;font-size:.72rem;}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+
+/* AI BOX */
+.aib{background:linear-gradient(135deg,rgba(26,107,74,.06),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.2);border-radius:var(--r);padding:14px;}
+.aibh{display:flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;color:var(--v);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.aibh::before{content:'✦';color:var(--vc);}
+.aibt{font-size:.8rem;color:var(--m);line-height:1.6;}
+
+/* PROGRESS */
+.pb{background:#e8ede9;border-radius:50px;height:6px;overflow:hidden;}
+.pf{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--v),var(--vc));transition:width .5s;}
+.pf-r{background:var(--d);}
+.pf-y{background:var(--wn);}
+
+/* CT CARD (unidade) */
+.ct-card{background:var(--w);border:1px solid var(--b);border-radius:var(--r);padding:18px;position:relative;overflow:hidden;transition:all .2s;cursor:pointer;}
+.ct-card:hover{border-color:var(--v);transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,107,74,.1);}
+.ct-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.ct-card.ok::before{background:linear-gradient(90deg,var(--v),var(--vc));}
+.ct-card.wn::before{background:linear-gradient(90deg,var(--wn),#fbbf24);}
+.ct-card.er::before{background:linear-gradient(90deg,var(--d),#f87171);}
+.ct-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.ct-card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--t);}
+.ct-card-loc{font-size:.7rem;color:var(--m);margin-top:2px;}
+.ct-card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.ct-stat{text-align:center;padding:8px;background:var(--bg);border-radius:7px;}
+.ct-stat-v{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--t);}
+.ct-stat-l{font-size:.62rem;color:var(--m);margin-top:1px;}
+.ct-bar-row{margin-bottom:6px;}
+.ct-bar-label{display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:3px;}
+
+/* MODAL */
+.mbk{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.mbk.op{display:flex;}
+.mod{background:#fff;border-radius:14px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.2);animation:su .22s ease;}
+@keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.mh{padding:18px 22px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.mh h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;}
+.mc{padding:22px;}
+.mf{padding:14px 22px;border-top:1px solid var(--b);display:flex;gap:8px;justify-content:flex-end;}
+.mx{cursor:pointer;font-size:1.1rem;color:var(--m);background:none;border:none;}
+
+/* TABS */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--b);margin-bottom:16px;overflow-x:auto;}
+.tab{padding:9px 14px;font-size:.78rem;font-weight:600;color:var(--m);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',sans-serif;white-space:nowrap;}
+.tab.on{color:var(--v);border-bottom-color:var(--v);}
+
+/* INPUTS */
+.ig{margin-bottom:12px;}
+.lbl{display:block;font-size:.7rem;font-weight:600;color:var(--m);margin-bottom:4px;}
+.inp,.sel{width:100%;padding:8px 11px;border:1.5px solid var(--b);border-radius:7px;font-size:.82rem;color:var(--t);font-family:'Inter',sans-serif;outline:none;background:#fff;transition:border .15s;}
+.inp:focus,.sel:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(26,107,74,.08);}
+.ir2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;z-index:999;background:var(--c);color:#fff;padding:11px 16px;border-radius:9px;font-size:.78rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:7px;max-width:340px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-left:3px solid var(--vc);}
+.toast.er{border-left:3px solid var(--d);}
+
+/* MAPA CALOR */
+.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.hm-cell{height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;cursor:pointer;transition:transform .15s;}
+.hm-cell:hover{transform:scale(1.1);}
+.hm-0{background:#e8ede9;}
+.hm-1{background:#bbf7d0;}
+.hm-2{background:#86efac;}
+.hm-3{background:#4ade80;}
+.hm-4{background:#22c55e;}
+.hm-5{background:#16a34a;}
+
+/* CHART BAR */
+.chart-bars{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:10px;}
+.cb-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.cb-bar{width:100%;border-radius:4px 4px 0 0;transition:height .5s;background:linear-gradient(180deg,var(--vc),var(--v));}
+.cb-lbl{font-size:.62rem;color:var(--m);white-space:nowrap;}
+.cb-val{font-size:.65rem;font-weight:700;color:var(--t);}
+
+@media(max-width:900px){
+  .sb{display:none;}
+  .sr4{grid-template-columns:repeat(2,1fr);}
+  .g2,.g3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sb">
+  <div class="sb-logo">CT Pro <b>IA</b> <small>REDE</small></div>
+
+  <div class="sb-sec">Rede</div>
+  <button class="ni on" onclick="P('dash')"><span class="ico">⊞</span>Painel da Rede</button>
+  <button class="ni" onclick="P('unidades')"><span class="ico">🏠</span>Unidades</button>
+  <button class="ni" onclick="P('comparativo')"><span class="ico">📊</span>Comparativo</button>
+
+  <div class="sb-sec">Gestão</div>
+  <button class="ni" onclick="P('acolhidos-rede')"><span class="ico">👤</span>Acolhidos (Rede)</button>
+  <button class="ni" onclick="P('transferencias')"><span class="ico">🔄</span>Transferências</button>
+  <button class="ni" onclick="P('financeiro-rede')"><span class="ico">💰</span>Financeiro Rede</button>
+
+  <div class="sb-sec">IA & Relatórios</div>
+  <button class="ni" onclick="P('ia-rede')"><span class="ico">✦</span>Assistente IA</button>
+  <button class="ni" onclick="P('alertas-rede')"><span class="ico">🔔</span>Alertas <span style="margin-left:auto;background:#ef4444;color:#fff;font-size:.58rem;font-weight:700;padding:1px 5px;border-radius:50px">9</span></button>
+  <button class="ni" onclick="P('relatorios-rede')"><span class="ico">📋</span>Relatórios Rede</button>
+  <button class="ni" onclick="P('bi')"><span class="ico">🧠</span>Business Intelligence</button>
+
+  <div class="sb-sec">Admin</div>
+  <button class="ni" onclick="P('equipe-rede')"><span class="ico">👥</span>Equipe Rede</button>
+  <button class="ni" onclick="P('config-rede')"><span class="ico">⚙️</span>Configurações</button>
+
+  <div class="sb-foot">
+    <div class="uc">
+      <div class="ua">RN</div>
+      <div><div class="un">Rede Esperança</div><div class="ur">Plano Rede · 5 unidades</div></div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="tb">
+    <div class="tb-title" id="tbt">Painel da Rede</div>
+    <div class="tb-r">
+      <select style="padding:6px 10px;border:1px solid var(--b);border-radius:7px;font-size:.78rem;font-family:'Inter',sans-serif;outline:none;color:var(--t);background:var(--bg)">
+        <option>Todas as unidades</option>
+        <option>CT Esperança — SP</option>
+        <option>CT Renascer — MG</option>
+        <option>CT Restaurar — PR</option>
+        <option>CT Vida Nova — GO</option>
+        <option>CT Recomeço — RJ</option>
+      </select>
+      <div class="ib">🔔</div>
+      <div class="ib">✦</div>
+    </div>
+  </div>
+  <div class="cnt">
+
+<!-- ══════════ DASHBOARD DA REDE ══════════ -->
+<div class="pg on" id="pg-dash">
+  <!-- STATS CONSOLIDADOS -->
+  <div class="sr sr4">
+    <div class="sc">
+      <div class="si bg-g">🏠</div>
+      <div class="sl">Total de unidades</div>
+      <div class="sv">5</div>
+      <div class="sch up">↑ +1 este trimestre</div>
+    </div>
+    <div class="sc">
+      <div class="si bg-b">👤</div>
+      <div class="sl">Acolhidos na rede</div>
+      <div class="sv">187</div>
+      <div class="sch up">↑ +12 este mês</div>
+    </div>
+    <div class="sc">
+      <div class="si bg-g">📊</div>
+      <div class="sl">Ocupação média</div>
+      <div class="sv">89%</div>
+      <div class="sch up">↑ vs. 84% mês anterior</div>
+    </div>
+    <div class="sc">
+      <div class="si bg-y">💰</div>
+      <div class="sl">Receita rede/mês</div>
+      <div class="sv" style="font-size:1.3rem">R$198k</div>
+      <div class="sch up">↑ +9% vs. maio</div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:14px">
+    <!-- MAPA DE SAÚDE DAS UNIDADES -->
+    <div class="card">
+      <div class="ct">🏠 Status das unidades <button class="btn bai btn-sm" onclick="P('unidades')">Ver todas</button></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;cursor:pointer" onclick="abrirUnidade('CT Esperança')">
+          <div style="width:8px;height:8px;background:var(--vc);border-radius:50%;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:.82rem">CT Esperança</strong><span class="bx g">96%</span></div>
+            <div style="font-size:.68rem;color:var(--m)">São Paulo — SP · 48/50 acolhidos</div>
+            <div class="pb" style="margin-top:5px"><div class="pf" style="width:96%"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;cursor:pointer" onclick="abrirUnidade('CT Renascer')">
+          <div style="width:8px;height:8px;background:var(--vc);border-radius:50%;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:.82rem">CT Renascer</strong><span class="bx g">88%</span></div>
+            <div style="font-size:.68rem;color:var(--m)">Belo Horizonte — MG · 44/50 acolhidos</div>
+            <div class="pb" style="margin-top:5px"><div class="pf" style="width:88%"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;cursor:pointer" onclick="abrirUnidade('CT Restaurar')">
+          <div style="width:8px;height:8px;background:var(--wn);border-radius:50%;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:.82rem">CT Restaurar</strong><span class="bx y">72%</span></div>
+            <div style="font-size:.68rem;color:var(--m)">Curitiba — PR · 36/50 acolhidos</div>
+            <div class="pb" style="margin-top:5px"><div class="pf pf-y" style="width:72%"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;cursor:pointer" onclick="abrirUnidade('CT Vida Nova')">
+          <div style="width:8px;height:8px;background:var(--vc);border-radius:50%;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:.82rem">CT Vida Nova</strong><span class="bx g">94%</span></div>
+            <div style="font-size:.68rem;color:var(--m)">Goiânia — GO · 33/35 acolhidos</div>
+            <div class="pb" style="margin-top:5px"><div class="pf" style="width:94%"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;cursor:pointer" onclick="abrirUnidade('CT Recomeço')">
+          <div style="width:8px;height:8px;background:var(--d);border-radius:50%;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:.82rem">CT Recomeço</strong><span class="bx r">78%</span></div>
+            <div style="font-size:.68rem;color:var(--m)">Rio de Janeiro — RJ · 42/54 acolhidos ⚠ 3 alertas</div>
+            <div class="pb" style="margin-top:5px"><div class="pf pf-r" style="width:78%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERTAS CRÍTICOS DA REDE -->
+    <div class="card">
+      <div class="ct">🚨 Alertas críticos da rede <span class="bx r">9 ativos</span></div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div style="padding:10px;background:#fff5f5;border-radius:8px;border:1px solid #fecaca">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><strong style="font-size:.8rem">CT Recomeço · João F.</strong><div style="font-size:.7rem;color:var(--m);margin-top:2px">Risco crítico IA — 4 ocorrências em 5 dias</div></div>
+            <span class="bx r">Urgente</span>
+          </div>
+          <button class="btn bs btn-sm" style="margin-top:6px" onclick="om('m-alerta')">Ver detalhes</button>
+        </div>
+        <div style="padding:10px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a">
+          <div style="display:flex;justify-content:space-between">
+            <div><strong style="font-size:.8rem">CT Restaurar — Ocupação baixa</strong><div style="font-size:.7rem;color:var(--m);margin-top:2px">72% de ocupação — receita abaixo do esperado</div></div>
+            <span class="bx y">Atenção</span>
+          </div>
+          <button class="btn bai btn-sm" style="margin-top:6px" onclick="aiSugestao('CT Restaurar','ocupação baixa')">✦ Sugestão IA</button>
+        </div>
+        <div style="padding:10px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a">
+          <div style="display:flex;justify-content:space-between">
+            <div><strong style="font-size:.8rem">CT Esperança · 7 PAS vencidos</strong><div style="font-size:.7rem;color:var(--m);margin-top:2px">Planos sem revisão há mais de 30 dias</div></div>
+            <span class="bx y">Atenção</span>
+          </div>
+        </div>
+        <div style="padding:10px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe">
+          <div style="display:flex;justify-content:space-between">
+            <div><strong style="font-size:.8rem">Rede — 18 altas previstas (30 dias)</strong><div style="font-size:.7rem;color:var(--m);margin-top:2px">Planejamento de reinserção recomendado</div></div>
+            <span class="bx bl">Info</span>
+          </div>
+          <button class="btn bai btn-sm" style="margin-top:6px" onclick="aiSugestao('rede','reinserção')">✦ Plano IA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVOLUÇÃO MENSAL + INSIGHT IA -->
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📈 Acolhidos por unidade — Junho 2026</div>
+      <div class="chart-bars" id="chart-ocu">
+        <div class="cb-wrap"><div class="cb-bar" style="height:96%"></div><div class="cb-val">48</div><div class="cb-lbl">Esperança</div></div>
+        <div class="cb-wrap"><div class="cb-bar" style="height:88%"></div><div class="cb-val">44</div><div class="cb-lbl">Renascer</div></div>
+        <div class="cb-wrap"><div class="cb-bar" style="height:72%" style="background:linear-gradient(180deg,#fbbf24,#f59e0b)"></div><div class="cb-val">36</div><div class="cb-lbl">Restaurar</div></div>
+        <div class="cb-wrap"><div class="cb-bar" style="height:94%"></div><div class="cb-val">33</div><div class="cb-lbl">Vida Nova</div></div>
+        <div class="cb-wrap"><div class="cb-bar" style="height:78%" style="background:linear-gradient(180deg,#f87171,#ef4444)"></div><div class="cb-val">42</div><div class="cb-lbl">Recomeço</div></div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--m)"><span style="width:10px;height:10px;background:var(--vc);border-radius:2px;display:inline-block"></span>Meta atingida</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--m)"><span style="width:10px;height:10px;background:var(--wn);border-radius:2px;display:inline-block"></span>Atenção</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--m)"><span style="width:10px;height:10px;background:var(--d);border-radius:2px;display:inline-block"></span>Abaixo da meta</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ct">✦ Insight IA da Rede</div>
+      <div class="aib" style="margin-bottom:10px">
+        <div class="aibh">Análise consolidada</div>
+        <div class="aibt">A CT Restaurar (PR) está com 72% de ocupação há 2 meses. A IA identificou que a baixa é causada por falta de presença digital local. Recomendo: (1) parceria com CAPS de Curitiba, (2) evento de sensibilização na região.</div>
+      </div>
+      <div class="aib">
+        <div class="aibh">Benchmark interno</div>
+        <div class="aibt">A CT Esperança tem a melhor taxa de conclusão de tratamento da rede (68%). A CT Recomeço tem a menor (41%). A IA detectou que a diferença está na frequência de atividades terapêuticas e qualidade dos PAS.</div>
+        <button class="btn bai btn-sm" style="margin-top:8px" onclick="om('m-ai-rede')">✦ Ver análise completa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ UNIDADES ══════════ -->
+<div class="pg" id="pg-unidades">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div style="font-size:.78rem;color:var(--m)">5 unidades ativas · Plano Rede</div>
+    <button class="btn bp" onclick="om('m-nova-ct')">+ Adicionar unidade</button>
+  </div>
+  <div class="g2">
+    <div class="ct-card ok" onclick="abrirUnidade('CT Esperança')">
+      <div class="ct-card-header">
+        <div><div class="ct-card-name">CT Esperança</div><div class="ct-card-loc">📍 São Paulo — SP · 50 vagas</div></div>
+        <span class="bx g">✓ Saudável</span>
+      </div>
+      <div class="ct-card-stats">
+        <div class="ct-stat"><div class="ct-stat-v">48</div><div class="ct-stat-l">Acolhidos</div></div>
+        <div class="ct-stat"><div class="ct-stat-v" style="color:var(--vc)">96%</div><div class="ct-stat-l">Ocupação</div></div>
+        <div class="ct-stat"><div class="ct-stat-v">5</div><div class="ct-stat-l">Altas/mês</div></div>
+      </div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>Ocupação</span><strong>96%</strong></div><div class="pb"><div class="pf" style="width:96%"></div></div></div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>PAS em dia</span><strong>86%</strong></div><div class="pb"><div class="pf" style="width:86%"></div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <span style="font-size:.68rem;color:var(--m)">Coord: Ana Nascimento</span>
+        <div style="display:flex;gap:5px"><button class="btn bs btn-sm" onclick="event.stopPropagation()">Acessar</button><button class="btn bai btn-sm" onclick="event.stopPropagation();om('m-ai-rede')">✦ IA</button></div>
+      </div>
+    </div>
+
+    <div class="ct-card ok" onclick="abrirUnidade('CT Renascer')">
+      <div class="ct-card-header">
+        <div><div class="ct-card-name">CT Renascer</div><div class="ct-card-loc">📍 Belo Horizonte — MG · 50 vagas</div></div>
+        <span class="bx g">✓ Saudável</span>
+      </div>
+      <div class="ct-card-stats">
+        <div class="ct-stat"><div class="ct-stat-v">44</div><div class="ct-stat-l">Acolhidos</div></div>
+        <div class="ct-stat"><div class="ct-stat-v" style="color:var(--vc)">88%</div><div class="ct-stat-l">Ocupação</div></div>
+        <div class="ct-stat"><div class="ct-stat-v">4</div><div class="ct-stat-l">Altas/mês</div></div>
+      </div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>Ocupação</span><strong>88%</strong></div><div class="pb"><div class="pf" style="width:88%"></div></div></div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>PAS em dia</span><strong>91%</strong></div><div class="pb"><div class="pf" style="width:91%"></div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <span style="font-size:.68rem;color:var(--m)">Coord: Paulo Ferreira</span>
+        <div style="display:flex;gap:5px"><button class="btn bs btn-sm" onclick="event.stopPropagation()">Acessar</button><button class="btn bai btn-sm" onclick="event.stopPropagation()">✦ IA</button></div>
+      </div>
+    </div>
+
+    <div class="ct-card wn" onclick="abrirUnidade('CT Restaurar')">
+      <div class="ct-card-header">
+        <div><div class="ct-card-name">CT Restaurar</div><div class="ct-card-loc">📍 Curitiba — PR · 50 vagas</div></div>
+        <span class="bx y">⚠ Atenção</span>
+      </div>
+      <div class="ct-card-stats">
+        <div class="ct-stat"><div class="ct-stat-v">36</div><div class="ct-stat-l">Acolhidos</div></div>
+        <div class="ct-stat"><div class="ct-stat-v" style="color:var(--wn)">72%</div><div class="ct-stat-l">Ocupação</div></div>
+        <div class="ct-stat"><div class="ct-stat-v">2</div><div class="ct-stat-l">Altas/mês</div></div>
+      </div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>Ocupação</span><strong style="color:var(--wn)">72%</strong></div><div class="pb"><div class="pf pf-y" style="width:72%"></div></div></div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>PAS em dia</span><strong>78%</strong></div><div class="pb"><div class="pf pf-y" style="width:78%"></div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <span style="font-size:.68rem;color:var(--m)">Coord: Sandra Lima</span>
+        <div style="display:flex;gap:5px"><button class="btn bs btn-sm" onclick="event.stopPropagation()">Acessar</button><button class="btn bai btn-sm" onclick="event.stopPropagation();aiSugestao('CT Restaurar','ocupação baixa')">✦ Plano IA</button></div>
+      </div>
+    </div>
+
+    <div class="ct-card ok" onclick="abrirUnidade('CT Vida Nova')">
+      <div class="ct-card-header">
+        <div><div class="ct-card-name">CT Vida Nova</div><div class="ct-card-loc">📍 Goiânia — GO · 35 vagas</div></div>
+        <span class="bx g">✓ Saudável</span>
+      </div>
+      <div class="ct-card-stats">
+        <div class="ct-stat"><div class="ct-stat-v">33</div><div class="ct-stat-l">Acolhidos</div></div>
+        <div class="ct-stat"><div class="ct-stat-v" style="color:var(--vc)">94%</div><div class="ct-stat-l">Ocupação</div></div>
+        <div class="ct-stat"><div class="ct-stat-v">3</div><div class="ct-stat-l">Altas/mês</div></div>
+      </div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>Ocupação</span><strong>94%</strong></div><div class="pb"><div class="pf" style="width:94%"></div></div></div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>PAS em dia</span><strong>94%</strong></div><div class="pb"><div class="pf" style="width:94%"></div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <span style="font-size:.68rem;color:var(--m)">Coord: Maria Souza</span>
+        <div style="display:flex;gap:5px"><button class="btn bs btn-sm" onclick="event.stopPropagation()">Acessar</button><button class="btn bai btn-sm" onclick="event.stopPropagation()">✦ IA</button></div>
+      </div>
+    </div>
+
+    <div class="ct-card er" onclick="abrirUnidade('CT Recomeço')">
+      <div class="ct-card-header">
+        <div><div class="ct-card-name">CT Recomeço</div><div class="ct-card-loc">📍 Rio de Janeiro — RJ · 54 vagas</div></div>
+        <span class="bx r">🚨 3 alertas</span>
+      </div>
+      <div class="ct-card-stats">
+        <div class="ct-stat"><div class="ct-stat-v">42</div><div class="ct-stat-l">Acolhidos</div></div>
+        <div class="ct-stat"><div class="ct-stat-v" style="color:var(--wn)">78%</div><div class="ct-stat-l">Ocupação</div></div>
+        <div class="ct-stat"><div class="ct-stat-v" style="color:var(--d)">3</div><div class="ct-stat-l">Alertas críticos</div></div>
+      </div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>Ocupação</span><strong style="color:var(--d)">78%</strong></div><div class="pb"><div class="pf pf-r" style="width:78%"></div></div></div>
+      <div class="ct-bar-row"><div class="ct-bar-label"><span>PAS em dia</span><strong style="color:var(--d)">61%</strong></div><div class="pb"><div class="pf pf-r" style="width:61%"></div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <span style="font-size:.68rem;color:var(--m)">Coord: Carlos Lima</span>
+        <div style="display:flex;gap:5px"><button class="btn bs btn-sm" onclick="event.stopPropagation()">Acessar</button><button class="btn bai btn-sm" onclick="event.stopPropagation();om('m-ai-rede')">✦ Diagnóstico IA</button></div>
+      </div>
+    </div>
+
+    <!-- CARD ADICIONAR -->
+    <div class="ct-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;cursor:pointer;border:2px dashed var(--b)" onclick="om('m-nova-ct')">
+      <div style="font-size:2.5rem;margin-bottom:12px;opacity:.3">+</div>
+      <div style="font-weight:600;color:var(--m);font-size:.9rem">Adicionar unidade</div>
+      <div style="font-size:.72rem;color:var(--m2);margin-top:4px">Plano Rede suporta até 5 unidades</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ COMPARATIVO ══════════ -->
+<div class="pg" id="pg-comparativo">
+  <div class="card" style="margin-bottom:14px">
+    <div class="ct">📊 Comparativo de indicadores — Junho 2026</div>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>Unidade</th>
+            <th>Acolhidos</th>
+            <th>Ocupação</th>
+            <th>PAS em dia</th>
+            <th>Adesão ativid.</th>
+            <th>Tx. conclusão</th>
+            <th>Ocorrências</th>
+            <th>Receita/mês</th>
+            <th>Score IA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CT Esperança</strong><div style="font-size:.65rem;color:var(--m)">SP</div></td>
+            <td>48/50</td>
+            <td><span class="bx g">96%</span></td>
+            <td><span class="bx g">86%</span></td>
+            <td><span class="bx g">91%</span></td>
+            <td><span class="bx g">68%</span></td>
+            <td><span class="bx g">3</span></td>
+            <td style="color:var(--v);font-weight:700">R$86.400</td>
+            <td><span class="bx ai">92/100</span></td>
+          </tr>
+          <tr>
+            <td><strong>CT Vida Nova</strong><div style="font-size:.65rem;color:var(--m)">GO</div></td>
+            <td>33/35</td>
+            <td><span class="bx g">94%</span></td>
+            <td><span class="bx g">94%</span></td>
+            <td><span class="bx g">88%</span></td>
+            <td><span class="bx g">65%</span></td>
+            <td><span class="bx g">1</span></td>
+            <td style="color:var(--v);font-weight:700">R$54.000</td>
+            <td><span class="bx ai">89/100</span></td>
+          </tr>
+          <tr>
+            <td><strong>CT Renascer</strong><div style="font-size:.65rem;color:var(--m)">MG</div></td>
+            <td>44/50</td>
+            <td><span class="bx g">88%</span></td>
+            <td><span class="bx g">91%</span></td>
+            <td><span class="bx g">85%</span></td>
+            <td><span class="bx g">61%</span></td>
+            <td><span class="bx g">4</span></td>
+            <td style="color:var(--v);font-weight:700">R$72.000</td>
+            <td><span class="bx ai">85/100</span></td>
+          </tr>
+          <tr>
+            <td><strong>CT Recomeço</strong><div style="font-size:.65rem;color:var(--m)">RJ</div></td>
+            <td>42/54</td>
+            <td><span class="bx y">78%</span></td>
+            <td><span class="bx r">61%</span></td>
+            <td><span class="bx y">77%</span></td>
+            <td><span class="bx r">41%</span></td>
+            <td><span class="bx r">11</span></td>
+            <td style="color:var(--wn);font-weight:700">R$61.200</td>
+            <td><span class="bx r">58/100</span></td>
+          </tr>
+          <tr>
+            <td><strong>CT Restaurar</strong><div style="font-size:.65rem;color:var(--m)">PR</div></td>
+            <td>36/50</td>
+            <td><span class="bx y">72%</span></td>
+            <td><span class="bx y">78%</span></td>
+            <td><span class="bx g">83%</span></td>
+            <td><span class="bx y">55%</span></td>
+            <td><span class="bx g">2</span></td>
+            <td style="color:var(--wn);font-weight:700">R$52.200</td>
+            <td><span class="bx y">71/100</span></td>
+          </tr>
+          <tr style="background:var(--vm);font-weight:700">
+            <td><strong>MÉDIA DA REDE</strong></td>
+            <td>203/239</td>
+            <td><span class="bx g">85,6%</span></td>
+            <td><span class="bx g">82%</span></td>
+            <td><span class="bx g">84,8%</span></td>
+            <td><span class="bx g">58%</span></td>
+            <td>21</td>
+            <td style="color:var(--v)">R$325.800</td>
+            <td><span class="bx ai">79/100</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="aib">
+    <div class="aibh">Diagnóstico IA da rede</div>
+    <div class="aibt">A CT Recomeço (RJ) puxa o score geral da rede para baixo. Os principais gargalos são: (1) PAS desatualizados — 39% fora do prazo; (2) alta taxa de ocorrências — 11 em junho vs. média de 2,5 na rede; (3) taxa de conclusão 41% abaixo da meta de 60%. Recomendo: auditoria presencial, troca de protocolo terapêutico e treinamento da equipe técnica baseado no modelo da CT Esperança.</div>
+    <button class="btn bai btn-sm" style="margin-top:10px" onclick="om('m-ai-rede')">✦ Gerar plano de melhoria completo</button>
+  </div>
+</div>
+
+<!-- ══════════ TRANSFERÊNCIAS ══════════ -->
+<div class="pg" id="pg-transferencias">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div class="aib" style="flex:1;min-width:240px">
+      <div class="aibh">Transferências entre unidades</div>
+      <div class="aibt">Transfira acolhidos entre unidades da rede mantendo todo o histórico, prontuário e PAS. A IA sugere a melhor unidade com base em vagas, perfil e proximidade familiar.</div>
+    </div>
+    <button class="btn bai" onclick="om('m-transf')">✦ Nova transferência com IA</button>
+  </div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Acolhido</th><th>Origem</th><th>Destino</th><th>Motivo</th><th>Data</th><th>Status</th><th>Aprovado por</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pedro Alves</strong></td><td>CT Recomeço (RJ)</td><td>CT Esperança (SP)</td><td>Proximidade familiar</td><td>10/06/2026</td><td><span class="bx g">Concluída</span></td><td>Dir. Rede</td></tr>
+          <tr><td><strong>Sandra Lima</strong></td><td>CT Restaurar (PR)</td><td>CT Renascer (MG)</td><td>Solicitação familiar</td><td>15/06/2026</td><td><span class="bx y">Em andamento</span></td><td>Dir. Rede</td></tr>
+          <tr><td><strong>Marcos José</strong></td><td>CT Recomeço (RJ)</td><td>CT Vida Nova (GO)</td><td>Questão de segurança</td><td>20/06/2026</td><td><span class="bx bl">Solicitada</span></td><td>Pendente</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FINANCEIRO REDE ══════════ -->
+<div class="pg" id="pg-financeiro-rede">
+  <div class="sr sr4">
+    <div class="sc"><div class="si bg-g">💵</div><div class="sl">Receita total rede</div><div class="sv" style="font-size:1.2rem">R$325.8k</div><div class="sch up">↑ +9% vs. maio</div></div>
+    <div class="sc"><div class="si bg-r">💸</div><div class="sl">Despesas rede</div><div class="sv" style="font-size:1.2rem">R$198.4k</div><div class="sch dn">↑ +4%</div></div>
+    <div class="sc"><div class="si bg-g">📊</div><div class="sl">Saldo rede</div><div class="sv" style="font-size:1.2rem;color:var(--v)">R$127.4k</div><div class="sch up">Margem 39,1%</div></div>
+    <div class="sc"><div class="si bg-b">📜</div><div class="sl">Contrapartida CEBAS</div><div class="sv" style="font-size:1.2rem">R$42k</div><div class="sch up">Meta: R$38k ✓</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">💰 Receita por unidade — Junho 2026</div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Unidade</th><th>Vagas pagas</th><th>Convênios</th><th>Gratuidades</th><th>Receita</th><th>Despesas</th><th>Margem</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CT Esperança</strong></td><td>R$64.800</td><td>R$21.600</td><td>11 vagas</td><td style="color:var(--v);font-weight:700">R$86.400</td><td>R$54.200</td><td><span class="bx g">37.3%</span></td></tr>
+          <tr><td><strong>CT Renascer</strong></td><td>R$57.600</td><td>R$14.400</td><td>9 vagas</td><td style="color:var(--v);font-weight:700">R$72.000</td><td>R$44.100</td><td><span class="bx g">38.8%</span></td></tr>
+          <tr><td><strong>CT Recomeço</strong></td><td>R$43.200</td><td>R$18.000</td><td>8 vagas</td><td style="color:var(--wn);font-weight:700">R$61.200</td><td>R$48.600</td><td><span class="bx y">20.6%</span></td></tr>
+          <tr><td><strong>CT Vida Nova</strong></td><td>R$46.800</td><td>R$7.200</td><td>7 vagas</td><td style="color:var(--v);font-weight:700">R$54.000</td><td>R(29.800</td><td><span class="bx g">44.8%</span></td></tr>
+          <tr><td><strong>CT Restaurar</strong></td><td>R$43.200</td><td>R$9.000</td><td>6 vagas</td><td style="color:var(--wn);font-weight:700">R$52.200</td><td>R$41.700</td><td><span class="bx y">20.1%</span></td></tr>
+          <tr style="background:var(--vm);font-weight:700"><td>TOTAL</td><td>R$255.600</td><td>R$70.200</td><td>41 vagas</td><td style="color:var(--v)">R$325.800</td><td>R$218.400</td><td><span class="bx g">33%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BI ══════════ -->
+<div class="pg" id="pg-bi">
+  <div class="aib" style="margin-bottom:16px">
+    <div class="aibh">Business Intelligence — exclusivo plano Rede</div>
+    <div class="aibt">Análises avançadas geradas pela IA com base em todos os dados da sua rede. Tendências, previsões, benchmarks e recomendações estratégicas.</div>
+  </div>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="sc" style="border-top:3px solid var(--vc)">
+      <div class="sl">Score médio da rede</div>
+      <div class="sv" style="color:var(--v)">79</div>
+      <div class="sch wn">⚠ Meta: 85</div>
+      <div class="pb" style="margin-top:8px"><div class="pf" style="width:79%"></div></div>
+    </div>
+    <div class="sc" style="border-top:3px solid var(--in)">
+      <div class="sl">Taxa média de conclusão</div>
+      <div class="sv">58%</div>
+      <div class="sch wn">Meta: 65%</div>
+      <div class="pb" style="margin-top:8px"><div class="pf" style="width:58%;background:var(--in)"></div></div>
+    </div>
+    <div class="sc" style="border-top:3px solid var(--wn)">
+      <div class="sl">Tempo médio de permanência</div>
+      <div class="sv">87d</div>
+      <div class="sch up">↑ +6 dias vs. mar</div>
+      <div class="pb" style="margin-top:8px"><div class="pf" style="width:73%;background:var(--wn)"></div></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📅 Heatmap de ocorrências — Últimos 49 dias</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="font-size:.65rem;color:var(--m)">Dom</span><span style="font-size:.65rem;color:var(--m)">Seg</span><span style="font-size:.65rem;color:var(--m)">Ter</span><span style="font-size:.65rem;color:var(--m)">Qua</span><span style="font-size:.65rem;color:var(--m)">Qui</span><span style="font-size:.65rem;color:var(--m)">Sex</span><span style="font-size:.65rem;color:var(--m)">Sáb</span>
+      </div>
+      <div class="heatmap" id="heatmap"></div>
+      <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
+        <span style="font-size:.65rem;color:var(--m)">Menos</span>
+        <div class="hm-0" style="width:14px;height:14px;border-radius:3px"></div>
+        <div class="hm-1" style="width:14px;height:14px;border-radius:3px"></div>
+        <div class="hm-3" style="width:14px;height:14px;border-radius:3px"></div>
+        <div class="hm-5" style="width:14px;height:14px;border-radius:3px"></div>
+        <span style="font-size:.65rem;color:var(--m)">Mais ocorrências</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">🎯 Previsão IA — Próximos 30 dias</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="padding:11px;background:var(--vm);border-radius:8px;border:1px solid rgba(26,107,74,.15)">
+          <div style="font-weight:700;font-size:.82rem;color:var(--v)">18 altas previstas</div>
+          <div style="font-size:.72rem;color:var(--m);margin-top:2px">4 CT Esperança · 5 CT Renascer · 3 CT Vida Nova · 6 CT Recomeço</div>
+        </div>
+        <div style="padding:11px;background:var(--ib);border-radius:8px;border:1px solid #bfdbfe">
+          <div style="font-weight:700;font-size:.82rem;color:#1d4ed8">23 novas admissões previstas</div>
+          <div style="font-size:.72rem;color:var(--m);margin-top:2px">Baseado em histórico e demanda da lista de espera</div>
+        </div>
+        <div style="padding:11px;background:var(--wb);border-radius:8px;border:1px solid #fde68a">
+          <div style="font-weight:700;font-size:.82rem;color:#92400e">CT Restaurar — risco de queda para 65%</div>
+          <div style="font-size:.72rem;color:var(--m);margin-top:2px">Projeção IA baseada na tendência dos últimos 60 dias</div>
+        </div>
+        <div style="padding:11px;background:var(--vm);border-radius:8px;border:1px solid rgba(26,107,74,.15)">
+          <div style="font-weight:700;font-size:.82rem;color:var(--v)">Receita prevista: R$341k</div>
+          <div style="font-size:.72rem;color:var(--m);margin-top:2px">↑ +4,7% se CT Restaurar atingir 80% de ocupação</div>
+        </div>
+      </div>
+      <button class="btn bai" style="width:100%;margin-top:12px" onclick="om('m-ai-rede')">✦ Análise estratégica completa</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ RELATÓRIOS REDE ══════════ -->
+<div class="pg" id="pg-relatorios-rede">
+  <div class="aib" style="margin-bottom:16px">
+    <div class="aibh">Relatórios consolidados da rede — diferencial exclusivo</div>
+    <div class="aibt">Gere relatórios consolidando todas as unidades em um único documento para apresentar a financiadores, SENAPRED, CONAD e parceiros.</div>
+  </div>
+  <div class="g3">
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:1.8rem;margin-bottom:10px">📋</div><div style="font-weight:700;margin-bottom:5px">SENAPRED — Rede completa</div><div style="font-size:.72rem;color:var(--m);margin-bottom:14px">Todas as unidades em um relatório</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('SENAPRED consolidado da rede')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:1.8rem;margin-bottom:10px">💰</div><div style="font-weight:700;margin-bottom:5px">DRE Consolidado</div><div style="font-size:.72rem;color:var(--m);margin-bottom:14px">Resultado financeiro de toda a rede</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('DRE financeiro consolidado da rede')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:1.8rem;margin-bottom:10px">🏆</div><div style="font-weight:700;margin-bottom:5px">Relatório de Impacto Social</div><div style="font-size:.72rem;color:var(--m);margin-bottom:14px">Para financiadores e apresentações</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('impacto social da rede de comunidades terapêuticas')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:1.8rem;margin-bottom:10px">📜</div><div style="font-weight:700;margin-bottom:5px">CEBAS — Rede</div><div style="font-size:.72rem;color:var(--m);margin-bottom:14px">Gratuidades consolidadas da rede</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('CEBAS consolidado da rede')">✦ Gerar</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:1.8rem;margin-bottom:10px">🧠</div><div style="font-weight:700;margin-bottom:5px">Análise Estratégica</div><div style="font-size:.72rem;color:var(--m);margin-bottom:14px">Desempenho, tendências e próximos passos</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('análise estratégica da rede')">✦ Gerar com IA</button></div>
+    <div class="card" style="text-align:center;padding:22px"><div style="font-size:1.8rem;margin-bottom:10px">🌱</div><div style="font-weight:700;margin-bottom:5px">Reinserção Social — Rede</div><div style="font-size:.72rem;color:var(--m);margin-bottom:14px">Taxa de sucesso pós-alta de todas as CTs</div><button class="btn bai" style="width:100%" onclick="aiRelatorio('reinserção social consolidada da rede')">✦ Gerar</button></div>
+  </div>
+</div>
+
+<!-- ASSISTENTE IA DA REDE -->
+<div class="pg" id="pg-ia-rede">
+  <div class="card" style="padding:0;overflow:hidden;height:calc(100vh - 108px);display:flex;flex-direction:column">
+    <div style="background:linear-gradient(135deg,var(--c),#1a3d28);padding:14px 18px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <div style="width:34px;height:34px;background:linear-gradient(135deg,var(--v),var(--vc));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff">✦</div>
+      <div><div style="font-weight:700;color:#fff;font-size:.88rem">Assistente IA — Visão de Rede</div><div style="font-size:.65rem;color:var(--vc)">Análise consolidada de todas as 5 unidades</div></div>
+    </div>
+    <div style="padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--b);flex-shrink:0">
+      <div class="bx bl" style="cursor:pointer;padding:5px 10px;font-size:.72rem" onclick="csr('Quais unidades têm maior risco operacional esta semana?')">🚨 Risco da rede</div>
+      <div class="bx bl" style="cursor:pointer;padding:5px 10px;font-size:.72rem" onclick="csr('Gere um diagnóstico completo da CT Recomeço e sugira um plano de melhoria')">🔍 Diagnóstico CT</div>
+      <div class="bx bl" style="cursor:pointer;padding:5px 10px;font-size:.72rem" onclick="csr('Gere o relatório de impacto social consolidado da rede para junho/2026')">📊 Relatório rede</div>
+      <div class="bx bl" style="cursor:pointer;padding:5px 10px;font-size:.72rem" onclick="csr('Qual estratégia usar para aumentar a ocupação da CT Restaurar de 72% para 90%?')">📈 Estratégia</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px" id="chat-rede">
+      <div class="cb a" style="max-width:78%;padding:11px 14px;border-radius:10px;font-size:.82rem;line-height:1.6;background:#fff;border:1px solid var(--b);align-self:flex-start;border-bottom-left-radius:3px">
+        <strong style="color:var(--v)">✦ Assistente IA — Rede</strong><br><br>
+        Olá! Tenho acesso consolidado a todas as <strong>5 unidades da rede</strong>. Posso ajudar com:<br><br>
+        • <strong>Diagnóstico</strong> de qualquer unidade com plano de melhoria<br>
+        • <strong>Benchmarks</strong> entre unidades da rede<br>
+        • <strong>Relatórios consolidados</strong> para SENAPRED, CONAD e financiadores<br>
+        • <strong>Estratégias</strong> para aumentar ocupação e resultados<br>
+        • <strong>Transferências</strong> inteligentes entre unidades<br>
+        • <strong>Previsões</strong> de receita, altas e demanda
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--b);padding:14px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;background:#fff">
+      <textarea id="ci-rede" style="flex:1;padding:9px 12px;border:1.5px solid var(--b);border-radius:8px;font-size:.82rem;font-family:'Inter',sans-serif;color:var(--t);resize:none;min-height:40px;max-height:110px;outline:none;transition:border .15s" placeholder="Pergunte sobre a rede, peça análises ou relatórios..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();cmRede();}"></textarea>
+      <button style="background:var(--v);border:none;border-radius:8px;width:40px;height:40px;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s" onclick="cmRede()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- EQUIPE REDE -->
+<div class="pg" id="pg-equipe-rede">
+  <div style="display:flex;justify-content:flex-end;margin-bottom:14px;gap:8px">
+    <button class="btn bs">📥 Exportar lista</button>
+    <button class="btn bp" onclick="om('m-conv')">+ Convidar profissional</button>
+  </div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Profissional</th><th>Função</th><th>Unidade</th><th>Acesso</th><th>Último acesso</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--vc));display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:#fff">DR</div><strong>Dir. Roberto</strong></div></td><td>Diretor da rede</td><td>Todas</td><td><span class="bx r">Super Admin</span></td><td>Agora</td><td><span class="bx g">Ativo</span></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:50%;background:var(--vm);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:var(--v)">AN</div><strong>Ana Nascimento</strong></div></td><td>Coordenadora</td><td>CT Esperança</td><td><span class="bx r">Admin</span></td><td>Hoje 09h</td><td><span class="bx g">Ativo</span></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:50%;background:var(--vm);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:var(--v)">PF</div><strong>Paulo Ferreira</strong></div></td><td>Coordenador</td><td>CT Renascer</td><td><span class="bx r">Admin</span></td><td>Hoje 08h</td><td><span class="bx g">Ativo</span></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:50%;background:var(--vm);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:var(--v)">SL</div><strong>Sandra Lima</strong></div></td><td>Coordenadora</td><td>CT Restaurar</td><td><span class="bx r">Admin</span></td><td>Ontem</td><td><span class="bx g">Ativo</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ACOLHIDOS REDE / ALERTAS / CONFIG: simplificados -->
+<div class="pg" id="pg-acolhidos-rede">
+  <div class="card"><div class="ct">👤 Acolhidos da rede — 203 ativos <button class="btn bai btn-sm" onclick="cmRede2('Liste os 5 acolhidos com maior risco em toda a rede')">✦ Top riscos IA</button></div><div class="tw"><table><thead><tr><th>Acolhido</th><th>Unidade</th><th>Fase</th><th>Risco IA</th><th>Status</th></tr></thead><tbody><tr><td><strong>João F.</strong></td><td>CT Recomeço</td><td>Fase 2</td><td><span class="bx r">🔴 Crítico</span></td><td><span class="bx r">Urgente</span></td></tr><tr><td><strong>Maria S.</strong></td><td>CT Esperança</td><td>Fase 3</td><td><span class="bx y">🟡 Médio</span></td><td><span class="bx g">Estável</span></td></tr><tr><td><strong>Carlos O.</strong></td><td>CT Renascer</td><td>Fase 2</td><td><span class="bx g">🟢 Baixo</span></td><td><span class="bx g">Estável</span></td></tr></tbody></table></div></div>
+</div>
+<div class="pg" id="pg-alertas-rede">
+  <div class="aib" style="margin-bottom:14px"><div class="aibh">9 alertas ativos na rede</div><div class="aibt">3 críticos na CT Recomeço, 4 de PAS vencidos na CT Esperança e CT Restaurar, 2 financeiros na CT Recomeço.</div></div>
+  <div class="card"><div class="tw"><table><thead><tr><th>Unidade</th><th>Tipo</th><th>Prioridade</th><th>Descrição</th><th>Status</th></tr></thead><tbody><tr><td><strong>CT Recomeço</strong></td><td>Risco IA</td><td><span class="bx r">Crítica</span></td><td>João F. — 4 ocorrências em 5 dias</td><td><span class="bx y">Aberto</span></td></tr><tr><td><strong>CT Esperança</strong></td><td>PAS vencido</td><td><span class="bx y">Alta</span></td><td>7 PAS sem revisão há 30+ dias</td><td><span class="bx y">Aberto</span></td></tr><tr><td><strong>CT Restaurar</strong></td><td>Ocupação</td><td><span class="bx y">Alta</span></td><td>Ocupação abaixo de 75% por 2 meses</td><td><span class="bx y">Em análise</span></td></tr></tbody></table></div></div>
+</div>
+<div class="pg" id="pg-config-rede">
+  <div class="g2">
+    <div class="card"><div class="ct">🌐 Configurações da rede</div>
+      <div class="ig"><label class="lbl">Nome da rede</label><input class="inp" value="Rede Esperança"></div>
+      <div class="ig"><label class="lbl">CNPJ da mantenedora</label><input class="inp" value="98.765.432/0001-10"></div>
+      <div class="ig"><label class="lbl">Responsável pela rede</label><input class="inp" value="Dir. Roberto Alves"></div>
+      <div class="ig"><label class="lbl">Limite de unidades</label><input class="inp" value="5 (Plano Rede)" readonly style="background:var(--bg)"></div>
+      <button class="btn bp">Salvar</button>
+    </div>
+    <div class="card"><div class="ct">✦ IA da rede</div>
+      <div class="ig"><label class="lbl">Frequência de análise</label><select class="sel"><option>Tempo real</option><option>6 horas</option><option>Diário</option></select></div>
+      <div class="ig"><label class="lbl">Alertas consolidados</label><select class="sel"><option>Sim — painel único</option><option>Por unidade separado</option></select></div>
+      <div class="aib" style="margin-top:8px"><div class="aibh">Status</div><div class="aibt">✅ IA da rede operacional · 5 unidades monitoradas · Último scan: agora</div></div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /cnt -->
+</div><!-- /main -->
+
+<!-- MODAIS -->
+<div class="mbk" id="m-alerta"><div class="mod" style="max-width:500px"><div class="mh"><h3>🚨 Alerta crítico — CT Recomeço</h3><button class="mx" onclick="cm('m-alerta')">✕</button></div><div class="mc"><div class="aib"><div class="aibh">João F. — Risco crítico</div><div class="aibt" id="alerta-body">Carregando análise IA...</div></div></div><div class="mf"><button class="btn bs" onclick="cm('m-alerta')">Fechar</button><button class="btn bai" onclick="cmRede2('Sugira intervenções urgentes para João F. na CT Recomeço com risco crítico de recaída');cm('m-alerta')">✦ Plano de ação IA</button></div></div></div>
+
+<div class="mbk" id="m-ai-rede"><div class="mod" style="max-width:640px"><div class="mh"><h3>✦ Análise IA da Rede</h3><button class="mx" onclick="cm('m-ai-rede')">✕</button></div><div class="mc"><div id="ai-rede-body" style="font-size:.82rem;line-height:1.75">Carregando...</div></div><div class="mf"><button class="btn bs" onclick="cm('m-ai-rede')">Fechar</button><button class="btn bp">📥 Exportar</button></div></div></div>
+
+<div class="mbk" id="m-nova-ct"><div class="mod" style="max-width:500px"><div class="mh"><h3>🏠 Nova unidade</h3><button class="mx" onclick="cm('m-nova-ct')">✕</button></div><div class="mc">
+  <div class="ig"><label class="lbl">Nome da CT *</label><input class="inp" placeholder="Ex: CT Renova"></div>
+  <div class="ir2"><div class="ig"><label class="lbl">Cidade *</label><input class="inp"></div><div class="ig"><label class="lbl">Estado</label><select class="sel"><option>SP</option><option>MG</option><option>RJ</option><option>PR</option><option>GO</option></select></div></div>
+  <div class="ig"><label class="lbl">Total de vagas</label><input class="inp" type="number" value="30"></div>
+  <div class="ig"><label class="lbl">Coordenador responsável</label><input class="inp" placeholder="Nome completo"></div>
+</div><div class="mf"><button class="btn bs" onclick="cm('m-nova-ct')">Cancelar</button><button class="btn bp" onclick="cm('m-nova-ct');t('✅ Unidade adicionada à rede!','ok')">Adicionar</button></div></div></div>
+
+<div class="mbk" id="m-transf"><div class="mod" style="max-width:500px"><div class="mh"><h3>🔄 Transferência com IA</h3><button class="mx" onclick="cm('m-transf')">✕</button></div><div class="mc">
+  <div class="ig"><label class="lbl">Acolhido</label><select class="sel"><option>João F. — CT Recomeço</option><option>Sandra L. — CT Restaurar</option><option>Marcos J. — CT Recomeço</option></select></div>
+  <div class="ig"><label class="lbl">Motivo</label><select class="sel"><option>Proximidade familiar</option><option>Questão de segurança</option><option>Vagas na unidade de origem</option><option>Solicitação do acolhido</option></select></div>
+  <div class="aib"><div class="aibh">Sugestão IA</div><div class="aibt">Com base no perfil e localização familiar, a IA recomenda transferência para <strong>CT Esperança (SP)</strong> — possui vagas, equipe especializada em dependência de crack e família do acolhido reside em São Paulo.</div></div>
+</div><div class="mf"><button class="btn bs" onclick="cm('m-transf')">Cancelar</button><button class="btn bai" onclick="cm('m-transf');t('✦ Transferência iniciada — prontuário será migrado automaticamente','ok')">✦ Confirmar transferência</button></div></div></div>
+
+<div class="mbk" id="m-rel-rede"><div class="mod" style="max-width:680px"><div class="mh"><h3 id="m-rel-title">📊 Relatório gerado</h3><button class="mx" onclick="cm('m-rel-rede')">✕</button></div><div class="mc"><div id="m-rel-body" style="font-size:.82rem;line-height:1.75"></div></div><div class="mf"><button class="btn bs" onclick="cm('m-rel-rede')">Fechar</button><button class="btn bp" onclick="t('📥 Exportado!','ok');cm('m-rel-rede')">📥 Exportar PDF</button></div></div></div>
+
+<div class="mbk" id="m-conv"><div class="mod" style="max-width:440px"><div class="mh"><h3>📧 Convidar profissional</h3><button class="mx" onclick="cm('m-conv')">✕</button></div><div class="mc">
+  <div class="ig"><label class="lbl">E-mail</label><input class="inp" type="email" placeholder="profissional@email.com"></div>
+  <div class="ig"><label class="lbl">Unidade</label><select class="sel"><option>CT Esperança</option><option>CT Renascer</option><option>CT Restaurar</option><option>CT Vida Nova</option><option>CT Recomeço</option></select></div>
+  <div class="ig"><label class="lbl">Perfil de acesso</label><select class="sel"><option>Admin da unidade</option><option>Técnico (psicólogo/médico)</option><option>Operador</option><option>Visualizador</option></select></div>
+</div><div class="mf"><button class="btn bs" onclick="cm('m-conv')">Cancelar</button><button class="btn bp" onclick="cm('m-conv');t('📧 Convite enviado!','ok')">Enviar convite</button></div></div></div>
+
+<div class="toast" id="toast-el"></div>
+
+<script>
+const titles={dash:'Painel da Rede',unidades:'Unidades',comparativo:'Comparativo',transferencias:'Transferências','acolhidos-rede':'Acolhidos da Rede','financeiro-rede':'Financeiro da Rede','ia-rede':'Assistente IA','alertas-rede':'Alertas','relatorios-rede':'Relatórios','bi':'Business Intelligence','equipe-rede':'Equipe da Rede','config-rede':'Configurações'};
+function P(id){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const pg=document.getElementById('pg-'+id);if(pg)pg.classList.add('on');document.getElementById('tbt').textContent=titles[id]||id;}
+function om(id){document.getElementById(id).classList.add('op');if(id==='m-alerta')carregarAlerta();if(id==='m-ai-rede')carregarAiRede();}
+function cm(id){document.getElementById(id).classList.remove('op');}
+document.querySelectorAll('.mbk').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('op');}));
+function t(msg,type='ok'){const el=document.getElementById('toast-el');el.textContent=msg;el.className='toast '+type+' show';setTimeout(()=>el.classList.remove('show'),3500);}
+function abrirUnidade(nome){t('↗ Abrindo '+nome+'...','ok');}
+
+// HEATMAP
+const hm=document.getElementById('heatmap');
+if(hm){const vals=[0,0,1,2,0,3,1,0,1,0,2,1,0,0,2,0,3,1,0,1,0,0,2,0,1,3,0,2,0,1,0,3,2,0,1,0,2,0,1,0,4,2,0,1,3,0,2,1];vals.forEach(v=>{const c=document.createElement('div');c.className='hm-cell hm-'+Math.min(v,5);if(v>0)c.textContent=v;hm.appendChild(c);});}
+
+// CHAT REDE
+let histRede=[];
+const SYS_REDE=`Você é o Assistente IA do CT Pro — módulo de gestão de rede de Comunidades Terapêuticas.
+
+Dados consolidados da rede:
+- 5 unidades: CT Esperança (SP, 96%), CT Renascer (MG, 88%), CT Restaurar (PR, 72%), CT Vida Nova (GO, 94%), CT Recomeço (RJ, 78%)
+- 203 acolhidos ativos | 239 vagas totais | 85% ocupação média
+- Receita rede: R$325.800/mês | Margem: 33%
+- 9 alertas ativos | 3 críticos na CT Recomeço
+- CT Recomeço tem problemas sérios: 11 ocorrências, 61% PAS em dia, 41% taxa de conclusão
+- CT Restaurar com ocupação baixa há 2 meses
+
+Ajude o diretor da rede com análises estratégicas, diagnósticos, relatórios consolidados, sugestões de melhoria e benchmarks entre unidades.
+Responda em português brasileiro, de forma executiva e estratégica.`;
+
+async function cmRede(){
+  const inp=document.getElementById('ci-rede');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  addBolha(msg,'u',true);
+  histRede.push({role:'user',content:msg});
+  const ld=addBolha('<em style="color:var(--m)">✦ Analisando rede...</em>','a',true);
+  const r=await callAI(msg,histRede,SYS_REDE);
+  histRede.push({role:'assistant',content:r});
+  ld.innerHTML=md(r);
+  document.getElementById('chat-rede').scrollTop=9999;
+}
+
+function csr(txt){document.getElementById('ci-rede').value=txt;cmRede();}
+function cmRede2(txt){P('ia-rede');setTimeout(()=>{document.getElementById('ci-rede').value=txt;cmRede();},300);}
+
+function addBolha(html,tipo,isRede=false){
+  const area=document.getElementById(isRede?'chat-rede':'chat-rede');
+  const d=document.createElement('div');
+  d.style.cssText=`max-width:78%;padding:11px 14px;border-radius:10px;font-size:.82rem;line-height:1.6;${tipo==='u'?'background:var(--v);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;margin-left:auto':'background:#fff;border:1px solid var(--b);align-self:flex-start;border-bottom-left-radius:3px'}`;
+  d.innerHTML=html;
+  area.appendChild(d);
+  area.scrollTop=9999;
+  return d;
+}
+
+async function aiSugestao(ct,problema){
+  P('ia-rede');
+  setTimeout(()=>{
+    document.getElementById('ci-rede').value=`Crie um plano estratégico para resolver o problema de ${problema} na ${ct}. Inclua ações concretas, responsáveis e prazos.`;
+    cmRede();
+  },300);
+}
+
+async function carregarAlerta(){
+  document.getElementById('alerta-body').innerHTML='✦ Analisando padrão de comportamento...';
+  const r=await callAI('João F. na CT Recomeço teve 4 ocorrências em 5 dias: agitação, recusa de medicação, tentativa de fuga e agressividade verbal. Analise o padrão e sugira intervenções imediatas e urgentes.',histRede,SYS_REDE);
+  document.getElementById('alerta-body').innerHTML=md(r);
+}
+
+async function carregarAiRede(){
+  document.getElementById('ai-rede-body').innerHTML='✦ Gerando análise estratégica completa...';
+  const r=await callAI('Faça um diagnóstico executivo completo da rede com: (1) saúde de cada unidade, (2) principais problemas, (3) benchmark interno, (4) 5 ações prioritárias para os próximos 30 dias, (5) projeção de receita com as melhorias.',histRede,SYS_REDE);
+  document.getElementById('ai-rede-body').innerHTML=md(r);
+}
+
+async function aiRelatorio(tipo){
+  t('✦ Gerando '+tipo+'...','ok');
+  const r=await callAI(`Gere um ${tipo} completo e detalhado para a rede. Inclua dados consolidados de todas as 5 unidades, indicadores de desempenho, resultado financeiro e conclusões. Formato profissional.`,histRede,SYS_REDE);
+  document.getElementById('m-rel-title').textContent='📊 '+tipo.charAt(0).toUpperCase()+tipo.slice(1);
+  document.getElementById('m-rel-body').innerHTML=md(r);
+  om('m-rel-rede');
+}
+
+async function callAI(msg,hist,sys){
+  try{
+    const messages=hist.length>0?[...hist]:[{role:'user',content:msg}];
+    if(hist.length===0)messages[0]={role:'user',content:msg};
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:sys,messages})});
+    const d=await r.json();
+    return d.content?.map(c=>c.text||'').join('')||'Erro na resposta.';
+  }catch(e){return '⚠️ Erro de conexão com a IA.';}
+}
+
+function md(txt){return txt.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/^###\s(.+)$/gm,'<div style="font-family:Syne,sans-serif;font-weight:700;font-size:.88rem;color:var(--v);margin:14px 0 6px">$1</div>').replace(/^##\s(.+)$/gm,'<div style="font-family:Syne,sans-serif;font-weight:700;font-size:.92rem;margin:10px 0 6px">$1</div>').replace(/^•\s(.+)$/gm,'<div style="padding-left:14px;margin:3px 0">• $1</div>').replace(/^-\s(.+)$/gm,'<div style="padding-left:14px;margin:3px 0">• $1</div>').replace(/^(\d+)\.\s(.+)$/gm,'<div style="padding-left:14px;margin:3px 0"><strong>$1.</strong> $2</div>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');}
+
+P('dash');
+</script>
+</body>
+</html>
